@@ -136,6 +136,15 @@ export class Section {
     });
     this.data = getSection(section);
     this.page.cache();
+
+    if (this.page.conn) {
+      this.page.conn.send(
+        JSON.stringify({
+          type: "section",
+          section
+        })
+      );
+    }
   }
 
   /**
@@ -236,6 +245,15 @@ export class Section {
 
     this.page.cache();
     this.page.emit("section", this);
+
+    if (this.page.conn) {
+      this.page.conn.send(
+        JSON.stringify({
+          type: "section",
+          section: data
+        })
+      );
+    }
   }
 
   /*

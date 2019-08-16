@@ -46,6 +46,13 @@ export class Page {
   public sections: Section[] = [];
 
   /**
+   * Peer
+   * @type {Peer}
+   */
+  public peer: Peer;
+  public conn: any;
+
+  /**
    * @param target
    * @param editing
    */
@@ -64,6 +71,12 @@ export class Page {
     }, 100);
   }
 
+  /*
+  |--------------------------------------------------------------------------------
+  | Load Utilities
+  |--------------------------------------------------------------------------------
+  */
+
   /**
    * Loads a cached page.
    *
@@ -76,6 +89,58 @@ export class Page {
     }
     this.emit("loaded");
   }
+
+  /*
+  |--------------------------------------------------------------------------------
+  | Peer Utilities
+  |--------------------------------------------------------------------------------
+  */
+
+  public share() {
+    this.peer = new Peer();
+    this.peer.on("connection", conn => {
+      this.conn = conn;
+
+      console.log("Connected");
+
+      setTimeout(() => {
+        conn.send(
+          JSON.stringify({
+            type: "load",
+            sections: this.sections.map(s => s.data)
+          })
+        );
+      }, 1000);
+    });
+    return this.peer;
+  }
+
+  public read(peerId: string) {
+    this.peer = new Peer();
+    this.conn = this.peer.connect(peerId);
+    this.conn.on("data", (data: any) => {
+      const payload = JSON.parse(data);
+
+      console.log(payload);
+
+      switch (payload.type) {
+        case "load": {
+          this.load(payload.sections);
+          break;
+        }
+        case "section": {
+          this.updateSection(payload.section);
+          break;
+        }
+      }
+    });
+  }
+
+  /*
+  |--------------------------------------------------------------------------------
+  | Section Utilities
+  |--------------------------------------------------------------------------------
+  */
 
   /**
    * Add a new scene to the editor.
@@ -93,6 +158,13 @@ export class Page {
     this.cache();
 
     return section;
+  }
+
+  public updateSection(data: any) {
+    const section = this.sections.find(s => s.id === data.id);
+    if (section) {
+      section.commit(data);
+    }
   }
 
   public removeSection(section: Section) {
@@ -114,6 +186,12 @@ export class Page {
     this.emit("loaded");
   }
 
+  /*
+  |--------------------------------------------------------------------------------
+  | Storage Utilities
+  |--------------------------------------------------------------------------------
+  */
+
   /**
    * Stores the current state of the page.
    */
@@ -134,7 +212,11 @@ export class Page {
     this.container.innerHTML = "";
   }
 
-  // ### Event Handlers
+  /*
+  |--------------------------------------------------------------------------------
+  | Event Handlers
+  |--------------------------------------------------------------------------------
+  */
 
   /**
    * Add editor event listener.
@@ -182,5 +264,12 @@ export class Page {
   }
 }
 
-type EventHandler = (...args: any) => void;
+/*
+ |--------------------------------------------------------------------------------
+ | Types
+ |--------------------------------------------------------------------------------
+ */
+
 type Event = "ready" | "loaded" | "section" | "edit";
+
+type EventHandler = (...args: any) => void;
