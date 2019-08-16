@@ -34,7 +34,7 @@ export class Editor extends React.Component<
    * @should update editor on section update events
    */
   public componentDidMount() {
-    this.page = new Page(this.content)
+    window.page = this.page = new Page(this.content)
       .on("ready", () => {
         const cache = localStorage.getItem("page");
         if (cache) {

@@ -70,6 +70,7 @@ export class Page {
    * @param list
    */
   public load(list: any[]) {
+    this.container.innerHTML = "";
     for (const data of list) {
       this.sections.push(new Section(this, getSection(data)).render());
     }
