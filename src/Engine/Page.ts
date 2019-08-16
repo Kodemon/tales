@@ -100,17 +100,20 @@ export class Page {
     this.peer = new Peer();
     this.peer.on("connection", conn => {
       this.conn = conn;
-
-      console.log("Connected");
-
-      setTimeout(() => {
-        conn.send(
-          JSON.stringify({
-            type: "load",
-            sections: this.sections.map(s => s.data)
-          })
-        );
-      }, 1000);
+      conn.on("data", (data: any) => {
+        const payload = JSON.parse(data);
+        switch (payload.type) {
+          case "ready": {
+            conn.send(
+              JSON.stringify({
+                type: "load",
+                sections: this.sections.map(s => s.data)
+              })
+            );
+            break;
+          }
+        }
+      });
     });
     return this.peer;
   }
@@ -118,11 +121,17 @@ export class Page {
   public read(peerId: string) {
     this.peer = new Peer();
     this.conn = this.peer.connect(peerId);
+
+    this.conn.on("open", () => {
+      this.conn.send(
+        JSON.stringify({
+          type: "ready"
+        })
+      );
+    });
+
     this.conn.on("data", (data: any) => {
       const payload = JSON.parse(data);
-
-      console.log(payload);
-
       switch (payload.type) {
         case "load": {
           this.load(payload.sections);

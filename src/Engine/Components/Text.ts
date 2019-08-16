@@ -61,13 +61,13 @@ export function text(section: Section, component: any) {
 
   let debounce: any;
   quill.on("text-change", function(delta: any, oldDelta: any, source: any) {
-    clearTimeout(debounce);
-    debounce = setTimeout(() => {
-      section.setComponent({
-        ...component,
-        text: quill.getContents()
-      });
-    }, 2500);
+    // clearTimeout(debounce);
+    // debounce = setTimeout(() => {
+    section.setComponent({
+      ...component,
+      text: quill.getContents()
+    });
+    // }, 2500);
   });
 
   quill.setContents(component.text);
