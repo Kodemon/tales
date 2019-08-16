@@ -1,57 +1,54 @@
-import { Section } from "../Section";
-import { maybe, setStyle } from "../Utils";
+import { setStyle } from "../Utils";
+import { Component } from "./Component";
 
-/**
- * Appends a image layer to the provided container.
- *
- * @param section
- * @param component
- */
-export function image(section: Section, component: any) {
-  const image = document.createElement("img");
+export class Image extends Component {
+  public render() {
+    const image = document.createElement("img");
 
-  image.src = component.src;
+    image.src = this.getSetting("src");
 
-  const position = maybe(component, "settings.position");
-  switch (position) {
-    case "background": {
-      image.className = "component-absolute";
-      setStyle(image, {
-        objectFit: "cover",
-        width: section.page.viewport.width,
-        height: section.height * maybe<number>(component, "settings.height", 1)
-      });
-      section.append(image);
-      break;
-    }
+    const position = this.getSetting("position");
+    switch (position) {
+      case "background": {
+        image.className = "component-absolute";
+        setStyle(image, {
+          objectFit: "cover",
+          width: this.section.page.viewport.width,
+          height: this.section.height * this.getSetting("height", 0)
+        });
+        this.section.append(image);
+        break;
+      }
 
-    case "sticky": {
-      const container = document.createElement("div");
-      container.className = "component-fixed_container";
+      case "sticky": {
+        const container = document.createElement("div");
+        container.className = "component-fixed_container";
 
-      const scroller = document.createElement("div");
-      scroller.className = "component-scroll_overlay";
+        const scroller = document.createElement("div");
+        scroller.className = "component-scroll_overlay";
 
-      image.className = "component-fixed_component";
-      setStyle(image, {
-        objectFit: "cover",
-        width: section.page.viewport.width,
-        height: "100%"
-      });
+        image.className = "component-fixed_component";
+        setStyle(image, {
+          objectFit: "cover",
+          objectPosition: "50% 0",
+          width: this.section.page.viewport.width,
+          height: "100%"
+        });
 
-      container.append(image);
-      container.append(scroller);
+        container.append(image);
+        container.append(scroller);
 
-      section.append(container);
-      break;
-    }
+        this.section.append(container);
+        break;
+      }
 
-    default: {
-      setStyle(image, {
-        display: "block",
-        ...(component.style || {})
-      });
-      section.append(image);
+      default: {
+        setStyle(image, {
+          display: "block",
+          ...(this.data.style || {})
+        });
+        this.section.append(image);
+      }
     }
   }
 }

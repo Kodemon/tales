@@ -1,7 +1,6 @@
 import * as React from "react";
 
 import { Section } from "Engine/Section";
-import { maybe } from "Engine/Utils";
 
 import { Header, SettingGroup } from "../Styles";
 
@@ -20,22 +19,18 @@ export const ImageSettings: React.SFC<{
           <input
             type="text"
             placeholder="http://path.to/image"
-            value={component.src}
+            value={component.getSetting("src")}
             onChange={event => {
-              section.updateComponent({
-                ...component,
-                src: event.target.value
-              });
+              component.setSetting("src", event.target.value, true);
             }}
           />
         </SettingGroup>
         <SettingGroup>
           <label>Position</label>
           <select
-            value={maybe(component, "settings.position")}
+            value={component.getSetting("position")}
             onChange={event => {
-              section.updateComponentSettings(component, { position: event.target.value });
-              // section.set("position", event.target.value);
+              component.setSetting("position", event.target.value, true);
             }}
           >
             <option>None</option>
@@ -53,9 +48,9 @@ export const ImageSettings: React.SFC<{
           <label className="input">Width</label>
           <input
             type="text"
-            defaultValue={maybe(component, "style.width", "")}
+            defaultValue={component.getStyle("width", "")}
             onBlur={event => {
-              section.updateComponentStyle(component, { width: event.target.value });
+              component.setStyle("width", event.target.value, true);
             }}
           />
         </SettingGroup>
@@ -63,9 +58,9 @@ export const ImageSettings: React.SFC<{
           <label className="input">Height</label>
           <input
             type="text"
-            defaultValue={maybe(component, "style.height", "")}
+            defaultValue={component.getStyle("height", "")}
             onBlur={event => {
-              section.updateComponentStyle(component, { height: event.target.value });
+              component.setStyle("height", event.target.value, true);
             }}
           />
         </SettingGroup>
@@ -73,9 +68,9 @@ export const ImageSettings: React.SFC<{
           <label className="input">Margin</label>
           <input
             type="text"
-            defaultValue={maybe(component, "style.margin", "")}
+            defaultValue={component.getStyle("margin", "")}
             onBlur={event => {
-              section.updateComponentStyle(component, { margin: event.target.value });
+              component.setStyle("margin", event.target.value, true);
             }}
           />
         </SettingGroup>
@@ -83,7 +78,7 @@ export const ImageSettings: React.SFC<{
       <div style={{ borderTop: "1px solid #ccc", padding: 10, textAlign: "center" }}>
         <button
           onClick={() => {
-            section.removeComponent(component);
+            section.removeComponent(component.id, true);
           }}
         >
           Delete Image

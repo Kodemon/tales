@@ -5,6 +5,7 @@ import * as ScrollMagic from "scrollmagic";
 import "animation.gsap";
 import "debug.addIndicators";
 
+import { Conduit, ConduitType } from "./Conduit";
 import { getSection, Section } from "./Section";
 import { Viewport } from "./Viewport";
 
@@ -20,6 +21,12 @@ export class Page {
    * @type {HTMLDivElement}
    */
   public container: HTMLDivElement;
+
+  /**
+   * Peer
+   * @type {Conduit}
+   */
+  public conduit: Conduit;
 
   /**
    * ScrollMagic Controller.
@@ -46,22 +53,25 @@ export class Page {
   public sections: Section[] = [];
 
   /**
-   * Peer
-   * @type {Peer}
-   */
-  public peer: Peer;
-  public conn: any;
-
-  /**
    * @param target
    * @param editing
    */
   constructor(container: any) {
     this.container = container;
+
+    // ### Load Conduit
+
+    this.conduit = new Conduit(this);
+
+    // ### Load ScrollMagic Controller
+
     this.controller = new ScrollMagic.Controller({
       container: this.container,
       refreshInterval: 0
     });
+
+    // ### Load Page
+
     const loader = setInterval(() => {
       if (this.container.offsetHeight > 0) {
         clearInterval(loader);
@@ -84,6 +94,7 @@ export class Page {
    */
   public load(list: any[]) {
     this.container.innerHTML = "";
+    this.sections = [];
     for (const data of list) {
       this.sections.push(new Section(this, getSection(data)).render());
     }
@@ -92,57 +103,12 @@ export class Page {
 
   /*
   |--------------------------------------------------------------------------------
-  | Peer Utilities
+  | Conduit Utilities
   |--------------------------------------------------------------------------------
   */
 
-  public share() {
-    this.peer = new Peer();
-    this.peer.on("connection", conn => {
-      this.conn = conn;
-      conn.on("data", (data: any) => {
-        const payload = JSON.parse(data);
-        switch (payload.type) {
-          case "ready": {
-            conn.send(
-              JSON.stringify({
-                type: "load",
-                sections: this.sections.map(s => s.data)
-              })
-            );
-            break;
-          }
-        }
-      });
-    });
-    return this.peer;
-  }
-
-  public read(peerId: string) {
-    this.peer = new Peer();
-    this.conn = this.peer.connect(peerId);
-
-    this.conn.on("open", () => {
-      this.conn.send(
-        JSON.stringify({
-          type: "ready"
-        })
-      );
-    });
-
-    this.conn.on("data", (data: any) => {
-      const payload = JSON.parse(data);
-      switch (payload.type) {
-        case "load": {
-          this.load(payload.sections);
-          break;
-        }
-        case "section": {
-          this.updateSection(payload.section);
-          break;
-        }
-      }
-    });
+  public connect(peer: string) {
+    this.conduit.connect(peer);
   }
 
   /*
@@ -154,10 +120,11 @@ export class Page {
   /**
    * Add a new scene to the editor.
    *
-   * @param props
+   * @param data
+   * @param isSource
    */
-  public addSection(props?: any) {
-    const section = new Section(this, getSection(props));
+  public addSection(data: any, isSource: boolean = false) {
+    const section = new Section(this, getSection(data));
 
     this.sections.push(section);
 
@@ -166,9 +133,18 @@ export class Page {
     this.emit("section", section);
     this.cache();
 
+    if (isSource) {
+      this.conduit.send("section:added", section.data);
+    }
+
     return section;
   }
 
+  /**
+   * Update a section.
+   *
+   * @param data
+   */
   public updateSection(data: any) {
     const section = this.sections.find(s => s.id === data.id);
     if (section) {
@@ -176,6 +152,11 @@ export class Page {
     }
   }
 
+  /**
+   * Removes a section.
+   *
+   * @param section
+   */
   public removeSection(section: Section) {
     this.sections = this.sections.reduce((list: Section[], cached: Section) => {
       if (section !== cached) {
@@ -197,6 +178,14 @@ export class Page {
 
   /*
   |--------------------------------------------------------------------------------
+  | Component Utilities
+  |--------------------------------------------------------------------------------
+  */
+
+  // ...
+
+  /*
+  |--------------------------------------------------------------------------------
   | Storage Utilities
   |--------------------------------------------------------------------------------
   */
@@ -205,11 +194,11 @@ export class Page {
    * Stores the current state of the page.
    */
   public cache() {
-    const scenes: any = [];
+    const sections: any = [];
     this.sections.forEach(scene => {
-      scenes.push(scene.data);
+      sections.push(scene.data);
     });
-    localStorage.setItem("page", JSON.stringify(scenes));
+    localStorage.setItem("page", JSON.stringify(sections));
   }
 
   /**

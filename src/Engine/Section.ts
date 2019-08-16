@@ -1,9 +1,8 @@
 import * as rndm from "rndm";
 import * as ScrollMagic from "scrollmagic";
 
-import { image } from "./Components/Image";
-import { reveal } from "./Components/Reveal";
-import { text } from "./Components/Text";
+import { Image } from "./Components/Image";
+import { Text } from "./Components/Text";
 import { Page } from "./Page";
 import { cleanObjectProperties, maybe, setStyle } from "./Utils";
 
@@ -31,6 +30,12 @@ export class Section {
    * @type {ScrollMagic.Scene}
    */
   public scroll: typeof ScrollMagic.Scene;
+
+  /**
+   * List of components living under this section.
+   * @type {any[]}
+   */
+  public components: any[] = [];
 
   /**
    * Section schema.
@@ -66,14 +71,6 @@ export class Section {
     return this.data.id;
   }
 
-  /**
-   * Section components.
-   * @type {any[]}
-   */
-  get components() {
-    return this.data.components;
-  }
-
   /*
   |--------------------------------------------------------------------------------
   | Setting Utilities
@@ -85,11 +82,15 @@ export class Section {
    *
    * @param key
    * @param value
+   * @param isSource
    */
-  public set(key: SectionSetting, value: any) {
+  public set(key: SectionSetting, value: any, isSource = false) {
     const scene = { ...this.data };
     scene.settings[key] = value;
     this.commit(scene);
+    if (isSource) {
+      this.page.conduit.send("section:setting", this.data.id, key, value);
+    }
   }
 
   /**
@@ -112,79 +113,17 @@ export class Section {
    *
    * @param component
    */
-  public addComponent(component: any) {
+  public addComponent(component: any, isSource = false) {
     const section = { ...this.data };
-    section.components.push({
+    const data = {
       id: rndm.base62(10),
       ...component
-    });
+    };
+    section.components.push(data);
     this.commit(section);
-  }
-
-  /**
-   * Updates the provided component, and persists it.
-   *
-   * @param component
-   */
-  public setComponent(component: any) {
-    const section = { ...this.data };
-    section.components = section.components.map((i: any) => {
-      if (i.id === component.id) {
-        return component;
-      }
-      return i;
-    });
-    this.data = getSection(section);
-    this.page.cache();
-
-    if (this.page.conn) {
-      this.page.conn.send(
-        JSON.stringify({
-          type: "section",
-          section
-        })
-      );
+    if (isSource) {
+      this.page.conduit.send("component:added", section.id, data);
     }
-  }
-
-  /**
-   * Updates the provided component settings, and persists it.
-   *
-   * @param component
-   * @param settings
-   */
-  public updateComponentSettings(component: any, settings: any) {
-    const section = { ...this.data };
-    section.components = section.components.map((c: any) => {
-      if (c.id === component.id) {
-        c.settings = cleanObjectProperties({
-          ...maybe(component, "settings", {}),
-          ...settings
-        });
-      }
-      return c;
-    });
-    this.commit(section);
-  }
-
-  /**
-   * Updates the provided component style, and persists it.
-   *
-   * @param component
-   * @param style
-   */
-  public updateComponentStyle(component: any, style: any) {
-    const section = { ...this.data };
-    section.components = section.components.map((c: any) => {
-      if (c.id === component.id) {
-        c.style = cleanObjectProperties({
-          ...maybe(component, "style", {}),
-          ...style
-        });
-      }
-      return c;
-    });
-    this.commit(section);
   }
 
   /**
@@ -206,17 +145,21 @@ export class Section {
   /**
    * Removes the provided component from the scene.
    *
-   * @param component
+   * @param id
+   * @param isSource
    */
-  public removeComponent(component: any) {
+  public removeComponent(id: string, isSource = false) {
     const section = { ...this.data };
-    section.components = section.components.reduce((list: any[], i: any) => {
-      if (i.id !== component.id) {
-        list.push(i);
+    section.components = section.components.reduce((components: any[], component: any) => {
+      if (component.id !== id) {
+        components.push(component);
       }
-      return list;
+      return components;
     }, []);
     this.commit(section);
+    if (isSource) {
+      this.page.conduit.send("component:removed", section.id, id);
+    }
   }
 
   /*
@@ -245,15 +188,6 @@ export class Section {
 
     this.page.cache();
     this.page.emit("section", this);
-
-    if (this.page.conn) {
-      this.page.conn.send(
-        JSON.stringify({
-          type: "section",
-          section: data
-        })
-      );
-    }
   }
 
   /*
@@ -277,26 +211,9 @@ export class Section {
   public render() {
     this.container.innerHTML = "";
 
-    // ### component Rendering
-
-    for (const component of this.data.components) {
-      switch (component.type) {
-        case "image": {
-          image(this, component);
-          break;
-        }
-        case "text": {
-          text(this, component);
-          break;
-        }
-        case "reveal": {
-          reveal(this, component);
-          break;
-        }
-      }
+    for (const component of this.components) {
+      component.render();
     }
-
-    // ### Scene Loader
 
     const loader = setInterval(() => {
       if (this.container.offsetHeight !== 0) {
@@ -321,12 +238,28 @@ export class Section {
    * @param scene
    */
   private setData(data: SectionData) {
+    this.components = [];
+
     const height = maybe<number>(data, "settings.height", 0);
     if (height > 0) {
       this.height = this.page.viewport.height * height;
     } else {
       this.height = 0;
     }
+
+    for (const component of data.components) {
+      switch (component.type) {
+        case "image": {
+          this.components.push(new Image(this, component));
+          break;
+        }
+        case "text": {
+          this.components.push(new Text(this, component));
+          break;
+        }
+      }
+    }
+
     this.data = data;
   }
 
@@ -368,20 +301,20 @@ export class Section {
 /**
  * Gets a section in its raw data form as a immutable object.
  *
- * @param props
+ * @param data
  *
  * @returns immutable section data
  */
-export function getSection(props: any = {}): Readonly<SectionData> {
+export function getSection(data: any = {}): Readonly<SectionData> {
   return Object.freeze({
-    id: props.id || rndm.base62(10),
+    id: data.id || rndm.base62(10),
     settings: {
       background: "#fff",
       position: "relative",
       height: 1,
-      ...(props.settings || {})
+      ...(data.settings || {})
     },
-    components: props.components || []
+    components: data.components || []
   });
 }
 

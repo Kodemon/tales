@@ -32,14 +32,19 @@ export class Sections extends React.Component<
    * @param section
    */
   private addImage = (section: Section) => {
-    section.addComponent({
-      type: "image",
-      src: "https://jdrf.org.uk/wp-content/uploads/2017/06/placeholder-image.jpg",
-      style: {
-        width: "100%",
-        height: "auto"
-      }
-    });
+    section.addComponent(
+      {
+        type: "image",
+        settings: {
+          src: "https://jdrf.org.uk/wp-content/uploads/2017/06/placeholder-image.jpg"
+        },
+        style: {
+          width: "100%",
+          height: "auto"
+        }
+      },
+      true
+    );
   };
 
   /**
@@ -48,7 +53,7 @@ export class Sections extends React.Component<
    * @param section
    */
   private addText = (section: Section) => {
-    section.addComponent({ type: "text" });
+    section.addComponent({ type: "text" }, true);
   };
 
   public render() {

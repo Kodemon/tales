@@ -1,7 +1,6 @@
 import * as React from "react";
 
 import { Section } from "Engine/Section";
-import { maybe } from "Engine/Utils";
 
 import { Header, SettingGroup } from "../Styles";
 
@@ -19,10 +18,10 @@ export const TextSettings: React.SFC<{
           <label className="input">Min Width</label>
           <input
             type="number"
-            defaultValue={maybe(component, "settings.min", "")}
+            defaultValue={component.getSetting("min", "")}
             placeholder="280"
             onBlur={event => {
-              section.updateComponentSettings(component, { min: event.target.value });
+              component.setSetting("min", event.target.value, true);
             }}
           />
         </SettingGroup>
@@ -30,19 +29,19 @@ export const TextSettings: React.SFC<{
           <label className="input">Max Width</label>
           <input
             type="number"
-            defaultValue={maybe(component, "settings.max", "")}
+            defaultValue={component.getSetting("max", "")}
             placeholder="580"
             onBlur={event => {
-              section.updateComponentSettings(component, { max: event.target.value });
+              component.setSetting("max", event.target.value, true);
             }}
           />
         </SettingGroup>
         <SettingGroup>
           <label className="input">Layout</label>
           <select
-            value={maybe<string>(component, "settings.layout", "middle")}
+            value={component.getSetting("layout", "middle")}
             onChange={event => {
-              section.updateComponentSettings(component, { layout: event.target.value });
+              component.setSetting("layout", event.target.value, true);
             }}
           >
             <option value="left">Left</option>
@@ -61,10 +60,10 @@ export const TextSettings: React.SFC<{
           <label className="input">Color</label>
           <input
             type="text"
-            defaultValue={maybe(component, "style.color", "")}
+            defaultValue={component.getStyle("color", "")}
             placeholder="Base text color, eg. #fff"
             onBlur={event => {
-              section.updateComponentStyle(component, { color: event.target.value });
+              component.setStyle("color", event.target.value, true);
             }}
           />
         </SettingGroup>
@@ -72,10 +71,10 @@ export const TextSettings: React.SFC<{
           <label className="input">Font Size</label>
           <input
             type="text"
-            defaultValue={maybe(component, "style.fontSize", "")}
+            defaultValue={component.getStyle("fontSize", "")}
             placeholder="Base text size, eg. 18px"
             onBlur={event => {
-              section.updateComponentStyle(component, { fontSize: event.target.value });
+              component.setStyle("fontSize", event.target.value, true);
             }}
           />
         </SettingGroup>
@@ -83,10 +82,10 @@ export const TextSettings: React.SFC<{
           <label className="input">Color</label>
           <input
             type="text"
-            defaultValue={maybe(component, "style.textShadow", "")}
+            defaultValue={component.getStyle("textShadow", "")}
             placeholder="Shadow settings, 1px 1px 2px #262626"
             onBlur={event => {
-              section.updateComponentStyle(component, { textShadow: event.target.value });
+              component.setStyle("textShadow", event.target.value, true);
             }}
           />
         </SettingGroup>
@@ -95,7 +94,7 @@ export const TextSettings: React.SFC<{
       <div style={{ borderTop: "1px solid #ccc", padding: 10, textAlign: "center" }}>
         <button
           onClick={() => {
-            section.removeComponent(component);
+            section.removeComponent(component.id, true);
           }}
         >
           Delete Text

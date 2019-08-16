@@ -69,7 +69,6 @@ export class Editor extends React.Component<
   };
 
   public render() {
-    // return <Content ref={c => (this.content = c)} style={{height: "100%", width: "100%"}} />;
     return (
       <Wrapper>
         <Scenes>
@@ -89,7 +88,7 @@ export class Editor extends React.Component<
               <button
                 onClick={() => {
                   if (this.page) {
-                    this.setState(() => ({ section: this.page.addSection() }));
+                    this.setState(() => ({ section: this.page.addSection({}, true) }));
                   }
                 }}
               >

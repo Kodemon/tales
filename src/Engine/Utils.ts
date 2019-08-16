@@ -43,6 +43,39 @@ export function maybe<V = any>(obj: any, path: string | string[], fallback?: any
 }
 
 /**
+ * Deep copies provided object, returning a immutable result. If performance is
+ * a minor concern, consider using immutable.js
+ *
+ * @param o Object, or array to copy.
+ *
+ * @returns deep copy of provided object
+ */
+export function deepCopy(o: any): any {
+  let newO: any;
+  let i: any;
+  if (typeof o !== "object") {
+    return o;
+  }
+  if (!o) {
+    return o;
+  }
+  if ("[object Array]" === Object.prototype.toString.apply(o)) {
+    newO = [];
+    for (i = 0; i < o.length; i += 1) {
+      newO[i] = deepCopy(o[i]);
+    }
+    return newO;
+  }
+  newO = {};
+  for (i in o) {
+    if (o.hasOwnProperty(i)) {
+      newO[i] = deepCopy(o[i]);
+    }
+  }
+  return newO;
+}
+
+/**
  * Updates the elements style attributes using fastom.mutate.
  *
  * @param element
