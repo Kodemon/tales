@@ -4,8 +4,8 @@
   "description": "Configurable web based render loop.",
   "main": "index.js",
   "scripts": {
-    "pixi": "NODE_ENV=pixi node fuse",
-    "three": "NODE_ENV=three node fuse",
+    "build": "NODE_ENV=production node fuse dist",
+    "local": "node fuse",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "engine@cmdo.xyz",
@@ -13,6 +13,7 @@
   "dependencies": {
     "fastdom": "1.0.9",
     "gsap": "2.1.3",
+    "peerjs": "^1.0.2",
     "quill": "1.3.6",
     "react": "16.9.0",
     "react-color": "^2.17.3",

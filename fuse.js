@@ -2,6 +2,12 @@ const { FuseBox, EnvPlugin, CSSPlugin, JSONPlugin, WebIndexPlugin, QuantumPlugin
 const { src, task, context } = require("fuse-box/sparky");
 const path = require("path");
 
+/*
+ |--------------------------------------------------------------------------------
+ | Context
+ |--------------------------------------------------------------------------------
+ */
+
 context(
   class {
     getConfig() {
@@ -48,7 +54,6 @@ context(
       const app = fuse.bundle("app");
       app.instructions("> index.tsx");
       if (!this.isProduction) {
-        // app.hmr({ reload: true });
         app.watch();
       }
       return app;
@@ -56,20 +61,40 @@ context(
   }
 );
 
+/*
+ |--------------------------------------------------------------------------------
+ | Clean
+ |--------------------------------------------------------------------------------
+ */
+
 task("clean", async () => {
-  // await src("public").clean("public").exec();
+  await src("public")
+    .clean("public")
+    .exec();
   await src(".fusebox")
     .clean(".fusebox")
     .exec();
 });
 
-task("default", async context => {
+/*
+ |--------------------------------------------------------------------------------
+ | Default
+ |--------------------------------------------------------------------------------
+ */
+
+task("default", ["clean"], async context => {
   const fuse = context.getConfig();
   context.isProduction = false;
   fuse.dev({ port: process.env.PORT || 3000, fallback: "index.html" });
   context.createBundle(fuse);
   await fuse.run();
 });
+
+/*
+ |--------------------------------------------------------------------------------
+ | Distribution
+ |--------------------------------------------------------------------------------
+ */
 
 task("dist", ["clean"], async context => {
   context.isProduction = true;

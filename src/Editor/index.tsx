@@ -10,6 +10,12 @@ import { SectionSettings } from "./Settings/Section";
 import { TextSettings } from "./Settings/Text";
 import { Content, Header, Scenes, Settings, Wrapper } from "./Styles";
 
+declare global {
+  interface Window {
+    page: Page;
+  }
+}
+
 export class Editor extends React.Component<
   {},
   {
