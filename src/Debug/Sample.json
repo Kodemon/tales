@@ -1,0 +1,120 @@
+[
+  {
+    settings: {
+      sticky: true,
+      height: 0.5
+    },
+    layers: [
+      {
+        type: "image",
+        src: "https://assets.vg247.it/current/2019/03/Vampire-The-Masquerade-Bloodlines-2.jpg",
+        settings: {
+          height: 1
+        },
+        style: {
+          width: "100%",
+          objectFit: "cover"
+        }
+      },
+      {
+        type: "image",
+        src: "https://cdn.freebiesupply.com/logos/large/2x/fanta-6-logo-png-transparent.png",
+        style: {
+          position: "absolute",
+          top: 20,
+          left: 20,
+          width: 65
+        }
+      }
+    ]
+  },
+
+  {
+    layers: [
+      {
+        type: "text",
+        text:
+          "The original Vampire: The Masquerade — Bloodlines could not have been released at a worse time. In 2004, the ambitious but buggy role-playing game went toe to toe with the likes of Gordon Freeman, Master Chief, and Solid Snake only to lose badly. Lackluster sales caused developer Troika Games to limp away from the project more or less broken.\n\nWhat has kept the game relevant over the years is its writing. Rooted in White Wolf’s sprawling World of Darkness pen-and-paper universe, Bloodlines is a deeply narrative video game. It allows players to chart their own course through a grim and morally ambiguous version of early 2000s Los Angeles. Its storyline is so highly regarded that it played a major role in Paradox Interactive’s decision to purchase White Wolf in 2015.\n\nVampire: The Masquerade — Bloodlines 2 is Paradox’s attempt at a sequel, currently in development by the team at Hardsuit Labs. Its narrative lead is none other than Brian Mitsoda, the man responsible for the storyline of that original game. Joining him is senior writer Cara Ellison, a former journalist turned games writer and a rabid fan of the original game.\n\nPolygon sat down with both Ellison and Mitsoda last month to discuss their history with the Vampire franchise, and to talk about what’s to come for fans of the RPG.",
+        style: {
+          padding: 40,
+          minWidth: 380,
+          maxWidth: 560,
+          margin: "0 auto"
+        }
+      },
+      {
+        type: "image",
+        src:
+          "https://cdn.vox-cdn.com/thumbor/mV7LkbjPSYF7gtQyA8ejegSz8AU=/0x0:2040x1150/1920x0/filters:focal(0x0:2040x1150):format(webp):no_upscale()/cdn.vox-cdn.com/uploads/chorus_asset/file/16291994/1CoffeeShop.jpg",
+        style: {
+          width: "80%",
+          marginLeft: "10%"
+        }
+      },
+      {
+        type: "text",
+        text: "Concept art of a high-rise office building for Vampire: The Masquerade — Bloodlines 2",
+        style: {
+          width: "80%",
+          marginLeft: "10%",
+          fontStyle: "italic",
+          color: "#767676",
+          padding: 10,
+          borderBottom: "1px solid #aaa"
+        }
+      },
+      {
+        type: "text",
+        text:
+          "When Bloodlines 2 begins, players will take on the role of a newly-created vampire slowly gaining power alongside of an awareness of their new role in society. The source of that power is human blood, and finding hosts is a major gameplay mechanic.\n\nBut not just any blood will do.\n\n“In our game vampires are looking for something called ‘resonance,’” Mitsoda says. “That means very strong emotional feelings in human beings. Vampires don’t really feel strong emotions so, in order to experience an emotion such as rage or desire, they have to get it out of people who have these very strong emotions already in their blood.”\n\nMitsoda says players might observe someone crashing their bike on a deserted street corner, then choose to swoop in and taste that pain. Later they might catch a pair of young lovers out for a walk, then follow one of them home to sample their desire. Depending on the emotional state of non-player characters, players themselves will be able to charge their passive and active abilities — powerful skills that will allow them to perform stunts in combat or influence social interactions. Only by finding the right kinds of resonance out in the wild can players build up their skills to meet their needs.\n\n“You’re always kind of on the hunt,” Mitsoda says, “and it’s one of the big parts of the side activities in the game. You’re skulking around on the tops of roofs and looking around for people with strong resonance and figuring out how to best get them in a position where you can feed on them without breaking the Masquerade.”\n\nThat means players will need to spend a lot of time observing and tracking their targets, paying careful attention to their moods and their interactions with other NPCs. In other games that kind of voyeurism can be extremely passive. Think Watch Dogs and its overarching themes of big data being used against us. Rarely do games allow the player to be the voyeur and also act on that information in a meaningful way. Hardsuit Labs wants to change that.",
+        style: {
+          padding: 40,
+          minWidth: 380,
+          maxWidth: 560,
+          margin: "0 auto"
+        }
+      }
+    ]
+  },
+
+  {
+    settings: {
+      background: "#262626",
+      height: 3
+    },
+    layers: [
+      {
+        type: "reveal",
+        items: [
+          {
+            src: "https://gamefa.com/wp-content/uploads/2019/03/Vampire-The-Masquerade-Bloodlines-2-2.jpg"
+          },
+          {
+            src: "http://www.capsulecomputers.com.au/wp-content/uploads/2019/03/Vampire-the-Masquerade-Bloodlines-2-artwork-12.jpg",
+            transition: "left"
+          },
+          {
+            src: "https://cdn3.dualshockers.com/wp-content/uploads/2019/03/Vampire-The-Masquerade-Bloodlines-2-8.png",
+            transition: "up"
+          }
+        ]
+      }
+    ]
+  },
+
+  {
+    layers: [
+      {
+        type: "text",
+        text:
+          "The original Vampire: The Masquerade — Bloodlines could not have been released at a worse time. In 2004, the ambitious but buggy role-playing game went toe to toe with the likes of Gordon Freeman, Master Chief, and Solid Snake only to lose badly. Lackluster sales caused developer Troika Games to limp away from the project more or less broken.\n\nWhat has kept the game relevant over the years is its writing. Rooted in White Wolf’s sprawling World of Darkness pen-and-paper universe, Bloodlines is a deeply narrative video game. It allows players to chart their own course through a grim and morally ambiguous version of early 2000s Los Angeles. Its storyline is so highly regarded that it played a major role in Paradox Interactive’s decision to purchase White Wolf in 2015.\n\nVampire: The Masquerade — Bloodlines 2 is Paradox’s attempt at a sequel, currently in development by the team at Hardsuit Labs. Its narrative lead is none other than Brian Mitsoda, the man responsible for the storyline of that original game. Joining him is senior writer Cara Ellison, a former journalist turned games writer and a rabid fan of the original game.\n\nPolygon sat down with both Ellison and Mitsoda last month to discuss their history with the Vampire franchise, and to talk about what’s to come for fans of the RPG.",
+        style: {
+          padding: 40,
+          minWidth: 380,
+          maxWidth: 560,
+          margin: "0 auto"
+        }
+      }
+    ]
+  }
+];

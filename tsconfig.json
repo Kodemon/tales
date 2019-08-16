@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "module": "CommonJS",
+    "target": "es5",
+    "lib": ["dom", "es2017", "esnext.asynciterable"],
+    "sourceMap": true,
+    "inlineSources": true,
+    "jsx": "react",
+    "baseUrl": ".",
+    "outDir": "./dist",
+    "importHelpers": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "resolveJsonModule": true,
+    "plugins": [
+      {
+        "name": "typescript-styled-plugin"
+      }
+    ],
+    "paths": {
+      "Engine/*": ["src/Engine/*"]
+    }
+  },
+  "include": ["./custom.d.ts", "./src"]
+}
