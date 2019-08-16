@@ -6,6 +6,7 @@ import { maybe } from "Engine/Utils";
 
 import { Sections } from "./Components/Sections";
 import { ImageSettings } from "./Settings/Image";
+import { PageSettings } from "./Settings/Page";
 import { SectionSettings } from "./Settings/Section";
 import { TextSettings } from "./Settings/Text";
 import { Content, Header, Scenes, Settings, Wrapper } from "./Styles";
@@ -46,6 +47,7 @@ export class Editor extends React.Component<
         if (cache) {
           this.page.load(JSON.parse(cache));
         }
+        this.forceUpdate();
       })
       .on("loaded", () => {
         this.forceUpdate();
@@ -100,6 +102,7 @@ export class Editor extends React.Component<
         </Scenes>
         <Content ref={c => (this.content = c)} />
         <Settings>
+          {this.page && <PageSettings page={this.page} />}
           {this.state.section && <SectionSettings section={this.state.section} />}
           {this.state.section && this.state.component && this.renderComponentSettings(this.state.section, this.state.component)}
         </Settings>

@@ -7,6 +7,7 @@ import "debug.addIndicators";
 
 import { Conduit, ConduitType } from "./Conduit";
 import { getSection, Section } from "./Section";
+import { setStyle } from "./Utils";
 import { Viewport } from "./Viewport";
 
 export class Page {
@@ -73,7 +74,7 @@ export class Page {
     // ### Load Page
 
     const loader = setInterval(() => {
-      if (this.container.offsetHeight > 0) {
+      if (this.container.offsetHeight > 0 && this.conduit.id) {
         clearInterval(loader);
         this.viewport = new Viewport(this.container.offsetWidth, this.container.offsetHeight);
         this.emit("ready");

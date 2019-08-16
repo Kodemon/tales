@@ -105,6 +105,8 @@ export class Conduit extends EventEmitter {
       });
     });
 
+    // ### Page Events
+
     this.on("page:load", (conn, data) => {
       this._page.load(data);
       this._page.cache();

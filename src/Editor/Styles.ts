@@ -62,6 +62,10 @@ export const SettingGroup = styled.div`
       margin-top: 3px;
     }
   }
+
+  .read {
+    font-size: 13px;
+  }
 `;
 
 export const SettingGroupStacked = styled.div`
