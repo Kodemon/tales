@@ -19,9 +19,9 @@ export const ImageSettings: React.SFC<{
           <input
             type="text"
             placeholder="http://path.to/image"
-            value={component.getSetting("src")}
+            value={component.get("src")}
             onChange={event => {
-              component.setSetting("src", event.target.value, true);
+              component.set("src", event.target.value, true);
             }}
           />
         </SettingGroup>
@@ -48,9 +48,9 @@ export const ImageSettings: React.SFC<{
           <label className="input">Width</label>
           <input
             type="text"
-            defaultValue={component.getStyle("width", "")}
+            defaultValue={component.getStyle("maxWidth", "")}
             onBlur={event => {
-              component.setStyle("width", event.target.value, true);
+              component.setStyle("maxWidth", event.target.value, true);
             }}
           />
         </SettingGroup>

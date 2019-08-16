@@ -35,11 +35,9 @@ export class Sections extends React.Component<
     section.addComponent(
       {
         type: "image",
-        settings: {
-          src: "https://jdrf.org.uk/wp-content/uploads/2017/06/placeholder-image.jpg"
-        },
+        src: "https://jdrf.org.uk/wp-content/uploads/2017/06/placeholder-image.jpg",
         style: {
-          width: "100%",
+          maxWidth: "100%",
           height: "auto"
         }
       },

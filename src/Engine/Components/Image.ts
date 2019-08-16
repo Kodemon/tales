@@ -5,7 +5,7 @@ export class Image extends Component {
   public render() {
     const image = document.createElement("img");
 
-    image.src = this.getSetting("src");
+    image.src = this.get("src");
 
     const position = this.getSetting("position");
     switch (position) {
@@ -13,8 +13,8 @@ export class Image extends Component {
         image.className = "component-absolute";
         setStyle(image, {
           objectFit: "cover",
-          width: this.section.page.viewport.width,
-          height: this.section.height * this.getSetting("height", 0)
+          width: "100%",
+          height: "100%"
         });
         this.section.append(image);
         break;
@@ -45,6 +45,7 @@ export class Image extends Component {
       default: {
         setStyle(image, {
           display: "block",
+          width: "100%",
           ...(this.data.style || {})
         });
         this.section.append(image);

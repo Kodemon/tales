@@ -9,7 +9,7 @@ export class Text extends Component {
   public quill: typeof Quill;
 
   /**
-   * Update a component key => value.
+   * Custom handler for quill based updates.
    *
    * @param key
    * @param value
@@ -88,8 +88,7 @@ export class Text extends Component {
     });
 
     this.quill.on("text-change", (delta: any, oldDelta: any, source: any) => {
-      console.log(source);
-      if (source !== "api") {
+      if (source === "user") {
         this.set("text", this.quill.getContents(), true);
       }
     });

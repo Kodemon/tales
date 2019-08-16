@@ -110,6 +110,8 @@ export class Conduit extends EventEmitter {
       this._page.cache();
     });
 
+    // ### Section Events
+
     this.on("section:added", (conn, data) => {
       this._page.addSection(data);
     });
@@ -120,6 +122,8 @@ export class Conduit extends EventEmitter {
         section.set(key, value);
       }
     });
+
+    // ### Component Events
 
     this.on("component:added", (conn, sectionId, data) => {
       const section = this._page.sections.find(s => s.id === sectionId);
