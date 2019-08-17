@@ -2,6 +2,8 @@ import * as React from "react";
 
 import { Page } from "Engine/Page";
 
+import { Content } from "./Editor/Styles";
+
 declare global {
   interface Window {
     page: Page;
@@ -22,6 +24,6 @@ export class Reader extends React.Component {
   }
 
   public render() {
-    return <div ref={c => (this.content = c)} style={{ height: "100%", width: "100%" }} />;
+    return <Content ref={c => (this.content = c)} style={{ height: "100%", width: "100%" }} />;
   }
 }

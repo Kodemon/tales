@@ -9,7 +9,7 @@ import { ImageSettings } from "./Settings/Image";
 import { PageSettings } from "./Settings/Page";
 import { SectionSettings } from "./Settings/Section";
 import { TextSettings } from "./Settings/Text";
-import { Content, Header, Scenes, Settings, Wrapper } from "./Styles";
+import { Content, Header, SectionSidebar, SettingSidebar, Wrapper } from "./Styles";
 
 declare global {
   interface Window {
@@ -73,7 +73,7 @@ export class Editor extends React.Component<
   public render() {
     return (
       <Wrapper>
-        <Scenes>
+        <SectionSidebar>
           <Header>
             <h1>Sections</h1>
             <div>
@@ -99,13 +99,13 @@ export class Editor extends React.Component<
             </div>
           </Header>
           {this.page && <Sections page={this.page} editComponent={this.editComponent} />}
-        </Scenes>
+        </SectionSidebar>
         <Content ref={c => (this.content = c)} />
-        <Settings>
+        <SettingSidebar>
           {this.page && <PageSettings page={this.page} />}
           {this.state.section && <SectionSettings section={this.state.section} />}
           {this.state.section && this.state.component && this.renderComponentSettings(this.state.section, this.state.component)}
-        </Settings>
+        </SettingSidebar>
       </Wrapper>
     );
   }

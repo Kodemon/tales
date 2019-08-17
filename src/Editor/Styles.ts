@@ -12,21 +12,16 @@ export const Wrapper = styled.div`
   }
 `;
 
-export const Header = styled.header`
-  position: relative;
-  border-bottom: 1px solid #ccc;
-  font-size: 13px;
-  padding: 10px;
+/*
+ |--------------------------------------------------------------------------------
+ | Editor Styles
+ |--------------------------------------------------------------------------------
+ */
 
-  > h1 {
-    font-size: 13px;
-    font-weight: 500;
-  }
-`;
-
-export const Scenes = styled.div`
+export const SectionSidebar = styled.div`
   background: #f6f6f6;
   border-right: 1px solid #ccc;
+  font-family: "Roboto", sans-serif;
 
   header {
     > div {
@@ -42,6 +37,125 @@ export const Scenes = styled.div`
     }
   }
 `;
+
+export const SettingSidebar = styled.div`
+  background: #f6f6f6;
+  border-left: 1px solid #ccc;
+  font-family: "Roboto", sans-serif;
+`;
+
+/*
+ |--------------------------------------------------------------------------------
+ | Content
+ |--------------------------------------------------------------------------------
+ */
+
+export const Content = styled.div`
+  position: relative;
+
+  overflow-y: scroll;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+
+  font-family: "Merriweather", serif;
+  font-size: 1.1em;
+  line-height: 1.71em;
+  text-rendering: optimizeLegibility;
+
+  /* Position Classes */
+
+  .section-relative {
+    position: relative;
+  }
+
+  .section-absolute {
+    position: absolute;
+  }
+
+  .section-sticky {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+  }
+  .section-sticky:before,
+  .section-sticky:after {
+    content: "";
+    display: table;
+  }
+
+  /* Fixed Sticky */
+
+  .component-absolute {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+
+  .component-fixed_container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    clip: rect(0, auto, auto, 0);
+    /* clip-path: polygon(0px 0px, 0px 100%, 100% 100%, 100% 0px); */
+  }
+
+  .component-scroll_overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+
+  .component-fixed_component {
+    position: fixed;
+    top: 0;
+  }
+
+  /* Quill */
+
+  .ql-container {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    height: auto;
+  }
+
+  .ql-editor {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    height: auto;
+  }
+`;
+
+/*
+ |--------------------------------------------------------------------------------
+ | General Styles
+ |--------------------------------------------------------------------------------
+ */
+
+export const Header = styled.header`
+  position: relative;
+  border-bottom: 1px solid #ccc;
+  font-size: 13px;
+  padding: 10px;
+
+  > h1 {
+    font-size: 13px;
+  }
+`;
+
+/*
+ |--------------------------------------------------------------------------------
+ | Form Styles
+ |--------------------------------------------------------------------------------
+ */
 
 export const SettingGroup = styled.div`
   display: grid;
@@ -77,16 +191,4 @@ export const SettingGroupStacked = styled.div`
       padding-top: 2px;
     }
   }
-`;
-
-export const Content = styled.div`
-  position: relative;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-`;
-
-export const Settings = styled.div`
-  background: #f6f6f6;
-  border-left: 1px solid #ccc;
 `;

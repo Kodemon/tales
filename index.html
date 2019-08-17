@@ -10,12 +10,12 @@
     <meta name="apple-mobile-web-app-title" content="BestForming" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-    <meta name="format-detection" content="telephone=no" />
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i"
+      href="https://fonts.googleapis.com/css?family=Roboto:400,400i,700"
     />
+    <link href="https://fonts.googleapis.com/css?family=Merriweather:300,300i,400,400i,700&display=swap" rel="stylesheet">
     <link
       href="https://cdn.quilljs.com/1.3.6/quill.bubble.css"
       rel="stylesheet"
@@ -25,84 +25,14 @@
       * {
         margin: 0;
         padding: 0;
-        font-family: "Roboto", sans-serif;
         -moz-box-sizing: border-box;
         -webkit-box-sizing: border-box;
         box-sizing: border-box;
       }
 
-      body {
-        background: #fcfcfc;
-      }
-
       #app {
         height: 100%;
         width: 100%;
-      }
-
-      /* Quill Overrides */
-
-      .ql-container {
-        height: auto;
-      }
-      .ql-editor {
-        font-size: inherit;
-        height: auto;
-      }
-
-      /* Position Classes */
-
-      .section-relative {
-        position: relative;
-      }
-
-      .section-absolute {
-        position: absolute;
-      }
-
-      .section-sticky {
-        position: -webkit-sticky;
-        position: sticky;
-        top: 0;
-      }
-      .section-sticky:before,
-      .section-sticky:after {
-        content: "";
-        display: table;
-      }
-
-      /* Fixed Sticky */
-
-      .component-absolute {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-      }
-
-      .component-fixed_container {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-
-        clip: rect(0, auto, auto, 0);
-        /* clip-path: polygon(0px 0px, 0px 100%, 100% 100%, 100% 0px); */
-      }
-
-      .component-scroll_overlay {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-      }
-
-      .component-fixed_component {
-        position: fixed;
-        top: 0;
       }
     </style>
     <script>
