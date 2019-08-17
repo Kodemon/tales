@@ -61,7 +61,7 @@ export const TextSettings: React.SFC<{
           <input
             type="text"
             defaultValue={component.getStyle("color", "")}
-            placeholder="Base text color, eg. #fff"
+            placeholder="#262626"
             onBlur={event => {
               component.setStyle("color", event.target.value, true);
             }}
@@ -72,18 +72,29 @@ export const TextSettings: React.SFC<{
           <input
             type="text"
             defaultValue={component.getStyle("fontSize", "")}
-            placeholder="Base text size, eg. 18px"
+            placeholder="1em"
             onBlur={event => {
               component.setStyle("fontSize", event.target.value, true);
             }}
           />
         </SettingGroup>
         <SettingGroup>
-          <label className="input">Color</label>
+          <label className="input">Padding</label>
+          <input
+            type="text"
+            defaultValue={component.getStyle("padding", "")}
+            placeholder="40px 20px"
+            onBlur={event => {
+              component.setStyle("padding", event.target.value, true);
+            }}
+          />
+        </SettingGroup>
+        <SettingGroup>
+          <label className="input">Shadow</label>
           <input
             type="text"
             defaultValue={component.getStyle("textShadow", "")}
-            placeholder="Shadow settings, 1px 1px 2px #262626"
+            placeholder="1px 1px 2px #262626"
             onBlur={event => {
               component.setStyle("textShadow", event.target.value, true);
             }}

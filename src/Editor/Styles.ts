@@ -57,6 +57,7 @@ export const Content = styled.div`
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
 
+  color: #303030;
   font-family: "Merriweather", serif;
   font-size: 1em;
   line-height: 1.77em;
@@ -131,6 +132,13 @@ export const Content = styled.div`
     font-size: inherit;
     line-height: inherit;
     height: auto;
+    padding: 0;
+    overflow-y: show;
+  }
+
+  .ql-blank::before {
+    left: auto;
+    right: auto;
   }
 `;
 

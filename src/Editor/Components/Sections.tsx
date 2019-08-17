@@ -51,7 +51,15 @@ export class Sections extends React.Component<
    * @param section
    */
   private addText = (section: Section) => {
-    section.addComponent({ type: "text" }, true);
+    section.addComponent(
+      {
+        type: "text",
+        style: {
+          padding: "40px 20px"
+        }
+      },
+      true
+    );
   };
 
   public render() {
