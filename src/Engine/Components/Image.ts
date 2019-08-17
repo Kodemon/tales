@@ -1,11 +1,19 @@
+import { viewport } from "Engine/Viewport";
+
 import { setStyle } from "../Utils";
 import { Component } from "./Component";
 
 export class Image extends Component {
+  public getTitle() {
+    return this.get("title", "Image");
+  }
+
   public render() {
     const image = document.createElement("img");
 
     image.src = this.get("src");
+    image.title = this.get("title", "");
+    image.alt = this.get("altText", "");
 
     const position = this.getSetting("position");
     switch (position) {
@@ -31,12 +39,16 @@ export class Image extends Component {
         setStyle(image, {
           objectFit: "cover",
           objectPosition: "50% 0",
-          width: this.section.page.viewport.width,
+          width: viewport.width,
           height: "100%"
         });
 
         container.append(image);
         container.append(scroller);
+
+        container.onclick = () => {
+          this.section.page.emit("edit", this.section, this);
+        };
 
         this.section.append(container);
         break;
@@ -48,6 +60,9 @@ export class Image extends Component {
           width: "100%",
           ...(this.data.style || {})
         });
+        image.onclick = () => {
+          this.section.page.emit("edit", this.section, this);
+        };
         this.section.append(image);
       }
     }

@@ -11,9 +11,9 @@ export const TextSettings: React.SFC<{
   return (
     <React.Fragment key={`component-${component.id}`}>
       <Header>
-        <h1>Layout Settings</h1>
+        <h1>Text Layout</h1>
       </Header>
-      <div style={{ padding: 10 }}>
+      <div style={{ padding: 10, borderBottom: "1px dashed #ccc" }}>
         <SettingGroup>
           <label className="input">Min Width</label>
           <input
@@ -53,9 +53,9 @@ export const TextSettings: React.SFC<{
       </div>
 
       <Header>
-        <h1>Text Settings</h1>
+        <h1>Base Text Styles</h1>
       </Header>
-      <div style={{ padding: 10 }}>
+      <div style={{ padding: 10, borderBottom: "1px dashed #ccc" }}>
         <SettingGroup>
           <label className="input">Color</label>
           <input
@@ -100,6 +100,29 @@ export const TextSettings: React.SFC<{
             }}
           />
         </SettingGroup>
+      </div>
+
+      <Header>
+        <h1>Text Formatting</h1>
+      </Header>
+      <div style={{ padding: 10 }}>
+        <button
+          className="ql-bold"
+          onClick={() => {
+            component.quill.format("header", 1);
+          }}
+        >
+          H1
+        </button>
+
+        <button
+          className="ql-bold"
+          onClick={() => {
+            component.quill.format("bold", true);
+          }}
+        >
+          B
+        </button>
       </div>
 
       <div style={{ borderTop: "1px dashed #ccc", padding: 10, textAlign: "center" }}>

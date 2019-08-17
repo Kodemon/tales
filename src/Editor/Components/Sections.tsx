@@ -7,6 +7,7 @@ import { Section } from "Engine/Section";
 export class Sections extends React.Component<
   {
     page: Page;
+    active: string;
     editComponent: (section: Section, component: any) => void;
   },
   {
@@ -107,7 +108,7 @@ export class Sections extends React.Component<
                   this.props.editComponent(section, component);
                 }}
               >
-                {getComponentIcon(component.type)} {component.type}
+                {getComponentIcon(component.type)} {this.props.active === component.id ? <strong style={{ color: "#1B83BA" }}>{component.getTitle()}</strong> : component.getTitle()}
               </li>
             );
           })}

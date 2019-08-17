@@ -1,9 +1,16 @@
-export class Viewport {
+class Viewport {
   public width: number;
   public height: number;
 
-  constructor(width: number, height: number) {
-    this.width = width;
-    this.height = height;
+  /**
+   * Sets the viewport data based on the provided container.
+   *
+   * @param container
+   */
+  public setContainer(container: HTMLDivElement) {
+    this.width = container.clientWidth;
+    this.height = container.clientHeight;
   }
 }
+
+export const viewport = new Viewport();

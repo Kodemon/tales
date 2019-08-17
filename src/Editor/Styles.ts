@@ -42,6 +42,11 @@ export const SettingSidebar = styled.div`
   background: #f6f6f6;
   border-left: 1px solid #ccc;
   font-family: "Roboto", sans-serif;
+
+  .sketch-picker {
+    background: transparent !important;
+    box-shadow: none !important;
+  }
 `;
 
 /*
@@ -54,13 +59,15 @@ export const Content = styled.div`
   position: relative;
 
   overflow-y: scroll;
-  overflow-x: hidden;
+  overflow-x: visible;
   -webkit-overflow-scrolling: touch;
 
+  /*
   color: #303030;
   font-family: "Merriweather", serif;
   font-size: 1em;
   line-height: 1.77em;
+  */
   text-rendering: optimizeLegibility;
 
   /* Position Classes */
@@ -118,8 +125,7 @@ export const Content = styled.div`
     top: 0;
   }
 
-  /* Quill */
-
+  /* Quill
   .ql-container {
     font-family: inherit;
     font-size: inherit;
@@ -133,7 +139,39 @@ export const Content = styled.div`
     line-height: inherit;
     height: auto;
     padding: 0;
-    overflow-y: show;
+    overflow-y: visible;
+  }
+  */
+
+  .ql-container {
+    font-family: "Merriweather", serif;
+    font-size: 1em;
+
+    &.ql-snow {
+      border: none;
+    }
+  }
+
+  .ql-editor {
+    line-height: 1.77em;
+  }
+
+  .ql-toolbar {
+    display: none;
+    grid-area: toolbar;
+
+    position: fixed;
+    top: 0;
+    width: 100%;
+
+    background: #fff;
+    z-index: 999;
+  }
+
+  .tale-text.editing {
+    .ql-toolbar {
+      display: block;
+    }
   }
 
   .ql-blank::before {

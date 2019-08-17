@@ -70,11 +70,12 @@ class ColorPicker extends React.Component<
           }}
         >
           {this.props.label}
-          <i className={`fa fa-caret-${this.state.show ? "down" : "up"}`} style={{ float: "right", marginTop: 4 }} />
+          <i className={`fa fa-caret-${this.state.show ? "up" : "down"}`} style={{ float: "right", marginTop: 4 }} />
         </label>
         {this.state.show && (
           <SketchPicker
             width={240}
+            style={{ boxShadow: "none", background: "none" }}
             color={this.props.section.get("background")}
             onChangeComplete={(color: any) => {
               this.props.section.set("background", color.hex, true);

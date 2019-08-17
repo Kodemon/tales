@@ -1,14 +1,8 @@
-import "TweenMax";
-
 import * as ScrollMagic from "scrollmagic";
 
-import "animation.gsap";
-import "debug.addIndicators";
-
-import { Conduit, ConduitType } from "./Conduit";
+import { Conduit } from "./Conduit";
 import { getSection, Section } from "./Section";
-import { setStyle } from "./Utils";
-import { Viewport } from "./Viewport";
+import { viewport } from "./Viewport";
 
 export class Page {
   /**
@@ -34,12 +28,6 @@ export class Page {
    * @type {ScrollMagic.Controller}
    */
   public controller: any;
-
-  /**
-   * Viewport dimensions.
-   * @type {Viewport}
-   */
-  public viewport: Viewport;
 
   /**
    * Event listeners.
@@ -71,12 +59,20 @@ export class Page {
       refreshInterval: 0
     });
 
+    let resizeDebounce: any;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeDebounce);
+      resizeDebounce = setTimeout(() => {
+        this.refresh();
+      }, 250);
+    });
+
     // ### Load Page
 
     const loader = setInterval(() => {
       if (this.container.offsetHeight > 0 && this.conduit.id) {
         clearInterval(loader);
-        this.viewport = new Viewport(this.container.offsetWidth, this.container.offsetHeight);
+        viewport.setContainer(this.container);
         this.emit("ready");
       }
     }, 100);
@@ -95,11 +91,20 @@ export class Page {
    */
   public load(list: any[]) {
     this.container.innerHTML = "";
+
     this.sections = [];
     for (const data of list) {
       this.sections.push(new Section(this, getSection(data)).render());
     }
+
     this.emit("loaded");
+  }
+
+  public refresh() {
+    viewport.setContainer(this.container);
+    for (const section of this.sections) {
+      section.render();
+    }
   }
 
   /*

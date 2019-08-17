@@ -52,6 +52,7 @@ export class Editor extends React.Component<
       .on("loaded", () => {
         this.forceUpdate();
       })
+      .on("edit", this.editComponent)
       .on("section", (section: Section) => {
         const sectionId = maybe(this.state, "section.id");
         const componentId = maybe(this.state, "component.id");
@@ -98,7 +99,7 @@ export class Editor extends React.Component<
               </button>
             </div>
           </Header>
-          {this.page && <Sections page={this.page} editComponent={this.editComponent} />}
+          {this.page && <Sections page={this.page} active={maybe(this.state, "component.id", "")} editComponent={this.editComponent} />}
         </SectionSidebar>
         <Content ref={c => (this.content = c)} />
         <SettingSidebar>

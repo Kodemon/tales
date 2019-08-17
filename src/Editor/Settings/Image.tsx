@@ -15,13 +15,33 @@ export const ImageSettings: React.SFC<{
       </Header>
       <div style={{ padding: 10, borderBottom: "1px dashed #ccc" }}>
         <SettingGroup>
+          <label className="input">Title</label>
+          <input
+            type="text"
+            defaultValue={component.get("title", "")}
+            onBlur={event => {
+              component.set("title", event.target.value, true);
+            }}
+          />
+        </SettingGroup>
+        <SettingGroup>
           <label className="input">Source</label>
           <input
             type="text"
             placeholder="http://path.to/image"
-            value={component.get("src")}
-            onChange={event => {
+            defaultValue={component.get("src", "")}
+            onBlur={event => {
               component.set("src", event.target.value, true);
+            }}
+          />
+        </SettingGroup>
+        <SettingGroup>
+          <label className="input">Alt Text</label>
+          <input
+            type="text"
+            defaultValue={component.get("altText", "")}
+            onBlur={event => {
+              component.set("altText", event.target.value, true);
             }}
           />
         </SettingGroup>

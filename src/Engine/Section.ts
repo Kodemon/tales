@@ -4,7 +4,8 @@ import * as ScrollMagic from "scrollmagic";
 import { Image } from "./Components/Image";
 import { Text } from "./Components/Text";
 import { Page } from "./Page";
-import { cleanObjectProperties, maybe, setStyle } from "./Utils";
+import { maybe, setStyle } from "./Utils";
+import { viewport } from "./Viewport";
 
 export class Section {
   /**
@@ -124,6 +125,7 @@ export class Section {
     if (isSource) {
       this.page.conduit.send("component:added", section.id, data);
     }
+    this.page.emit("edit", this, this.components.find(c => c.id === data.id));
   }
 
   /**
@@ -242,7 +244,7 @@ export class Section {
 
     const height = maybe<number>(data, "settings.height", 0);
     if (height > 0) {
-      this.height = this.page.viewport.height * height;
+      this.height = viewport.height * height;
     } else {
       this.height = 0;
     }

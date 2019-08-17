@@ -39,6 +39,16 @@ export class Component {
   }
 
   /**
+   * Return the item title, default behavior returns the component
+   * type as the title.
+   *
+   * @returns component title
+   */
+  public getTitle() {
+    return this.type;
+  }
+
+  /**
    * Update a component key => value.
    *
    * @param key

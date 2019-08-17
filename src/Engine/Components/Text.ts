@@ -1,20 +1,19 @@
 import * as Quill from "quill";
 
 import { getSection } from "Engine/Section";
+import { viewport } from "Engine/Viewport";
 
 import { deepCopy, maybe, setStyle } from "../Utils";
 import { Component } from "./Component";
 
 export class Text extends Component {
   public quill: typeof Quill;
+  public grid: HTMLDivElement;
 
-  /**
-   * Custom handler for quill based updates.
-   *
-   * @param key
-   * @param value
-   * @param isSource
-   */
+  public getTitle() {
+    return `${this.quill.getText(0, 20)}...`;
+  }
+
   public set(key: string, value: any, isSource = false) {
     const section = deepCopy(this.section.data);
     section.components = section.components.map((component: any) => {
@@ -34,56 +33,51 @@ export class Text extends Component {
     }
   }
 
-  /**
-   * Render quill.
-   */
+  public setEditingState(state: boolean) {
+    if (state) {
+      this.grid.className = "tale-text editing";
+      document.querySelectorAll(".ql-toolbar").forEach(el => {
+        setStyle(el, {
+          width: viewport.width
+        });
+      });
+    } else {
+      this.grid.className = "tale-text";
+    }
+  }
+
   public render() {
-    const grid = document.createElement("div");
-    setStyle(grid, {
+    this.grid = document.createElement("div");
+    this.grid.className = "tale-text";
+    setStyle(this.grid, {
       ...getGridLayout(maybe<string>(this.data, "settings.layout"), maybe<number>(this.data, "settings.min"), maybe<number>(this.data, "settings.max")),
       minHeight: this.section.height
     });
     if (maybe<boolean>(this.data, "settings.sticky", false)) {
-      setStyle(grid, {
+      setStyle(this.grid, {
         position: "absolute",
         top: 0,
         left: 0,
         width: "100%"
       });
     }
-    this.section.append(grid);
+    this.section.append(this.grid);
 
     const body = document.createElement("article");
     setStyle(body, {
       gridArea: "text",
       ...maybe(this.data, "style", {})
     });
-    grid.append(body);
+    this.grid.append(body);
 
     this.quill = new Quill(body, {
-      theme: "bubble",
-      placeholder: "Compose an epic...",
-      readOnly: false,
-      modules: {
-        toolbar: [
-          ["bold", "italic", "underline", "strike"], // toggled buttons
-          ["blockquote", "code-block"],
+      theme: "snow",
+      placeholder: "Compose an epic..."
+    });
 
-          [{ header: 1 }, { header: 2 }], // custom button values
-          [{ list: "ordered" }, { list: "bullet" }],
-          [{ script: "sub" }, { script: "super" }], // superscript/subscript
-          [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
-          [{ direction: "rtl" }], // text direction
-
-          [{ size: ["small", false, "large", "huge"] }], // custom dropdown
-          [{ header: [1, 2, 3, 4, 5, 6, false] }],
-
-          [{ color: [] }, { background: [] }], // dropdown with defaults from theme
-          [{ font: [] }],
-          [{ align: [] }],
-
-          ["clean"] // remove formatting button
-        ]
+    this.quill.on("selection-change", (range: any) => {
+      if (range) {
+        this.section.page.emit("edit", this.section, this);
       }
     });
 
@@ -108,32 +102,32 @@ function getGridLayout(layout: string = "middle", min: number = 280, max: number
       return {
         display: "grid",
         gridTemplateColumns: `minmax(${min}px, ${max}px) auto`,
-        gridTemplateRows: "1fr",
-        gridTemplateAreas: "'text .'"
+        gridTemplateRows: "auto 1fr",
+        gridTemplateAreas: "'toolbar toolbar' 'text .'"
       };
     }
     case "middle": {
       return {
         display: "grid",
         gridTemplateColumns: `auto minmax(${min}px, ${max}px) auto`,
-        gridTemplateRows: "1fr",
-        gridTemplateAreas: "'. text .'"
+        gridTemplateRows: "auto 1fr",
+        gridTemplateAreas: "'toolbar toolbar toolbar' '. text .'"
       };
     }
     case "right": {
       return {
         display: "grid",
         gridTemplateColumns: `auto minmax(${min}px, ${max}px)`,
-        gridTemplateRows: "1fr",
-        gridTemplateAreas: "'. text'"
+        gridTemplateRows: "auto 1fr",
+        gridTemplateAreas: "'toolbar toolbar' '. text'"
       };
     }
     case "center": {
       return {
         display: "grid",
         gridTemplateColumns: `auto minmax(${min}px, ${max}px) auto`,
-        gridTemplateRows: "1fr auto 1fr",
-        gridTemplateAreas: "'. . .' '. text .' '. . .'"
+        gridTemplateRows: "auto 1fr auto 1fr",
+        gridTemplateAreas: "'toolbar toolbar toolbar' '. . .' '. text .' '. . .'"
       };
     }
   }
