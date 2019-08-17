@@ -12,7 +12,7 @@ export const PageSettings: React.SFC<{
       <Header>
         <h1>Page</h1>
       </Header>
-      <div style={{ borderBottom: "1px solid #ccc", padding: 10 }}>
+      <div style={{ borderBottom: "1px dashed #ccc", padding: 10 }}>
         <SettingGroup>
           <label className="input">Conduit</label>
           <div className="read">{page.conduit.id}</div>

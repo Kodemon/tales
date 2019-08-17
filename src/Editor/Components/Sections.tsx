@@ -125,7 +125,7 @@ export class Sections extends React.Component<
 
 const SectionList = styled.ul`
   > li {
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px dashed #ccc;
     font-size: 13px;
 
     > header {
@@ -138,7 +138,7 @@ const SectionList = styled.ul`
 `;
 
 const Components = styled.div`
-  border-top: 1px solid #ccc;
+  border-top: 1px dashed #ccc;
   padding: 10px;
 
   .component {

@@ -91,7 +91,7 @@ export const TextSettings: React.SFC<{
         </SettingGroup>
       </div>
 
-      <div style={{ borderTop: "1px solid #ccc", padding: 10, textAlign: "center" }}>
+      <div style={{ borderTop: "1px dashed #ccc", padding: 10, textAlign: "center" }}>
         <button
           onClick={() => {
             section.removeComponent(component.id, true);

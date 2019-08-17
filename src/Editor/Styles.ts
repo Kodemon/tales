@@ -142,7 +142,7 @@ export const Content = styled.div`
 
 export const Header = styled.header`
   position: relative;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px dashed #ccc;
   font-size: 13px;
   padding: 10px;
 

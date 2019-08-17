@@ -13,7 +13,7 @@ export const ImageSettings: React.SFC<{
       <Header>
         <h1>Image Settings</h1>
       </Header>
-      <div style={{ padding: 10 }}>
+      <div style={{ padding: 10, borderBottom: "1px dashed #ccc" }}>
         <SettingGroup>
           <label className="input">Source</label>
           <input
@@ -75,7 +75,7 @@ export const ImageSettings: React.SFC<{
           />
         </SettingGroup>
       </div>
-      <div style={{ borderTop: "1px solid #ccc", padding: 10, textAlign: "center" }}>
+      <div style={{ borderTop: "1px dashed #ccc", padding: 10, textAlign: "center" }}>
         <button
           onClick={() => {
             section.removeComponent(component.id, true);

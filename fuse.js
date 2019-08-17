@@ -12,7 +12,7 @@ context(
   class {
     getConfig() {
       return FuseBox.init({
-        homeDir: "src/",
+        homeDir: ".",
         output: "public/$name.js",
         target: "browser@es5",
         sourceMaps: {
@@ -39,7 +39,7 @@ context(
             })
         ],
         alias: {
-          Engine: "~/Engine",
+          Engine: "~/src/Engine",
           TweenLite: path.resolve("node_modules", "gsap/src/uncompressed/TweenLite.js"),
           TweenMax: path.resolve("node_modules", "gsap/src/uncompressed/TweenMax.js"),
           TimelineLite: path.resolve("node_modules", "gsap/src/uncompressed/TimelineLite.js"),
@@ -52,7 +52,7 @@ context(
 
     createBundle(fuse) {
       const app = fuse.bundle("app");
-      app.instructions("> index.tsx");
+      app.instructions("> src/index.tsx");
       if (!this.isProduction) {
         app.watch();
       }

@@ -13,7 +13,7 @@ export const SectionSettings: React.SFC<{
       <Header>
         <h1>Section Settings</h1>
       </Header>
-      <div style={{ borderBottom: "1px solid #ccc", padding: 10 }}>
+      <div style={{ borderBottom: "1px dashed #ccc", padding: 10 }}>
         <SettingGroup>
           <label className="input">Position</label>
           <select
