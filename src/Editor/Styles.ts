@@ -58,8 +58,8 @@ export const Content = styled.div`
   -webkit-overflow-scrolling: touch;
 
   font-family: "Merriweather", serif;
-  font-size: 1.1em;
-  line-height: 1.71em;
+  font-size: 1em;
+  line-height: 1.77em;
   text-rendering: optimizeLegibility;
 
   /* Position Classes */
