@@ -45,6 +45,13 @@ export class Section {
   public data: SectionData;
 
   /**
+   * Map of rendered elements, used during re-renders requests
+   * to replace a specific elements.
+   * @type {Map<string, any>}
+   */
+  private rendered: Map<string, any> = new Map();
+
+  /**
    * @param page
    * @param data
    */
@@ -74,7 +81,7 @@ export class Section {
 
   /*
   |--------------------------------------------------------------------------------
-  | Setting Utilities
+  | Setting Setting Utilities
   |--------------------------------------------------------------------------------
   */
 
@@ -86,9 +93,9 @@ export class Section {
    * @param isSource
    */
   public set(key: SectionSetting, value: any, isSource = false) {
-    const scene = { ...this.data };
-    scene.settings[key] = value;
-    this.commit(scene);
+    const data = { ...this.data };
+    data.settings[key] = value;
+    this.commit(data);
     if (isSource) {
       this.page.conduit.send("section:setting", this.data.id, key, value);
     }
@@ -121,7 +128,7 @@ export class Section {
       ...component
     };
     section.components.push(data);
-    this.commit(section);
+    this.commit(section, data.id);
     if (isSource) {
       this.page.conduit.send("component:added", section.id, data);
     }
@@ -141,7 +148,7 @@ export class Section {
       }
       return c;
     });
-    this.commit(section);
+    this.commit(section, component.id);
   }
 
   /**
@@ -158,7 +165,7 @@ export class Section {
       }
       return components;
     }, []);
-    this.commit(section);
+    this.commit(section, id);
     if (isSource) {
       this.page.conduit.send("component:removed", section.id, id);
     }
@@ -180,13 +187,13 @@ export class Section {
    *
    * @param obj
    */
-  public commit(obj: any) {
+  public commit(obj: any, componentId?: string) {
     const data = getSection(obj);
 
     this.setData(data);
     this.setStyle();
 
-    this.render();
+    this.render(componentId);
 
     this.page.cache();
     this.page.emit("section", this);
@@ -201,19 +208,29 @@ export class Section {
   /**
    * Adds the given element to the scene.
    *
-   * @param element
+   * @param componentId
+   * @param nextElement
    */
-  public append(element: any) {
-    this.container.append(element);
+  public append(componentId: string, nextElement: any) {
+    const currentElement = this.rendered.get(componentId);
+    if (currentElement) {
+      this.container.replaceChild(nextElement, currentElement);
+    } else {
+      this.container.append(nextElement);
+    }
+    this.rendered.set(componentId, nextElement);
   }
 
   /**
    * Renders the scene to the dom.
+   *
+   * @param componentId
    */
-  public render() {
-    this.container.innerHTML = "";
-
+  public render(componentId?: string) {
     for (const component of this.components) {
+      if (componentId && componentId !== component.id) {
+        continue;
+      }
       component.render();
     }
 
@@ -240,8 +257,6 @@ export class Section {
    * @param scene
    */
   private setData(data: SectionData) {
-    this.components = [];
-
     const height = maybe<number>(data, "settings.height", 0);
     if (height > 0) {
       this.height = viewport.height * height;
@@ -250,14 +265,19 @@ export class Section {
     }
 
     for (const component of data.components) {
-      switch (component.type) {
-        case "image": {
-          this.components.push(new Image(this, component));
-          break;
-        }
-        case "text": {
-          this.components.push(new Text(this, component));
-          break;
+      const current = this.components.find(c => c.id === component.id);
+      if (current) {
+        current.setData(component);
+      } else {
+        switch (component.type) {
+          case "image": {
+            this.components.push(new Image(this, component));
+            break;
+          }
+          case "text": {
+            this.components.push(new Text(this, component));
+            break;
+          }
         }
       }
     }

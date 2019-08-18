@@ -24,7 +24,10 @@ export class Image extends Component {
           width: "100%",
           height: "100%"
         });
-        this.section.append(image);
+        image.onclick = () => {
+          this.section.page.emit("edit", this.section, this);
+        };
+        this.section.append(this.id, image);
         break;
       }
 
@@ -50,7 +53,7 @@ export class Image extends Component {
           this.section.page.emit("edit", this.section, this);
         };
 
-        this.section.append(container);
+        this.section.append(this.id, container);
         break;
       }
 
@@ -63,7 +66,7 @@ export class Image extends Component {
         image.onclick = () => {
           this.section.page.emit("edit", this.section, this);
         };
-        this.section.append(image);
+        this.section.append(this.id, image);
       }
     }
   }

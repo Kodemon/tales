@@ -45,7 +45,7 @@ export class Text extends Component {
         width: "100%"
       });
     }
-    this.section.append(this.grid);
+    this.section.append(this.id, this.grid);
 
     const body = document.createElement("article");
     setStyle(body, {

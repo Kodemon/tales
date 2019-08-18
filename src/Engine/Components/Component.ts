@@ -1,5 +1,3 @@
-import * as objectPath from "object-path";
-
 import { cleanObjectProperties, deepCopy, maybe } from "Engine/Utils";
 
 import { Section } from "../Section";
@@ -15,7 +13,7 @@ export class Component {
    * Data attributes of the component.
    * @type {any}
    */
-  public readonly data: any;
+  public data: any;
 
   /**
    * Component type.
@@ -35,6 +33,15 @@ export class Component {
 
   constructor(section: Section, data: any) {
     this.section = section;
+    this.data = Object.freeze(data);
+  }
+
+  /**
+   * Sets the new component data values.
+   *
+   * @param data
+   */
+  public setData(data: any) {
     this.data = Object.freeze(data);
   }
 
@@ -63,7 +70,7 @@ export class Component {
       }
       return component;
     });
-    this.section.commit(section);
+    this.section.commit(section, this.id);
     if (isSource) {
       this.section.page.conduit.send("component:set", section.id, this.id, key, value);
     }
@@ -99,7 +106,7 @@ export class Component {
       }
       return component;
     });
-    this.section.commit(section);
+    this.section.commit(section, this.id);
     if (isSource) {
       this.section.page.conduit.send("component:setting", section.id, this.id, key, value);
     }
@@ -135,7 +142,7 @@ export class Component {
       }
       return component;
     });
-    this.section.commit(section);
+    this.section.commit(section, this.id);
     if (isSource) {
       this.section.page.conduit.send("component:style", section.id, this.id, key, value);
     }
