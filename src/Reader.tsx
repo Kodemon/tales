@@ -10,6 +10,9 @@ declare global {
   }
 }
 
+const urlParams = new URLSearchParams(window.location.search);
+const peerId = urlParams.get("peer");
+
 export class Reader extends React.Component {
   private content: HTMLDivElement | null;
   private page: Page;
@@ -19,6 +22,9 @@ export class Reader extends React.Component {
       const cache = localStorage.getItem("page");
       if (cache) {
         this.page.load(JSON.parse(cache));
+      }
+      if (peerId) {
+        this.page.connect(peerId);
       }
     });
   }
