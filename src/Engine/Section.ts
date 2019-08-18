@@ -33,23 +33,23 @@ export class Section {
   public scroll: typeof ScrollMagic.Scene;
 
   /**
-   * List of components living under this section.
-   * @type {any[]}
-   */
-  public components: any[] = [];
-
-  /**
    * Section schema.
    * @type {SectionData}
    */
   public data: SectionData;
 
   /**
+   * List of components living under this section.
+   * @type {any[]}
+   */
+  public components: any[] = [];
+
+  /**
    * Map of rendered elements, used during re-renders requests
    * to replace a specific elements.
    * @type {Map<string, any>}
    */
-  private rendered: Map<string, any> = new Map();
+  public elements: Map<string, any> = new Map();
 
   /**
    * @param page
@@ -81,7 +81,7 @@ export class Section {
 
   /*
   |--------------------------------------------------------------------------------
-  | Setting Setting Utilities
+  | Section Setting Utilities
   |--------------------------------------------------------------------------------
   */
 
@@ -92,7 +92,7 @@ export class Section {
    * @param value
    * @param isSource
    */
-  public set(key: SectionSetting, value: any, isSource = false) {
+  public setSetting(key: SectionSetting, value: any, isSource = false) {
     const data = { ...this.data };
     data.settings[key] = value;
     this.commit(data);
@@ -106,7 +106,7 @@ export class Section {
    *
    * @param key
    */
-  public get(key: SectionSetting) {
+  public getSetting(key: SectionSetting) {
     return maybe(this.data, `settings.${key}`);
   }
 
@@ -133,42 +133,6 @@ export class Section {
       this.page.conduit.send("component:added", section.id, data);
     }
     this.page.emit("edit", this, this.components.find(c => c.id === data.id));
-  }
-
-  /**
-   * Updates the provided component, and commits it to the session.
-   *
-   * @param component
-   */
-  public updateComponent(component: any) {
-    const section = { ...this.data };
-    section.components = section.components.map((c: any) => {
-      if (c.id === component.id) {
-        return component;
-      }
-      return c;
-    });
-    this.commit(section, component.id);
-  }
-
-  /**
-   * Removes the provided component from the scene.
-   *
-   * @param id
-   * @param isSource
-   */
-  public removeComponent(id: string, isSource = false) {
-    const section = { ...this.data };
-    section.components = section.components.reduce((components: any[], component: any) => {
-      if (component.id !== id) {
-        components.push(component);
-      }
-      return components;
-    }, []);
-    this.commit(section, id);
-    if (isSource) {
-      this.page.conduit.send("component:removed", section.id, id);
-    }
   }
 
   /*
@@ -212,13 +176,13 @@ export class Section {
    * @param nextElement
    */
   public append(componentId: string, nextElement: any) {
-    const currentElement = this.rendered.get(componentId);
+    const currentElement = this.elements.get(componentId);
     if (currentElement) {
       this.container.replaceChild(nextElement, currentElement);
     } else {
       this.container.append(nextElement);
     }
-    this.rendered.set(componentId, nextElement);
+    this.elements.set(componentId, nextElement);
   }
 
   /**

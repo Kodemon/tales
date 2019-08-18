@@ -1,6 +1,6 @@
 import * as Quill from "quill";
 
-import { maybe, setStyle } from "Engine/Utils";
+let currentSelection = "";
 
 /**
  * Injects quill instance into the provided text component.
@@ -9,23 +9,27 @@ import { maybe, setStyle } from "Engine/Utils";
  */
 export function setTextEditor(component: any) {
   const body = document.createElement("article");
-  setStyle(body, {
-    gridArea: "text",
-    ...maybe(component.data, "style", {})
-  });
-  component.grid.innerHTML = "";
-  component.grid.append(body);
-
   const quill = new Quill(body, {
     theme: "snow",
-    placeholder: "Compose an epic..."
+    placeholder: "Compose an epic...",
+    modules: {
+      toolbar: false
+    }
   });
 
+  // ### Selection Change
+  // 1. Send a component edit selection when selection has changed.
+
   quill.on("selection-change", (range: any) => {
-    if (range) {
+    if (range && component.id !== currentSelection) {
+      currentSelection = component.id;
       component.section.page.emit("edit", component.section, component);
     }
   });
+
+  // ### Text Change
+  // 1. Update the text, and html keys on the component.
+  // 2. Send text, and html update events to all connected peers.
 
   quill.on("text-change", (delta: any, oldDelta: any, source: any) => {
     if (source === "user") {
@@ -39,7 +43,13 @@ export function setTextEditor(component: any) {
     }
   });
 
+  // ### Content
+  // 1. Assign the initial component quill text.
+
   quill.setContents(component.data.text);
 
-  component.quill = quill;
+  // ### Inject
+  // 1. Inject the quill editor, and text body to the component.
+
+  component.setQuill(quill, body);
 }

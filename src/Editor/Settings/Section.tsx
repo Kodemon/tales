@@ -19,7 +19,7 @@ export const SectionSettings: React.SFC<{
           <select
             value={section.data.settings.position}
             onChange={event => {
-              section.set("position", event.target.value, true);
+              section.setSetting("position", event.target.value, true);
             }}
           >
             <option value="relative">Relative</option>
@@ -31,9 +31,9 @@ export const SectionSettings: React.SFC<{
           <label className="input">Height</label>
           <input
             type="number"
-            defaultValue={`${section.get("height") * 100}`}
+            defaultValue={`${section.getSetting("height") * 100}`}
             onBlur={event => {
-              section.set("height", parseInt(event.target.value, 10) / 100, true);
+              section.setSetting("height", parseInt(event.target.value, 10) / 100, true);
             }}
           />
         </SettingGroup>
@@ -76,9 +76,9 @@ class ColorPicker extends React.Component<
           <SketchPicker
             width={240}
             style={{ boxShadow: "none", background: "none" }}
-            color={this.props.section.get("background")}
+            color={this.props.section.getSetting("background")}
             onChangeComplete={(color: any) => {
-              this.props.section.set("background", color.hex, true);
+              this.props.section.setSetting("background", color.hex, true);
             }}
           />
         )}

@@ -25,8 +25,17 @@ export class Editor extends React.Component<
     component?: any;
   }
 > {
-  private content: HTMLDivElement | null;
+  /**
+   * Engine page instance.
+   * @type {Page}
+   */
   private page: Page;
+
+  /**
+   * Page target container element.
+   * @type {HTMLDivElement | null}
+   */
+  private content: HTMLDivElement | null;
 
   constructor(props: any, state: any) {
     super(props, state);
@@ -36,39 +45,56 @@ export class Editor extends React.Component<
     };
   }
 
+  /*
+  |--------------------------------------------------------------------------------
+  | React Cycles
+  |--------------------------------------------------------------------------------
+  */
+
   /**
    * @should create a new page
    * @should load cached page if exists
    * @should update editor on section update events
    */
   public componentDidMount() {
-    window.page = this.page = new Page(this.content)
-      .on("ready", () => {
-        const cache = localStorage.getItem("page");
-        if (cache) {
-          this.page.load(JSON.parse(cache));
-        }
-        this.forceUpdate();
-      })
-      .on("loaded", () => {
-        this.forceUpdate();
-        this.page.sections.forEach(section => this.setTextEditors(section));
-      })
-      .on("edit", this.editComponent)
-      .on("section", (section: Section) => {
-        const sectionId = maybe(this.state, "section.id");
-        const componentId = maybe(this.state, "component.id");
-        if (sectionId && sectionId === section.id) {
-          this.setState(() => ({ section, component: section.components.find(i => i.id === componentId) }));
-        } else {
-          this.forceUpdate();
-        }
-        this.setTextEditors(section);
-      })
-      .on("edit", (section: Section, component: any) => {
-        this.setState(() => ({ section, component }));
-      });
+    window.page = this.page = new Page(this.content, true)
+      .on("ready", this.onReady)
+      .on("loaded", this.onLoaded)
+      .on("edit", this.onEdit)
+      .on("section", this.onSection);
   }
+
+  public componentWillUnmount() {
+    this.page.off("ready", this.onReady);
+    this.page.off("loaded", this.onLoaded);
+    this.page.off("edit", this.onEdit);
+    this.page.off("section", this.onSection);
+  }
+
+  /*
+  |--------------------------------------------------------------------------------
+  | Event Handlers
+  |--------------------------------------------------------------------------------
+  */
+
+  /**
+   * Triggers when the page container has successfully rendered.
+   */
+  private onReady = () => {
+    const cache = localStorage.getItem("page");
+    if (cache) {
+      this.page.load(JSON.parse(cache));
+    }
+    this.forceUpdate();
+  };
+
+  /**
+   * Triggers when a cached page has finished loading.
+   */
+  private onLoaded = () => {
+    this.forceUpdate();
+    this.page.sections.forEach(section => this.setTextEditors(section));
+  };
 
   /**
    * Sets the current editable component.
@@ -76,15 +102,37 @@ export class Editor extends React.Component<
    * @param section
    * @param component
    */
-  public editComponent = (section: Section, component: any) => {
+  private onEdit = (section: Section, component: any) => {
     this.setState(() => ({ section, component }));
   };
+
+  /**
+   * Triggers when a section has been updated.
+   *
+   * @param section
+   */
+  private onSection = (section: Section) => {
+    const sectionId = maybe(this.state, "section.id");
+    const componentId = maybe(this.state, "component.id");
+    if (sectionId && sectionId === section.id) {
+      this.setState(() => ({ section, component: section.components.find(i => i.id === componentId) }));
+    } else {
+      this.forceUpdate();
+    }
+    this.setTextEditors(section);
+  };
+
+  /*
+  |--------------------------------------------------------------------------------
+  | Utilities
+  |--------------------------------------------------------------------------------
+  */
 
   /**
    * Sets a text editor instance on any text components in the
    * provided section.
    *
-   * @param {section}
+   * @param section
    */
   private setTextEditors(section: Section) {
     section.components.forEach(component => {
@@ -93,6 +141,12 @@ export class Editor extends React.Component<
       }
     });
   }
+
+  /*
+  |--------------------------------------------------------------------------------
+  | Renderers
+  |--------------------------------------------------------------------------------
+  */
 
   public render() {
     return (
@@ -122,7 +176,7 @@ export class Editor extends React.Component<
               </button>
             </div>
           </Header>
-          {this.page && <Sections page={this.page} active={maybe(this.state, "component.id", "")} editComponent={this.editComponent} />}
+          {this.page && <Sections page={this.page} active={maybe(this.state, "component.id", "")} editComponent={this.onEdit} />}
         </SectionSidebar>
         <Content ref={c => (this.content = c)} />
         <SettingSidebar>

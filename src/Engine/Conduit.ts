@@ -9,25 +9,25 @@ export class Conduit extends EventEmitter {
    * Page this conduit affects on events.
    * @type {Page}
    */
-  private _page: Page;
+  private page: Page;
 
   /**
    * Peer session.
    * @type {Peer}
    */
-  private _peer: Peer;
+  private peer: Peer;
 
   /**
    * List of active peer data connections.
    * @type {Peer.DataConnection}
    */
-  private _list: Set<Peer.DataConnection> = new Set();
+  private list: Set<Peer.DataConnection> = new Set();
 
   constructor(page: Page) {
     super();
 
-    this._page = page;
-    this._peer = new Peer();
+    this.page = page;
+    this.peer = new Peer();
 
     this._setup();
   }
@@ -39,7 +39,7 @@ export class Conduit extends EventEmitter {
   */
 
   get id() {
-    return this._peer.id;
+    return this.peer.id;
   }
 
   /*
@@ -54,7 +54,7 @@ export class Conduit extends EventEmitter {
    * @param peer
    */
   public connect(peer: string) {
-    this._storeConnection(this._peer.connect(peer));
+    this.storeConnection(this.peer.connect(peer));
   }
 
   /*
@@ -71,7 +71,7 @@ export class Conduit extends EventEmitter {
    */
   public send(type: ConduitType, ...args: any) {
     log("sending", type, args);
-    this._list.forEach(conn => {
+    this.list.forEach(conn => {
       conn.send(JSON.stringify({ type, args }));
     });
   }
@@ -98,44 +98,44 @@ export class Conduit extends EventEmitter {
    * Set up all the conduit event listeners.
    */
   private _setup() {
-    this._peer.on("connection", conn => {
-      this._storeConnection(conn);
+    this.peer.on("connection", conn => {
+      this.storeConnection(conn);
       conn.on("open", () => {
-        this.sendTo(conn, "page:load", this._page.sections.map(s => s.data));
+        this.sendTo(conn, "page:load", this.page.sections.map(s => s.data));
       });
     });
 
     // ### Page Events
 
     this.on("page:load", (conn, data) => {
-      this._page.load(data);
-      this._page.cache();
+      this.page.load(data);
+      this.page.cache();
     });
 
     // ### Section Events
 
     this.on("section:added", (conn, data) => {
-      this._page.addSection(data);
+      this.page.addSection(data);
     });
 
     this.on("section:setting", (conn, sectionId, key, value) => {
-      const section = this._page.sections.find(s => s.id === sectionId);
+      const section = this.page.sections.find(s => s.id === sectionId);
       if (section) {
-        section.set(key, value);
+        section.setSetting(key, value);
       }
     });
 
     // ### Component Events
 
     this.on("component:added", (conn, sectionId, data) => {
-      const section = this._page.sections.find(s => s.id === sectionId);
+      const section = this.page.sections.find(s => s.id === sectionId);
       if (section) {
         section.addComponent(data);
       }
     });
 
     this.on("component:set", (conn, sectionId, componentId, key, value) => {
-      const section = this._page.sections.find(s => s.id === sectionId);
+      const section = this.page.sections.find(s => s.id === sectionId);
       if (section) {
         const component = section.components.find(c => c.id === componentId);
         if (component) {
@@ -145,7 +145,7 @@ export class Conduit extends EventEmitter {
     });
 
     this.on("component:setting", (conn, sectionId, componentId, key, value) => {
-      const section = this._page.sections.find(s => s.id === sectionId);
+      const section = this.page.sections.find(s => s.id === sectionId);
       if (section) {
         const component = section.components.find(c => c.id === componentId);
         if (component) {
@@ -155,7 +155,7 @@ export class Conduit extends EventEmitter {
     });
 
     this.on("component:style", (conn, sectionId, componentId, key, value) => {
-      const section = this._page.sections.find(s => s.id === sectionId);
+      const section = this.page.sections.find(s => s.id === sectionId);
       if (section) {
         const component = section.components.find(c => c.id === componentId);
         if (component) {
@@ -165,9 +165,12 @@ export class Conduit extends EventEmitter {
     });
 
     this.on("component:removed", (conn, sectionId, componentId) => {
-      const section = this._page.sections.find(s => s.id === sectionId);
+      const section = this.page.sections.find(s => s.id === sectionId);
       if (section) {
-        section.removeComponent(componentId);
+        const component = section.components.find(c => c.id === componentId);
+        if (component) {
+          component.remove();
+        }
       }
     });
   }
@@ -177,7 +180,7 @@ export class Conduit extends EventEmitter {
    *
    * @param conn
    */
-  private _storeConnection(conn: Peer.DataConnection) {
+  private storeConnection(conn: Peer.DataConnection) {
     log("storing connection %o", conn);
 
     conn.on("data", (data: any) => {
@@ -187,10 +190,10 @@ export class Conduit extends EventEmitter {
 
     conn.on("close", () => {
       log("peer closed %o", conn);
-      this._list.delete(conn);
+      this.list.delete(conn);
     });
 
-    this._list.add(conn);
+    this.list.add(conn);
   }
 }
 

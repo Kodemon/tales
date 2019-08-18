@@ -113,7 +113,7 @@ export const TextSettings: React.SFC<{
       <div style={{ borderTop: "1px dashed #ccc", padding: 10, textAlign: "center" }}>
         <button
           onClick={() => {
-            section.removeComponent(component.id, true);
+            component.remove(true);
           }}
         >
           Delete Text

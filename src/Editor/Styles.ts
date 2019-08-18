@@ -138,6 +138,7 @@ export const Content = styled.div`
 
   .ql-editor {
     line-height: 1.77em;
+    overflow: visible;
   }
 
   .ql-toolbar {

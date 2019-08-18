@@ -31,19 +31,32 @@ export class Component {
     return this.data.id;
   }
 
+  /**
+   * Conduit instance.
+   * @type {Conduit}
+   */
+  get conduit() {
+    return this.section.page.conduit;
+  }
+
+  /**
+   * Edit state of the page.
+   * @type {boolean}
+   */
+  get editing() {
+    return this.section.page.editing;
+  }
+
   constructor(section: Section, data: any) {
     this.section = section;
     this.data = Object.freeze(data);
   }
 
-  /**
-   * Sets the new component data values.
-   *
-   * @param data
-   */
-  public setData(data: any) {
-    this.data = Object.freeze(data);
-  }
+  /*
+  |--------------------------------------------------------------------------------
+  | Data Utilties
+  |--------------------------------------------------------------------------------
+  */
 
   /**
    * Return the item title, default behavior returns the component
@@ -53,6 +66,21 @@ export class Component {
    */
   public getTitle() {
     return this.type;
+  }
+
+  /*
+  |--------------------------------------------------------------------------------
+  | Data Utilities
+  |--------------------------------------------------------------------------------
+  */
+
+  /**
+   * Replaces the data parameter with the provided data.
+   *
+   * @param data
+   */
+  public setData(data: any) {
+    this.data = Object.freeze(data);
   }
 
   /**
@@ -158,5 +186,44 @@ export class Component {
    */
   public getStyle(key: string, fallback?: any) {
     return maybe(this.data, ["style", key], fallback);
+  }
+
+  /*
+  |--------------------------------------------------------------------------------
+  | Removal Utilties
+  |--------------------------------------------------------------------------------
+  */
+
+  /**
+   * Removes the component from the page.
+   *
+   * @param isSource
+   */
+  public remove(isSource = false) {
+    const element = this.section.elements.get(this.id);
+    if (element) {
+      this.section.elements.delete(this.id);
+      element.remove();
+    }
+
+    this.section.components = this.section.components.reduce((components: any[], component: any) => {
+      if (component.id !== this.id) {
+        components.push(component);
+      }
+      return components;
+    }, []);
+
+    const section = deepCopy(this.section.data);
+    section.components = section.components.reduce((components: any[], component: any) => {
+      if (component.id !== this.id) {
+        components.push(component);
+      }
+      return components;
+    }, []);
+    this.section.commit(section);
+
+    if (isSource) {
+      this.conduit.send("component:removed", section.id, this.id);
+    }
   }
 }

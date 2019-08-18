@@ -11,10 +11,11 @@
   "author": "engine@cmdo.xyz",
   "license": "ISC",
   "dependencies": {
-    "debug": "^4.1.1",
+    "debug": "4.1.1",
+    "eventemitter3": "4.0.0",
     "fastdom": "1.0.9",
     "gsap": "2.1.3",
-    "object-path": "^0.11.4",
+    "object-path": "0.11.4",
     "quill": "1.3.6",
     "react": "16.9.0",
     "react-color": "2.17.3",
@@ -24,15 +25,15 @@
     "styled-components": "4.3.2"
   },
   "devDependencies": {
-    "@types/debug": "^4.1.5",
+    "@types/debug": "4.1.5",
     "@types/gsap": "1.20.2",
     "@types/node": "12.7.1",
-    "@types/object-path": "^0.11.0",
+    "@types/object-path": "0.11.0",
     "@types/react": "16.9.1",
     "@types/react-dom": "16.8.5",
     "@types/styled-components": "4.1.18",
     "fuse-box": "3.7.1",
-    "tslib": "^1.10.0",
+    "tslib": "1.10.0",
     "tslint": "5.18.0",
     "tslint-config-prettier": "1.18.0",
     "typescript": "3.5.3"

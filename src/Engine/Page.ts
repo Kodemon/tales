@@ -1,10 +1,11 @@
+import { EventEmitter } from "eventemitter3";
 import * as ScrollMagic from "scrollmagic";
 
 import { Conduit } from "./Conduit";
 import { getSection, Section } from "./Section";
 import { viewport } from "./Viewport";
 
-export class Page {
+export class Page extends EventEmitter {
   /**
    * Editing state.
    * @type {boolean}
@@ -30,12 +31,6 @@ export class Page {
   public controller: any;
 
   /**
-   * Event listeners.
-   * @type {Map}
-   */
-  public events: Map<Event, Set<EventHandler>> = new Map();
-
-  /**
    * Scenes.
    * @type {Section[]}
    */
@@ -45,8 +40,11 @@ export class Page {
    * @param target
    * @param editing
    */
-  constructor(container: any) {
+  constructor(container: any, editing = false) {
+    super();
+
     this.container = container;
+    this.editing = editing;
 
     // ### Load Conduit
 
@@ -85,7 +83,7 @@ export class Page {
   */
 
   /**
-   * Loads a cached page.
+   * Load a cached page.
    *
    * @param list
    */
@@ -100,6 +98,9 @@ export class Page {
     this.emit("loaded");
   }
 
+  /**
+   * Re-render all the components.
+   */
   public refresh() {
     viewport.setContainer(this.container);
     for (const section of this.sections) {
@@ -184,14 +185,6 @@ export class Page {
 
   /*
   |--------------------------------------------------------------------------------
-  | Component Utilities
-  |--------------------------------------------------------------------------------
-  */
-
-  // ...
-
-  /*
-  |--------------------------------------------------------------------------------
   | Storage Utilities
   |--------------------------------------------------------------------------------
   */
@@ -214,57 +207,6 @@ export class Page {
     localStorage.removeItem("page");
     this.sections = [];
     this.container.innerHTML = "";
-  }
-
-  /*
-  |--------------------------------------------------------------------------------
-  | Event Handlers
-  |--------------------------------------------------------------------------------
-  */
-
-  /**
-   * Add editor event listener.
-   *
-   * @param event
-   * @param fn
-   */
-  public on(event: Event, fn: EventHandler) {
-    let fns = this.events.get(event);
-    if (!fns) {
-      fns = new Set();
-    }
-    fns.add(fn);
-    this.events.set(event, fns);
-    return this;
-  }
-
-  /**
-   * Remove editor event listener.
-   *
-   * @param event
-   * @param fn
-   */
-  public off(event: Event, fn: EventHandler) {
-    const fns = this.events.get(event);
-    if (fns) {
-      fns.delete(fn);
-      this.events.set(event, fns);
-    }
-    return this;
-  }
-
-  /**
-   * Emit editor event.
-   *
-   * @param event
-   */
-  public emit(event: Event, ...args: any) {
-    const fns = this.events.get(event);
-    if (fns) {
-      fns.forEach(fn => {
-        fn(...args);
-      });
-    }
   }
 }
 
