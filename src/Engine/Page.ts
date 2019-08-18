@@ -1,5 +1,4 @@
 import { EventEmitter } from "eventemitter3";
-import * as ScrollMagic from "scrollmagic";
 
 import { Conduit } from "./Conduit";
 import { getSection, Section } from "./Section";
@@ -25,12 +24,6 @@ export class Page extends EventEmitter {
   public conduit: Conduit;
 
   /**
-   * ScrollMagic Controller.
-   * @type {ScrollMagic.Controller}
-   */
-  public controller: any;
-
-  /**
    * Scenes.
    * @type {Section[]}
    */
@@ -50,12 +43,7 @@ export class Page extends EventEmitter {
 
     this.conduit = new Conduit(this);
 
-    // ### Load ScrollMagic Controller
-
-    this.controller = new ScrollMagic.Controller({
-      container: this.container,
-      refreshInterval: 0
-    });
+    // ### Resize Event Handler
 
     let resizeDebounce: any;
     window.addEventListener("resize", () => {

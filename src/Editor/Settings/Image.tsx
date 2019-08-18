@@ -10,9 +10,6 @@ export const ImageSettings: React.SFC<{
 }> = function ImageSettings({ section, component }) {
   return (
     <React.Fragment key={`component-${component.id}`}>
-      <Header>
-        <h1>Image Settings</h1>
-      </Header>
       <div style={{ padding: 10, borderBottom: "1px dashed #ccc" }}>
         <SettingGroup>
           <label className="input">Title</label>
@@ -61,7 +58,7 @@ export const ImageSettings: React.SFC<{
       </div>
 
       <Header>
-        <h1>Image Style</h1>
+        <h1>Style</h1>
       </Header>
       <div style={{ padding: 10 }}>
         <SettingGroup>

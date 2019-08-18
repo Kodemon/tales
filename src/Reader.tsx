@@ -24,9 +24,9 @@ export class Reader extends React.Component {
         this.page.load(JSON.parse(cache));
       }
       if (peerId) {
-        setTimeout(() => {
+        this.page.on("conduit:open", () => {
           this.page.connect(peerId);
-        }, 5000);
+        });
       }
     });
   }

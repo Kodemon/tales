@@ -1,7 +1,7 @@
 import * as rndm from "rndm";
-import * as ScrollMagic from "scrollmagic";
 
 import { Image } from "./Components/Image";
+import { Reveal } from "./Components/Reveal";
 import { Text } from "./Components/Text";
 import { Page } from "./Page";
 import { maybe, setStyle } from "./Utils";
@@ -25,12 +25,6 @@ export class Section {
    * @type {height}
    */
   public height: number = 0;
-
-  /**
-   * ScrollMagic scene.
-   * @type {ScrollMagic.Scene}
-   */
-  public scroll: typeof ScrollMagic.Scene;
 
   /**
    * Section schema.
@@ -63,12 +57,6 @@ export class Section {
     this.setStyle();
 
     page.container.append(this.container);
-
-    this.scroll = new ScrollMagic.Scene({
-      triggerElement: this.container,
-      triggerHook: 1,
-      reverse: true
-    });
   }
 
   /**
@@ -197,15 +185,6 @@ export class Section {
       }
       component.render();
     }
-
-    const loader = setInterval(() => {
-      if (this.container.offsetHeight !== 0) {
-        this.scroll.duration(this.container.offsetHeight);
-        this.scroll.addTo(this.page.controller);
-        clearInterval(loader);
-      }
-    }, 100);
-
     return this;
   }
 
@@ -240,6 +219,10 @@ export class Section {
           }
           case "text": {
             this.components.push(new Text(this, component));
+            break;
+          }
+          case "reveal": {
+            this.components.push(new Reveal(this, component));
             break;
           }
         }

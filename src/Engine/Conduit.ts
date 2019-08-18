@@ -2,6 +2,8 @@ import * as debug from "debug";
 import { EventEmitter } from "eventemitter3";
 import { Page } from "./Page";
 
+const TIMEOUT = 5;
+
 const log = debug("conduit");
 
 export class Conduit extends EventEmitter {
@@ -9,19 +11,19 @@ export class Conduit extends EventEmitter {
    * Page this conduit affects on events.
    * @type {Page}
    */
-  private page: Page;
+  public page: Page;
 
   /**
    * Peer session.
    * @type {Peer}
    */
-  private peer: Peer;
+  public peer: Peer;
 
   /**
    * List of active peer data connections.
    * @type {Peer.DataConnection}
    */
-  private list: Set<Peer.DataConnection> = new Set();
+  public list: Set<Peer.DataConnection> = new Set();
 
   constructor(page: Page) {
     super();
@@ -29,7 +31,7 @@ export class Conduit extends EventEmitter {
     this.page = page;
     this.peer = new Peer();
 
-    this._setup();
+    this.load();
   }
 
   /*
@@ -97,12 +99,19 @@ export class Conduit extends EventEmitter {
   /**
    * Set up all the conduit event listeners.
    */
-  private _setup() {
+  private load() {
     this.peer.on("connection", conn => {
       this.storeConnection(conn);
+
       conn.on("open", () => {
         this.sendTo(conn, "page:load", this.page.sections.map(s => s.data));
       });
+    });
+
+    // ### Opened
+
+    this.peer.on("open", () => {
+      this.page.emit("conduit:open");
     });
 
     // ### Page Events
@@ -173,6 +182,13 @@ export class Conduit extends EventEmitter {
         }
       }
     });
+
+    // ### Cleanup
+
+    window.addEventListener("beforeunload", () => {
+      this.peer.disconnect();
+      this.peer.destroy();
+    });
   }
 
   /**
@@ -191,9 +207,47 @@ export class Conduit extends EventEmitter {
     conn.on("close", () => {
       log("peer closed %o", conn);
       this.list.delete(conn);
+      this.page.emit("refresh");
+    });
+
+    conn.on("error", err => {
+      console.log(err);
     });
 
     this.list.add(conn);
+
+    this.page.emit("refresh");
+
+    // ### Heartbeat
+
+    let lastChecked = new Date().getTime() / 1000;
+
+    const ping = (c: Peer.DataConnection) => {
+      if (c.peer === conn.peer) {
+        lastChecked = new Date().getTime() / 1000;
+      }
+    };
+
+    const heartbeat = setInterval(() => {
+      this.sendTo(conn, "ping");
+    }, TIMEOUT * 1000);
+
+    const activePeerCheck = setInterval(() => {
+      const isActive = lastChecked + TIMEOUT * 2 > Math.ceil(new Date().getTime() / 1000);
+      if (!isActive) {
+        log("peer closed %o", conn);
+
+        clearInterval(activePeerCheck);
+        clearInterval(heartbeat);
+
+        this.off("ping", ping);
+
+        this.list.delete(conn);
+        this.page.emit("refresh");
+      }
+    }, (TIMEOUT / 2) * 1000);
+
+    this.on("ping", ping);
   }
 }
 
@@ -204,6 +258,7 @@ export class Conduit extends EventEmitter {
  */
 
 export type ConduitType =
+  | "ping"
   | "page:load"
   | "section:added"
   | "section:setting"

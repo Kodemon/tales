@@ -19,7 +19,8 @@
       "prefer-conditional-expression": false,
       "no-unused-expression": false,
       "only-arrow-functions": false,
-      "member-ordering": false
+      "member-ordering": false,
+      "no-console": false
   },
   "rulesDirectory": []
 }

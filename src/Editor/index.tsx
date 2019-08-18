@@ -1,4 +1,5 @@
 import * as React from "react";
+import styled from "styled-components";
 
 import { Page } from "Engine/Page";
 import { Section } from "Engine/Section";
@@ -8,6 +9,7 @@ import { Sections } from "./Components/Sections";
 import { setTextEditor } from "./Lib/Text";
 import { ImageSettings } from "./Settings/Image";
 import { PageSettings } from "./Settings/Page";
+import { RevealSettings } from "./Settings/Reveal";
 import { SectionSettings } from "./Settings/Section";
 import { TextSettings } from "./Settings/Text";
 import { Content, Header, SectionSidebar, SettingSidebar, Wrapper } from "./Styles";
@@ -21,6 +23,7 @@ declare global {
 export class Editor extends React.Component<
   {},
   {
+    tab: string;
     section?: Section;
     component?: any;
   }
@@ -40,6 +43,7 @@ export class Editor extends React.Component<
   constructor(props: any, state: any) {
     super(props, state);
     this.state = {
+      tab: "page",
       section: undefined,
       component: undefined
     };
@@ -60,6 +64,7 @@ export class Editor extends React.Component<
     window.page = this.page = new Page(this.content, true)
       .on("ready", this.onReady)
       .on("loaded", this.onLoaded)
+      .on("refresh", this.onRefresh)
       .on("edit", this.onEdit)
       .on("section", this.onSection);
   }
@@ -67,6 +72,7 @@ export class Editor extends React.Component<
   public componentWillUnmount() {
     this.page.off("ready", this.onReady);
     this.page.off("loaded", this.onLoaded);
+    this.page.off("refresh", this.onRefresh);
     this.page.off("edit", this.onEdit);
     this.page.off("section", this.onSection);
   }
@@ -97,13 +103,20 @@ export class Editor extends React.Component<
   };
 
   /**
+   * Triggers when something has changed in the engine.
+   */
+  private onRefresh = () => {
+    this.forceUpdate();
+  };
+
+  /**
    * Sets the current editable component.
    *
    * @param section
    * @param component
    */
   private onEdit = (section: Section, component: any) => {
-    this.setState(() => ({ section, component }));
+    this.setState(() => ({ tab: component ? "component" : "section", section, component }));
   };
 
   /**
@@ -179,12 +192,53 @@ export class Editor extends React.Component<
           {this.page && <Sections page={this.page} active={maybe(this.state, "component.id", "")} editComponent={this.onEdit} />}
         </SectionSidebar>
         <Content ref={c => (this.content = c)} />
-        <SettingSidebar>
-          {this.page && <PageSettings page={this.page} />}
-          {this.state.section && <SectionSettings section={this.state.section} />}
-          {this.state.section && this.state.component && this.renderComponentSettings(this.state.section, this.state.component)}
-        </SettingSidebar>
+        <SettingSidebar>{this.renderTabs()}</SettingSidebar>
       </Wrapper>
+    );
+  }
+
+  private renderTabs() {
+    const { tab, section, component } = this.state;
+    return (
+      <React.Fragment>
+        <Tabs>
+          <span
+            className={tab === "page" ? "active" : ""}
+            onClick={() => {
+              this.setState(() => ({ tab: "page" }));
+            }}
+          >
+            Page
+          </span>
+          {
+            <span
+              className={tab === "section" ? "active" : !section ? "disabled" : ""}
+              onClick={() => {
+                if (section) {
+                  this.setState(() => ({ tab: "section" }));
+                }
+              }}
+            >
+              Section
+            </span>
+          }
+          {
+            <span
+              className={tab === "component" ? "active" : !component ? "disabled" : ""}
+              onClick={() => {
+                if (component) {
+                  this.setState(() => ({ tab: "component" }));
+                }
+              }}
+            >
+              Component
+            </span>
+          }
+        </Tabs>
+        {tab === "page" && this.page && <PageSettings page={this.page} />}
+        {tab === "section" && this.state.section && <SectionSettings section={this.state.section} />}
+        {tab === "component" && this.state.section && this.state.component && this.renderComponentSettings(this.state.section, this.state.component)}
+      </React.Fragment>
     );
   }
 
@@ -196,6 +250,50 @@ export class Editor extends React.Component<
       case "text": {
         return <TextSettings section={section} component={component} />;
       }
+      case "reveal": {
+        return <RevealSettings section={section} component={component} />;
+      }
     }
   }
 }
+
+const Tabs = styled.div`
+  display: flex;
+
+  border-bottom: 2px solid #ccc;
+  margin-bottom: 10px;
+
+  span {
+    display: block;
+
+    flex-basis: 100%;
+
+    border-right: 1px solid #ccc;
+    padding: 5px;
+
+    color: #767676;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+
+    &.disabled {
+      color: #ccc;
+    }
+
+    &.active {
+      background: #dbdcde;
+      color: #4362a3;
+    }
+
+    &:hover {
+      cursor: pointer;
+      &.disabled {
+        cursor: default;
+      }
+    }
+
+    &:last-child {
+      border-right: none;
+    }
+  }
+`;

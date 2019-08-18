@@ -32,11 +32,19 @@ export class Component {
   }
 
   /**
+   * Page instance.
+   * @type {Page}
+   */
+  get page() {
+    return this.section.page;
+  }
+
+  /**
    * Conduit instance.
    * @type {Conduit}
    */
   get conduit() {
-    return this.section.page.conduit;
+    return this.page.conduit;
   }
 
   /**
@@ -44,7 +52,7 @@ export class Component {
    * @type {boolean}
    */
   get editing() {
-    return this.section.page.editing;
+    return this.page.editing;
   }
 
   constructor(section: Section, data: any) {

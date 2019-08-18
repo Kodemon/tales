@@ -53,7 +53,7 @@ export class Toolbar extends React.Component<
   public render() {
     return (
       <React.Fragment>
-        <div className="toolbar ql-toolbar ql-snow" style={{ marginBottom: 10 }}>
+        <div className="toolbar ql-toolbar ql-snow" style={{ border: "1px dashed #ccc", marginBottom: 10 }}>
           <div className="ql-formats">
             {this.bold()}
             {this.italic()}

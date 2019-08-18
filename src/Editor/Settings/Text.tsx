@@ -11,8 +11,12 @@ export const TextSettings: React.SFC<{
 }> = function TextSettings({ section, component }) {
   return (
     <React.Fragment key={`component-${component.id}`}>
+      <div style={{ padding: 10, borderBottom: "1px dashed #ccc" }}>
+        <Toolbar quill={component.quill} />
+      </div>
+
       <Header>
-        <h1>Text Layout</h1>
+        <h1>Settings</h1>
       </Header>
       <div style={{ padding: 10, borderBottom: "1px dashed #ccc" }}>
         <SettingGroup>
@@ -54,9 +58,9 @@ export const TextSettings: React.SFC<{
       </div>
 
       <Header>
-        <h1>Base Text Styles</h1>
+        <h1>Styles</h1>
       </Header>
-      <div style={{ padding: 10, borderBottom: "1px dashed #ccc" }}>
+      <div style={{ padding: 10 }}>
         <SettingGroup>
           <label className="input">Color</label>
           <input
@@ -101,13 +105,6 @@ export const TextSettings: React.SFC<{
             }}
           />
         </SettingGroup>
-      </div>
-
-      <Header>
-        <h1>Text Formatting</h1>
-      </Header>
-      <div style={{ padding: 10 }}>
-        <Toolbar quill={component.quill} />
       </div>
 
       <div style={{ borderTop: "1px dashed #ccc", padding: 10, textAlign: "center" }}>
