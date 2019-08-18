@@ -1,7 +1,6 @@
 import * as Quill from "quill";
 
 import { getSection } from "Engine/Section";
-import { viewport } from "Engine/Viewport";
 
 import { deepCopy, maybe, setStyle } from "../Utils";
 import { Component } from "./Component";
@@ -14,11 +13,11 @@ export class Text extends Component {
     return `${this.quill.getText(0, 20)}...`;
   }
 
-  public set(key: string, value: any, isSource = false) {
+  public set(key: string, { content, delta }: any, isSource = false) {
     const section = deepCopy(this.section.data);
     section.components = section.components.map((component: any) => {
       if (component.id === this.id) {
-        component[key] = value;
+        component[key] = content;
       }
       return component;
     });
@@ -26,23 +25,8 @@ export class Text extends Component {
     this.section.data = getSection(section);
     this.section.page.cache();
 
-    if (isSource) {
-      this.section.page.conduit.send("component:set", section.id, this.id, key, value);
-    } else {
-      this.quill.setContents(value);
-    }
-  }
-
-  public setEditingState(state: boolean) {
-    if (state) {
-      this.grid.className = "tale-text editing";
-      document.querySelectorAll(".ql-toolbar").forEach(el => {
-        setStyle(el, {
-          width: viewport.width
-        });
-      });
-    } else {
-      this.grid.className = "tale-text";
+    if (!isSource) {
+      this.quill.updateContents(delta);
     }
   }
 
@@ -83,7 +67,9 @@ export class Text extends Component {
 
     this.quill.on("text-change", (delta: any, oldDelta: any, source: any) => {
       if (source === "user") {
-        this.set("text", this.quill.getContents(), true);
+        const data = { content: this.quill.getContents(), delta };
+        this.section.page.conduit.send("component:set", this.section.id, this.id, "text", data);
+        this.set("text", data, true);
       }
     });
 
