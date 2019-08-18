@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { Section } from "Engine/Section";
 
+import { Toolbar } from "../Components/Toolbar";
 import { Header, SettingGroup } from "../Styles";
 
 export const TextSettings: React.SFC<{
@@ -106,23 +107,7 @@ export const TextSettings: React.SFC<{
         <h1>Text Formatting</h1>
       </Header>
       <div style={{ padding: 10 }}>
-        <button
-          className="ql-bold"
-          onClick={() => {
-            component.quill.format("header", 1);
-          }}
-        >
-          H1
-        </button>
-
-        <button
-          className="ql-bold"
-          onClick={() => {
-            component.quill.format("bold", true);
-          }}
-        >
-          B
-        </button>
+        <Toolbar quill={component.quill} />
       </div>
 
       <div style={{ borderTop: "1px dashed #ccc", padding: 10, textAlign: "center" }}>

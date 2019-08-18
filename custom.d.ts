@@ -4,6 +4,7 @@ declare module "scrollmagic";
 declare module "quill";
 declare module "TweenLite";
 declare module "TweenMax";
+declare module "quill";
 
 /*
  |--------------------------------------------------------------------------------
