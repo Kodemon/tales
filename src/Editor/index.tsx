@@ -5,6 +5,7 @@ import { Section } from "Engine/Section";
 import { maybe } from "Engine/Utils";
 
 import { Sections } from "./Components/Sections";
+import { setTextEditor } from "./Lib/Text";
 import { ImageSettings } from "./Settings/Image";
 import { PageSettings } from "./Settings/Page";
 import { SectionSettings } from "./Settings/Section";
@@ -51,6 +52,7 @@ export class Editor extends React.Component<
       })
       .on("loaded", () => {
         this.forceUpdate();
+        this.loadTextEditors();
       })
       .on("edit", this.editComponent)
       .on("section", (section: Section) => {
@@ -70,6 +72,16 @@ export class Editor extends React.Component<
   public editComponent = (section: Section, component: any) => {
     this.setState(() => ({ section, component }));
   };
+
+  private loadTextEditors() {
+    this.page.sections.forEach(section => {
+      section.components.forEach(component => {
+        if (component.type === "text") {
+          setTextEditor(component);
+        }
+      });
+    });
+  }
 
   public render() {
     return (

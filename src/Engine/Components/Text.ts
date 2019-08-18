@@ -1,18 +1,40 @@
-import * as Quill from "quill";
-
 import { getSection } from "Engine/Section";
 
 import { deepCopy, maybe, setStyle } from "../Utils";
 import { Component } from "./Component";
 
 export class Text extends Component {
-  public quill: typeof Quill;
+  /**
+   * Text container element.
+   * @type {HTMLDivElement}
+   */
   public grid: HTMLDivElement;
 
+  /**
+   * Quill instance passed by the editor.
+   * @type {Quill}
+   */
+  public quill: any;
+
+  /**
+   * Return text title.
+   *
+   * @returns partial quill text or "Text"
+   */
   public getTitle() {
-    return `${this.quill.getText(0, 20)}...`;
+    if (this.quill) {
+      return `${this.quill.getText(0, 20)}`;
+    }
+    return "Text";
   }
 
+  /**
+   * Updates the component.
+   *
+   * @param key
+   * @param param1
+   * @param isSource
+   */
   public set(key: string, { content, delta }: any, isSource = false) {
     const section = deepCopy(this.section.data);
     section.components = section.components.map((component: any) => {
@@ -30,6 +52,10 @@ export class Text extends Component {
     }
   }
 
+  /**
+   * Outputs the article container element, in read mode it also renders out the
+   * html output within the container.
+   */
   public render() {
     this.grid = document.createElement("div");
     this.grid.className = "tale-text";
@@ -46,34 +72,6 @@ export class Text extends Component {
       });
     }
     this.section.append(this.id, this.grid);
-
-    const body = document.createElement("article");
-    setStyle(body, {
-      gridArea: "text",
-      ...maybe(this.data, "style", {})
-    });
-    this.grid.append(body);
-
-    this.quill = new Quill(body, {
-      theme: "snow",
-      placeholder: "Compose an epic..."
-    });
-
-    this.quill.on("selection-change", (range: any) => {
-      if (range) {
-        this.section.page.emit("edit", this.section, this);
-      }
-    });
-
-    this.quill.on("text-change", (delta: any, oldDelta: any, source: any) => {
-      if (source === "user") {
-        const data = { content: this.quill.getContents(), delta };
-        this.section.page.conduit.send("component:set", this.section.id, this.id, "text", data);
-        this.set("text", data, true);
-      }
-    });
-
-    this.quill.setContents(this.data.text);
   }
 }
 

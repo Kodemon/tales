@@ -1,6 +1,8 @@
-import { maybe } from "Engine/Utils";
 import * as Quill from "quill";
 import * as React from "react";
+
+import { maybe } from "Engine/Utils";
+
 import { SettingGroup } from "../Styles";
 
 export class Toolbar extends React.Component<
