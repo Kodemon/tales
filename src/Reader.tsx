@@ -26,7 +26,7 @@ export class Reader extends React.Component {
       if (peerId) {
         setTimeout(() => {
           this.page.connect(peerId);
-        }, 1000);
+        }, 5000);
       }
     });
   }
