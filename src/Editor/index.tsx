@@ -52,7 +52,7 @@ export class Editor extends React.Component<
       })
       .on("loaded", () => {
         this.forceUpdate();
-        this.loadTextEditors();
+        this.page.sections.forEach(section => this.setTextEditors(section));
       })
       .on("edit", this.editComponent)
       .on("section", (section: Section) => {
@@ -63,23 +63,34 @@ export class Editor extends React.Component<
         } else {
           this.forceUpdate();
         }
+        this.setTextEditors(section);
       })
       .on("edit", (section: Section, component: any) => {
         this.setState(() => ({ section, component }));
       });
   }
 
+  /**
+   * Sets the current editable component.
+   *
+   * @param section
+   * @param component
+   */
   public editComponent = (section: Section, component: any) => {
     this.setState(() => ({ section, component }));
   };
 
-  private loadTextEditors() {
-    this.page.sections.forEach(section => {
-      section.components.forEach(component => {
-        if (component.type === "text") {
-          setTextEditor(component);
-        }
-      });
+  /**
+   * Sets a text editor instance on any text components in the
+   * provided section.
+   *
+   * @param {section}
+   */
+  private setTextEditors(section: Section) {
+    section.components.forEach(component => {
+      if (component.type === "text") {
+        setTextEditor(component);
+      }
     });
   }
 
