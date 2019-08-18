@@ -24,7 +24,9 @@ export class Reader extends React.Component {
         this.page.load(JSON.parse(cache));
       }
       if (peerId) {
-        this.page.connect(peerId);
+        setTimeout(() => {
+          this.page.connect(peerId);
+        }, 1000);
       }
     });
   }

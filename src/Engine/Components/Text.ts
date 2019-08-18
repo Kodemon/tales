@@ -32,14 +32,14 @@ export class Text extends Component {
    * Updates the component.
    *
    * @param key
-   * @param param1
+   * @param value
    * @param isSource
    */
-  public set(key: string, { content, delta }: any, isSource = false) {
+  public set(key: string, value: any, isSource = false) {
     const section = deepCopy(this.section.data);
     section.components = section.components.map((component: any) => {
       if (component.id === this.id) {
-        component[key] = content;
+        component[key] = key === "html" ? value : value.content;
       }
       return component;
     });
@@ -48,7 +48,11 @@ export class Text extends Component {
     this.section.page.cache();
 
     if (!isSource) {
-      this.quill.updateContents(delta);
+      if (key === "text" && this.quill) {
+        this.quill.updateContents(value.delta);
+      } else if (key === "html") {
+        this.setHTML(value);
+      }
     }
   }
 
@@ -72,6 +76,23 @@ export class Text extends Component {
       });
     }
     this.section.append(this.id, this.grid);
+    this.setHTML();
+  }
+
+  private setHTML(html = this.get("html")) {
+    if (html) {
+      const body = document.createElement("article");
+      setStyle(body, {
+        gridArea: "text",
+        ...maybe(this.data, "style", {})
+      });
+
+      body.className = "ql-container ql-snow ql-editor";
+      body.innerHTML = html;
+
+      this.grid.innerHTML = "";
+      this.grid.append(body);
+    }
   }
 }
 
@@ -87,7 +108,7 @@ function getGridLayout(layout: string = "middle", min: number = 280, max: number
         display: "grid",
         gridTemplateColumns: `minmax(${min}px, ${max}px) auto`,
         gridTemplateRows: "auto 1fr",
-        gridTemplateAreas: "'toolbar toolbar' 'text .'"
+        gridTemplateAreas: "'text .'"
       };
     }
     case "middle": {
@@ -95,7 +116,7 @@ function getGridLayout(layout: string = "middle", min: number = 280, max: number
         display: "grid",
         gridTemplateColumns: `auto minmax(${min}px, ${max}px) auto`,
         gridTemplateRows: "auto 1fr",
-        gridTemplateAreas: "'toolbar toolbar toolbar' '. text .'"
+        gridTemplateAreas: "'. text .'"
       };
     }
     case "right": {
@@ -103,15 +124,15 @@ function getGridLayout(layout: string = "middle", min: number = 280, max: number
         display: "grid",
         gridTemplateColumns: `auto minmax(${min}px, ${max}px)`,
         gridTemplateRows: "auto 1fr",
-        gridTemplateAreas: "'toolbar toolbar' '. text'"
+        gridTemplateAreas: "'. text'"
       };
     }
     case "center": {
       return {
         display: "grid",
         gridTemplateColumns: `auto minmax(${min}px, ${max}px) auto`,
-        gridTemplateRows: "auto 1fr auto 1fr",
-        gridTemplateAreas: "'toolbar toolbar toolbar' '. . .' '. text .' '. . .'"
+        gridTemplateRows: "1fr auto 1fr",
+        gridTemplateAreas: "'. . .' '. text .' '. . .'"
       };
     }
   }

@@ -13,6 +13,7 @@ export function setTextEditor(component: any) {
     gridArea: "text",
     ...maybe(component.data, "style", {})
   });
+  component.grid.innerHTML = "";
   component.grid.append(body);
 
   const quill = new Quill(body, {
@@ -29,8 +30,12 @@ export function setTextEditor(component: any) {
   quill.on("text-change", (delta: any, oldDelta: any, source: any) => {
     if (source === "user") {
       const data = { content: quill.getContents(), delta };
+
       component.section.page.conduit.send("component:set", component.section.id, component.id, "text", data);
       component.set("text", data, true);
+
+      component.section.page.conduit.send("component:set", component.section.id, component.id, "html", quill.root.innerHTML);
+      component.set("html", quill.root.innerHTML, true);
     }
   });
 

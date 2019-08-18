@@ -125,23 +125,7 @@ export const Content = styled.div`
     top: 0;
   }
 
-  /* Quill
-  .ql-container {
-    font-family: inherit;
-    font-size: inherit;
-    line-height: inherit;
-    height: auto;
-  }
-
-  .ql-editor {
-    font-family: inherit;
-    font-size: inherit;
-    line-height: inherit;
-    height: auto;
-    padding: 0;
-    overflow-y: visible;
-  }
-  */
+  /* Quill */
 
   .ql-container {
     font-family: "Merriweather", serif;
@@ -158,20 +142,6 @@ export const Content = styled.div`
 
   .ql-toolbar {
     display: none;
-    grid-area: toolbar;
-
-    position: fixed;
-    top: 0;
-    width: 100%;
-
-    background: #fff;
-    z-index: 999;
-  }
-
-  .tale-text.editing {
-    .ql-toolbar {
-      display: block;
-    }
   }
 
   .ql-blank::before {
