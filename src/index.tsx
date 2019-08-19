@@ -47,7 +47,7 @@ router.register([
 
 router.listen({
   async render(route) {
-    ReactDOM.render(createReactElement(route.components), document.getElementById("app"));
+    ReactDOM.render(createReactElement([...route.components]), document.getElementById("app"));
   },
 
   error(err) {
