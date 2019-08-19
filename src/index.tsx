@@ -4,6 +4,7 @@ import * as ReactDOM from "react-dom";
 import { Dashboard } from "./App/Dashboard";
 import { Editor } from "./App/Editor";
 import { Reader } from "./App/Reader";
+import { Site } from "./App/Site";
 import { Page } from "./Engine/Page";
 import { Route, router } from "./Router";
 
@@ -23,6 +24,10 @@ router.register([
   new Route(Dashboard, {
     id: "dashboard",
     path: "/"
+  }),
+  new Route(Site, {
+    id: "site",
+    path: "/sites/:site"
   }),
   new Route(Reader, {
     id: "reader",
