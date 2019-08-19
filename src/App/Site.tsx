@@ -67,7 +67,9 @@ export class Site extends React.Component<
         <section>
           <ul>
             {pages.map(page => (
-              <li key={page.id}>{page.title}</li>
+              <li key={page.id}>
+                <button onClick={() => router.goTo(`/edit/${page.id}`)}>{page.title}</button>
+              </li>
             ))}
           </ul>
         </section>

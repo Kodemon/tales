@@ -70,7 +70,7 @@ export class Dashboard extends React.Component<
           <ul>
             {sites.map(site => (
               <li key={site.id}>
-                <a onClick={() => router.goTo(`/sites/${site.id}`)}>{site.title}</a>
+                <button onClick={() => router.goTo(`/sites/${site.id}`)}>{site.title}</button>
               </li>
             ))}
           </ul>
