@@ -27,7 +27,7 @@ export class Page extends EventEmitter {
    * Peer
    * @type {Conduit}
    */
-  public conduit: Conduit;
+  public conduit?: Conduit;
 
   /**
    * Scenes.
@@ -47,10 +47,6 @@ export class Page extends EventEmitter {
     this.container = container;
     this.editing = editing;
 
-    // ### Load Conduit
-
-    this.conduit = new Conduit(this);
-
     // ### Resize Event Handler
 
     let resizeDebounce: any;
@@ -64,7 +60,7 @@ export class Page extends EventEmitter {
     // ### Load Page
 
     const loader = setInterval(() => {
-      if (this.container.offsetHeight > 0 && this.conduit.id) {
+      if (this.container.offsetHeight > 0) {
         clearInterval(loader);
         viewport.setContainer(this.container);
         this.emit("ready");
@@ -110,8 +106,27 @@ export class Page extends EventEmitter {
   |--------------------------------------------------------------------------------
   */
 
-  public connect(peer: string) {
-    this.conduit.connect(peer);
+  /**
+   * Initiates a conduit connection using peer.js
+   */
+  public share() {
+    this.conduit = new Conduit(this);
+  }
+
+  /**
+   * Initiates a peer to peer connection with the given peerId.
+   *
+   * @param peerId
+   */
+  public connect(peerId: string) {
+    if (!this.conduit) {
+      this.share();
+      this.once("conduit:open", () => {
+        this.conduit!.connect(peerId);
+      });
+    } else {
+      this.conduit!.connect(peerId);
+    }
   }
 
   /*
@@ -136,7 +151,7 @@ export class Page extends EventEmitter {
     this.emit("section", section);
     this.cache();
 
-    if (isSource) {
+    if (isSource && this.conduit) {
       this.conduit.send("section:added", section.data);
     }
 

@@ -16,9 +16,7 @@ export class Reader extends React.Component {
         this.page.load(JSON.parse(cache));
       }
       if (router.query.has("peer")) {
-        this.page.on("conduit:open", () => {
-          this.page.connect(router.query.get("peer"));
-        });
+        this.page.connect(router.query.get("peer"));
       }
     });
   }
