@@ -2,7 +2,26 @@ import * as React from "react";
 import * as rndm from "rndm";
 
 import { router } from "../../Router";
-import { Commands, Header, Heading, Link, Nav, NavDetail, NavItem, PageContainer, Row, Section, Splash, Subtitle, Title, WelcomePage } from "./Styles";
+import {
+  BlockDetail,
+  BlockItem,
+  BlockTitle,
+  Commands,
+  Header,
+  Heading,
+  Link,
+  Nav,
+  NavDetail,
+  NavDivider,
+  NavItem,
+  PageContainer,
+  Row,
+  Section,
+  Splash,
+  Subtitle,
+  Title,
+  WelcomePage
+} from "./Styles";
 
 export class Site extends React.Component<
   {},
@@ -75,17 +94,60 @@ export class Site extends React.Component<
                 <Nav>
                   {pages.map(page => (
                     <NavItem key={page.id}>
-                      <Link onClick={() => router.goTo(`/edit/${page.id}`)}>{page.title}</Link>
+                      - <Link onClick={() => router.goTo(`/edit/${page.id}`)}>{page.title}</Link>
                     </NavItem>
                   ))}
+                  <NavDivider />
                   <NavItem>
                     <Link type="button" onClick={this.createPage}>
-                      New Page
+                      New Page...
                     </Link>
                   </NavItem>
                 </Nav>
               </Section>
             </Splash>
+            <Commands>
+              <Section>
+                <Header>Manage Site</Header>
+                <Nav>
+                  <NavItem>
+                    <BlockItem>
+                      <BlockTitle>Publishing</BlockTitle>
+                      <BlockDetail>Publish your site to your domain.</BlockDetail>
+                    </BlockItem>
+                  </NavItem>
+                  <NavItem>
+                    <BlockItem>
+                      <BlockTitle>Site Navigation</BlockTitle>
+                      <BlockDetail>Menus, Footers, and other navigation elements bring interactivity to your pages.</BlockDetail>
+                    </BlockItem>
+                  </NavItem>
+                  <NavItem>
+                    <BlockItem>
+                      <BlockTitle>Color theme</BlockTitle>
+                      <BlockDetail>Make your site and pages look the way you love.</BlockDetail>
+                    </BlockItem>
+                  </NavItem>
+                </Nav>
+              </Section>
+              <Section>
+                <Header>Learn</Header>
+                <Nav>
+                  <NavItem>
+                    <BlockItem>
+                      <BlockTitle>Publishing overview</BlockTitle>
+                      <BlockDetail>Rapidly publish and manage your site.</BlockDetail>
+                    </BlockItem>
+                  </NavItem>
+                  <NavItem>
+                    <BlockItem>
+                      <BlockTitle>Themes</BlockTitle>
+                      <BlockDetail>Try some default themes, or learn how to build your own.</BlockDetail>
+                    </BlockItem>
+                  </NavItem>
+                </Nav>
+              </Section>
+            </Commands>
           </Row>
         </WelcomePage>
       </PageContainer>

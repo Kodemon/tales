@@ -86,3 +86,43 @@ export const NavItem = styled.li`
   overflow: hidden;
   text-overflow: ellipsis;
 `;
+
+export const BlockItem = styled.button`
+  background: rgba(0, 0, 0, 0.04);
+  border: none;
+  margin: 7px 0;
+  padding: 12px 10px;
+  width: calc(100% - 2px);
+  height: 5em;
+  font-size: 1.3em;
+  text-align: left;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: inherit;
+`;
+export const BlockTitle = styled.h3`
+  font-weight: 400;
+  font-size: 1em;
+  margin: 0;
+  margin-bottom: 0.25em;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #616161;
+`;
+export const BlockDetail = styled.span`
+  display: inline-block;
+  width: 100%;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #717171;
+`;
+
+export const NavDivider = styled.li`
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  width: 200px;
+  margin: 2em 0 1em;
+`;
