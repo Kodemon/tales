@@ -10,62 +10,56 @@ export class Overlay extends Component {
 
   public render() {
     const el = document.createElement("div");
-
-    const position = this.getSetting("position");
     const type = this.getSetting("type");
     const background = this.getSetting("background");
-    switch (position) {
-      case "background": {
-        el.className = "component-absolute";
-        setStyle(el, {
-          objectFit: "cover",
-          width: "100%",
-          height: "100%"
-        });
-        break;
-      }
-      default: {
-        setStyle(el, {
-          display: "block",
-          width: "100%",
-          ...(this.data.style || {})
-        });
-      }
-    }
+    const borderWidth = this.getSetting("borderWidth");
+    el.className = "component-absolute";
+    const styles = {
+      width: "100%",
+      height: "100vh",
+      ...(borderWidth ? { border: `${borderWidth}px solid white` } : {}),
+      ...(this.data.style || {})
+    };
     switch (type) {
       case "topToBottom": {
         setStyle(el, {
-          backgroundImage: `linear-gradient(0deg, ${background} 0%, transparent 100%)`
+          backgroundImage: `linear-gradient(0deg, ${background} 0%, transparent 100%)`,
+          ...styles
         });
         break;
       }
       case "bottomToTop": {
         setStyle(el, {
-          backgroundImage: `linear-gradient(180deg, ${background} 0%, transparent 100%)`
+          backgroundImage: `linear-gradient(180deg, ${background} 0%, transparent 100%)`,
+          ...styles
         });
         break;
       }
       case "rightToLeft": {
         setStyle(el, {
-          backgroundImage: `linear-gradient(90deg, ${background} 0%, transparent 100%)`
+          backgroundImage: `linear-gradient(90deg, ${background} 0%, transparent 100%)`,
+          ...styles
         });
         break;
       }
       case "leftToRight": {
         setStyle(el, {
-          backgroundImage: `linear-gradient(270deg, ${background} 0%, transparent 100%)`
+          backgroundImage: `linear-gradient(270deg, ${background} 0%, transparent 100%)`,
+          ...styles
         });
         break;
       }
       case "vignette": {
         setStyle(el, {
-          boxShadow: `inset 0 0 25vmin 10vmin ${background}`
+          boxShadow: `inset 0 0 25vmin 10vmin ${background}`,
+          ...styles
         });
         break;
       }
       default: {
         setStyle(el, {
-          background: `${background}`
+          background: `${background}`,
+          ...styles
         });
       }
     }

@@ -57,11 +57,7 @@ export class Sections extends React.Component<
         type: "overlay",
         settings: {
           type: "topToBottom",
-          background: "#333"
-        },
-        style: {
-          maxWidth: "100%",
-          height: "auto"
+          background: "rgba(0,0,0,.5)"
         }
       },
       true
