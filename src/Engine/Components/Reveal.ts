@@ -21,19 +21,91 @@ export class Reveal extends Component {
       height: viewport.height
     });
 
-    const app = new PIXI.Application();
+    const app = new PIXI.Application({
+      width: viewport.width,
+      height: viewport.height
+    });
 
     container.appendChild(app.view);
 
     const items = this.get("items");
+    const offset = 1 / items.length;
+
     items.forEach((item: any, index: number) => {
-      app.loader.add(`reveal-${this.id}-${index}`, item.src).load((loader, resources) => {
-        console.log("loaded", item);
+      const sprite = app.stage.addChild(PIXI.Sprite.from(item.src));
+
+      setBackground(
+        {
+          x: viewport.width,
+          y: viewport.height
+        },
+        sprite,
+        true
+      );
+
+      if (index !== 0) {
+        sprite.alpha = 0;
+      }
+
+      const start = offset * index;
+      const end = start + offset;
+
+      events.on("progress", (id: string, progress: number) => {
+        if (id === this.id) {
+          const percent = (progress - start) / offset; // the percentage of the index 0 - 1
+          switch (item.transition) {
+            case "swap": {
+              sprite.alpha = start < progress && progress < end ? 1 : progress < start ? 0 : 1;
+              break;
+            }
+            case "fade": {
+              sprite.alpha = percent > 1 ? 1 : percent < 0 ? 0 : percent;
+              break;
+            }
+          }
+        }
+      });
+    });
+
+    container.onclick = () => {
+      this.section.page.emit("edit", this.section, this);
+    };
+
+    this.section.append(this.id, container);
+
+    this.page.on("loaded", () => {
+      enterView({
+        selector: [this.section.container],
+        offset: 0,
+        progress: (el: any, progress: any) => {
+          events.emit("progress", this.id, progress);
+        }
       });
     });
   }
+}
 
-  /*
+function setBackground(viewport: { x: number; y: number }, sprite: PIXI.Sprite, isCover = false, forceSize?: any) {
+  const sp = forceSize || { x: sprite.width, y: sprite.height };
+
+  const winratio = viewport.x / viewport.y;
+  const spratio = sp.x / sp.y;
+  const pos = new PIXI.Point(0, 0);
+
+  let scale = 1;
+  if (isCover ? winratio > spratio : winratio < spratio) {
+    scale = viewport.x / sp.x;
+    pos.y = -(sp.y * scale - viewport.y) / 2;
+  } else {
+    scale = viewport.y / sp.y;
+    pos.x = -(sp.x * scale - viewport.x) / 2;
+  }
+
+  sprite.scale = new PIXI.Point(scale, scale);
+  sprite.position = pos;
+}
+
+/*
   public render() {
     const container = document.createElement("div");
     setStyle(container, {
@@ -188,4 +260,3 @@ export class Reveal extends Component {
     });
   }
   */
-}
