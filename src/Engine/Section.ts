@@ -1,6 +1,7 @@
 import * as rndm from "rndm";
 
 import { Image } from "./Components/Image";
+import { Overlay } from "./Components/Overlay";
 import { Reveal } from "./Components/Reveal";
 import { Text } from "./Components/Text";
 import { Page } from "./Page";
@@ -219,6 +220,10 @@ export class Section {
           }
           case "text": {
             this.components.push(new Text(this, component));
+            break;
+          }
+          case "overlay": {
+            this.components.push(new Overlay(this, component));
             break;
           }
           case "reveal": {

@@ -1,8 +1,8 @@
 import * as React from "react";
-import { SketchPicker } from "react-color";
 
 import { Section } from "Engine/Section";
 
+import { ColorPicker } from "../Lib/ColorPicker";
 import { SettingGroup, SettingGroupStacked } from "../Styles";
 
 export const SectionSettings: React.SFC<{
@@ -33,51 +33,7 @@ export const SectionSettings: React.SFC<{
           }}
         />
       </SettingGroup>
-      <ColorPicker label="Background Color" section={section} />
+      <ColorPicker label="Background Color" effected={section} />
     </div>
   );
 };
-
-class ColorPicker extends React.Component<
-  {
-    label: string;
-    section: Section;
-  },
-  {
-    show: boolean;
-  }
-> {
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      show: true
-    };
-  }
-
-  public render() {
-    return (
-      <SettingGroupStacked>
-        <label
-          style={{ cursor: "pointer" }}
-          className="input"
-          onClick={() => {
-            this.setState(() => ({ show: !this.state.show }));
-          }}
-        >
-          {this.props.label}
-          <i className={`fa fa-caret-${this.state.show ? "up" : "down"}`} style={{ float: "right", marginTop: 4 }} />
-        </label>
-        {this.state.show && (
-          <SketchPicker
-            width={240}
-            style={{ boxShadow: "none", background: "none" }}
-            color={this.props.section.getSetting("background")}
-            onChangeComplete={(color: any) => {
-              this.props.section.setSetting("background", color.hex, true);
-            }}
-          />
-        )}
-      </SettingGroupStacked>
-    );
-  }
-}

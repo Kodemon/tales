@@ -9,6 +9,7 @@ import { router } from "../../Router";
 import { Sections } from "./Components/Sections";
 import { setTextEditor } from "./Lib/Text";
 import { ImageSettings } from "./Settings/Image";
+import { OverlaySettings } from "./Settings/Overlay";
 import { PageSettings } from "./Settings/Page";
 import { RevealSettings } from "./Settings/Reveal";
 import { SectionSettings } from "./Settings/Section";
@@ -244,6 +245,9 @@ export class Editor extends React.Component<
       }
       case "text": {
         return <TextSettings section={section} component={component} />;
+      }
+      case "overlay": {
+        return <OverlaySettings section={section} component={component} />;
       }
       case "reveal": {
         return <RevealSettings section={section} component={component} />;

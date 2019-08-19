@@ -28,7 +28,7 @@ export class Reveal extends Component {
     container.appendChild(app.view);
 
     const items = this.get("items");
-    const offset = 1 / items.length;
+    const offset = items ? 1 / items.length : 1;
 
     items.forEach((item: any, index: number) => {
       const sprite = app.stage.addChild(PIXI.Sprite.from(item.src));

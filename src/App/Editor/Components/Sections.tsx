@@ -47,6 +47,28 @@ export class Sections extends React.Component<
   };
 
   /**
+   * Add a new overlay component to the provided section.
+   *
+   * @param section
+   */
+  private addOverlay = (section: Section) => {
+    section.addComponent(
+      {
+        type: "overlay",
+        settings: {
+          type: "topToBottom",
+          background: "#333"
+        },
+        style: {
+          maxWidth: "100%",
+          height: "auto"
+        }
+      },
+      true
+    );
+  };
+
+  /**
    * Add a new text component to the provided section.
    *
    * @param section
@@ -162,6 +184,13 @@ export class Sections extends React.Component<
         </button>
         <button
           onClick={() => {
+            this.addOverlay(section);
+          }}
+        >
+          + Overlay
+        </button>
+        <button
+          onClick={() => {
             this.addText(section);
           }}
         >
@@ -214,6 +243,9 @@ function getComponentIcon(type: string) {
       return <i className="fa fa-text-height" style={{ marginRight: 5 }} />;
     }
     case "reveal": {
+      return <i className="fa fa-image" style={{ marginRight: 5 }} />;
+    }
+    case "overlay": {
       return <i className="fa fa-image" style={{ marginRight: 5 }} />;
     }
   }
