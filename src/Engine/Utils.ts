@@ -1,5 +1,11 @@
 import * as fastdom from "fastdom";
 
+/*
+ |--------------------------------------------------------------------------------
+ | General Utilities
+ |--------------------------------------------------------------------------------
+ */
+
 /**
  * Safely retrieve a value from a deep nested object.
  *
@@ -76,20 +82,6 @@ export function deepCopy(o: any): any {
 }
 
 /**
- * Updates the elements style attributes using fastom.mutate.
- *
- * @param element
- * @param styles
- */
-export function setStyle(element: any, styles: any): void {
-  fastdom.mutate(() => {
-    for (const key in styles) {
-      element.style[key] = styles[key];
-    }
-  });
-}
-
-/**
  * Parse a object, if a key=>value is empty or undefined it will be removed from the object.
  *
  * @param obj
@@ -104,6 +96,26 @@ export function cleanObjectProperties(obj: any = {}) {
     }
   }
   return result;
+}
+
+/*
+ |--------------------------------------------------------------------------------
+ | DOM Utilities
+ |--------------------------------------------------------------------------------
+ */
+
+/**
+ * Updates the elements style attributes using fastom.mutate.
+ *
+ * @param element
+ * @param styles
+ */
+export function setStyle(element: any, styles: any): void {
+  fastdom.mutate(() => {
+    for (const key in styles) {
+      element.style[key] = styles[key];
+    }
+  });
 }
 
 /**
@@ -124,4 +136,58 @@ export function translate(x: number, y: number, z?: number): string {
     return `translate3d(${posX}${posX !== 0 ? "px" : ""},${posY}${posY !== 0 ? "px" : ""},${posZ}${posZ !== 0 ? "px" : ""})`;
   }
   return `translate(${posX}${posX !== 0 ? "px" : ""},${posY}${posY !== 0 ? "px" : ""})`;
+}
+
+function setBackground(viewport: { x: number; y: number }, sprite: PIXI.Sprite, type: "cover" | "contain" = "contain", forceSize?: any) {
+  const sp = forceSize || { x: sprite.width, y: sprite.height };
+
+  const winratio = viewport.x / viewport.y;
+  const spratio = sp.x / sp.y;
+  const pos = new PIXI.Point(0, 0);
+
+  let scale = 1;
+  if (type === "cover" ? winratio > spratio : winratio < spratio) {
+    scale = viewport.x / sp.x;
+    pos.y = -(sp.y * scale - viewport.y) / 2;
+  } else {
+    scale = viewport.y / sp.y;
+    pos.x = -(sp.x * scale - viewport.x) / 2;
+  }
+
+  sprite.scale = new PIXI.Point(scale, scale);
+  sprite.position = pos;
+}
+
+/*
+ |--------------------------------------------------------------------------------
+ | Pixi.js Utilities
+ |--------------------------------------------------------------------------------
+ */
+
+/**
+ * PixiJS Background Cover/Contain.
+ *
+ * @param viewport
+ * @param sprite
+ * @param type
+ * @param forceSize
+ */
+export function setPixiBackground(viewport: { x: number; y: number }, sprite: PIXI.Sprite, type: "cover" | "contain" = "contain", forceSize?: any) {
+  const sp = forceSize || { x: sprite.width, y: sprite.height };
+
+  const winratio = viewport.x / viewport.y;
+  const spratio = sp.x / sp.y;
+  const pos = new PIXI.Point(0, 0);
+
+  let scale = 1;
+  if (type === "cover" ? winratio > spratio : winratio < spratio) {
+    scale = viewport.x / sp.x;
+    pos.y = -(sp.y * scale - viewport.y) / 2;
+  } else {
+    scale = viewport.y / sp.y;
+    pos.x = -(sp.x * scale - viewport.x) / 2;
+  }
+
+  sprite.scale = new PIXI.Point(scale, scale);
+  sprite.position = pos;
 }

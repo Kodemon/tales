@@ -1,6 +1,5 @@
 const { FuseBox, EnvPlugin, CSSPlugin, JSONPlugin, WebIndexPlugin, QuantumPlugin } = require("fuse-box");
 const { src, task, context } = require("fuse-box/sparky");
-const path = require("path");
 
 /*
  |--------------------------------------------------------------------------------
