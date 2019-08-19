@@ -104,7 +104,11 @@ export class Conduit extends EventEmitter {
       this.storeConnection(conn);
 
       conn.on("open", () => {
-        this.sendTo(conn, "page:load", this.page.sections.map(s => s.data));
+        this.sendTo(conn, "page:load", {
+          id: this.page.id,
+          title: "Unknown",
+          sections: this.page.sections.map(s => s.data)
+        });
       });
     });
 
