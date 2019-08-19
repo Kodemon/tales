@@ -1,5 +1,6 @@
 import * as rndm from "rndm";
 
+import { Gallery } from "./Components/Gallery";
 import { Image } from "./Components/Image";
 import { Overlay } from "./Components/Overlay";
 import { Reveal } from "./Components/Reveal";
@@ -214,16 +215,20 @@ export class Section {
         current.setData(component);
       } else {
         switch (component.type) {
-          case "image": {
-            this.components.push(new Image(this, component));
-            break;
-          }
           case "text": {
             this.components.push(new Text(this, component));
             break;
           }
           case "overlay": {
             this.components.push(new Overlay(this, component));
+            break;
+          }
+          case "image": {
+            this.components.push(new Image(this, component));
+            break;
+          }
+          case "gallery": {
+            this.components.push(new Gallery(this, component));
             break;
           }
           case "reveal": {

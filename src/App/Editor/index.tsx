@@ -8,6 +8,7 @@ import { maybe } from "Engine/Utils";
 import { router } from "../../Router";
 import { Sections } from "./Components/Sections";
 import { setTextEditor } from "./Lib/Text";
+import { GallerySettings } from "./Settings/Gallery";
 import { ImageSettings } from "./Settings/Image";
 import { OverlaySettings } from "./Settings/Overlay";
 import { PageSettings } from "./Settings/Page";
@@ -248,6 +249,9 @@ export class Editor extends React.Component<
       }
       case "overlay": {
         return <OverlaySettings section={section} component={component} />;
+      }
+      case "gallery": {
+        return <GallerySettings section={section} component={component} />;
       }
       case "reveal": {
         return <RevealSettings section={section} component={component} />;

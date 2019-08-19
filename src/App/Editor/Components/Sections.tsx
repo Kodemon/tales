@@ -47,6 +47,37 @@ export class Sections extends React.Component<
   };
 
   /**
+   * Add a new gallery component to the provided section.
+   *
+   * @param section
+   */
+  private addGallery = (section: Section) => {
+    section.addComponent(
+      {
+        type: "gallery",
+        items: [
+          {
+            src: "https://images.unsplash.com/photo-1497431187953-886f6a75d2a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
+          },
+          {
+            src: "https://images.unsplash.com/photo-1547782793-e1444139967a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80"
+          },
+          {
+            src: "https://images.unsplash.com/photo-1495887633121-f1156ca7f6a0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80"
+          },
+          {
+            src: "https://images.unsplash.com/photo-1517697471339-4aa32003c11a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1355&q=80"
+          },
+          {
+            src: "https://images.unsplash.com/photo-1554726425-ac299472ae80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1329&q=80"
+          }
+        ]
+      },
+      true
+    );
+  };
+
+  /**
    * Add a new overlay component to the provided section.
    *
    * @param section
@@ -180,6 +211,13 @@ export class Sections extends React.Component<
         </button>
         <button
           onClick={() => {
+            this.addGallery(section);
+          }}
+        >
+          + Gallery
+        </button>
+        <button
+          onClick={() => {
             this.addOverlay(section);
           }}
         >
@@ -242,6 +280,9 @@ function getComponentIcon(type: string) {
       return <i className="fa fa-image" style={{ marginRight: 5 }} />;
     }
     case "overlay": {
+      return <i className="fa fa-image" style={{ marginRight: 5 }} />;
+    }
+    case "gallery": {
       return <i className="fa fa-image" style={{ marginRight: 5 }} />;
     }
   }

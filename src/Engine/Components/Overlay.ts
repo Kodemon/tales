@@ -15,8 +15,8 @@ export class Overlay extends Component {
     const borderWidth = this.getSetting("borderWidth");
     el.className = "component-absolute";
     const styles = {
-      width: "100%",
-      height: "100vh",
+      width: viewport.width,
+      height: viewport.height,
       ...(borderWidth ? { border: `${borderWidth}px solid white` } : {}),
       ...(this.data.style || {})
     };
