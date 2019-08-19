@@ -1,7 +1,8 @@
 import * as React from "react";
 import * as rndm from "rndm";
 
-import { router } from "../Router";
+import { router } from "../../Router";
+import { Commands, Header, Heading, Link, Nav, NavDetail, NavItem, PageContainer, Row, Section, Splash, Subtitle, Title, WelcomePage } from "./Styles";
 
 export class Site extends React.Component<
   {},
@@ -62,27 +63,32 @@ export class Site extends React.Component<
     }
 
     return (
-      <div>
-        <h1>Site - {site.title}</h1>
-        <section>
-          <ul>
-            <li>
-              <button type="button" onClick={this.createPage}>
-                New Page
-              </button>
-            </li>
-          </ul>
-        </section>
-        <section>
-          <ul>
-            {pages.map(page => (
-              <li key={page.id}>
-                <button onClick={() => router.goTo(`/edit/${page.id}`)}>{page.title}</button>
-              </li>
-            ))}
-          </ul>
-        </section>
-      </div>
+      <PageContainer>
+        <WelcomePage>
+          <Title>
+            <Heading>Site - {site.title}</Heading>
+          </Title>
+          <Row>
+            <Splash>
+              <Section>
+                <Header>Pages</Header>
+                <Nav>
+                  {pages.map(page => (
+                    <NavItem key={page.id}>
+                      <Link onClick={() => router.goTo(`/edit/${page.id}`)}>{page.title}</Link>
+                    </NavItem>
+                  ))}
+                  <NavItem>
+                    <Link type="button" onClick={this.createPage}>
+                      New Page
+                    </Link>
+                  </NavItem>
+                </Nav>
+              </Section>
+            </Splash>
+          </Row>
+        </WelcomePage>
+      </PageContainer>
     );
   }
 }

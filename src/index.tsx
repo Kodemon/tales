@@ -1,10 +1,10 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-import { Dashboard } from "./App/Dashboard";
 import { Editor } from "./App/Editor";
 import { Reader } from "./App/Reader";
-import { Site } from "./App/Site";
+import { Dashboard } from "./App/Workspace/Dashboard";
+import { Site } from "./App/Workspace/Site";
 import { Page } from "./Engine/Page";
 import { Route, router } from "./Router";
 
