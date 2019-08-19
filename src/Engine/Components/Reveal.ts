@@ -21,6 +21,27 @@ export class Reveal extends Component {
       height: viewport.height
     });
 
+    const app = new PIXI.Application();
+
+    container.appendChild(app.view);
+
+    const items = this.get("items");
+    items.forEach((item: any, index: number) => {
+      app.loader.add(`reveal-${this.id}-${index}`, item.src).load((loader, resources) => {
+        console.log("loaded", item);
+      });
+    });
+  }
+
+  /*
+  public render() {
+    const container = document.createElement("div");
+    setStyle(container, {
+      position: "sticky",
+      top: 0,
+      height: viewport.height
+    });
+
     const items = this.get("items");
     const offset = 1 / items.length;
 
@@ -166,4 +187,5 @@ export class Reveal extends Component {
       });
     });
   }
+  */
 }
