@@ -13,6 +13,16 @@ export const OverlaySettings: React.SFC<{
     <React.Fragment key={`component-${component.id}`}>
       <div style={{ padding: 10, borderBottom: "1px dashed #ccc" }}>
         <SettingGroup>
+          <label className="input">Height</label>
+          <input
+            type="text"
+            defaultValue={component.getStyle("height", "")}
+            onBlur={event => {
+              component.setStyle("height", event.target.value, true);
+            }}
+          />
+        </SettingGroup>
+        <SettingGroup>
           <label className="input">Border Width</label>
           <input
             type="text"

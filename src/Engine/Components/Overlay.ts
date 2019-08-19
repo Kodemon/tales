@@ -16,7 +16,7 @@ export class Overlay extends Component {
     el.className = "component-absolute";
     const styles = {
       width: viewport.width,
-      height: viewport.height,
+      height: this.getStyle("height", viewport.height),
       ...(borderWidth ? { border: `${borderWidth}px solid white` } : {}),
       ...(this.data.style || {})
     };
