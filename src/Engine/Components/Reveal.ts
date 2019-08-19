@@ -71,6 +71,11 @@ export class Reveal extends Component {
       this.section.page.emit("edit", this.section, this);
     };
 
+    const scroller = document.createElement("div");
+    scroller.className = "component-scroll_overlay";
+
+    container.append(scroller);
+
     this.section.append(this.id, container);
 
     this.page.on("loaded", () => {
