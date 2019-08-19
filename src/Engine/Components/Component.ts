@@ -40,14 +40,6 @@ export class Component {
   }
 
   /**
-   * Conduit instance.
-   * @type {Conduit}
-   */
-  get conduit() {
-    return this.page.conduit;
-  }
-
-  /**
    * Edit state of the page.
    * @type {boolean}
    */
@@ -108,7 +100,7 @@ export class Component {
     });
     this.section.commit(section, this.id);
     if (isSource) {
-      this.section.page.conduit.send("component:set", section.id, this.id, key, value);
+      this.page.send("component:set", section.id, this.id, key, value);
     }
   }
 
@@ -144,7 +136,7 @@ export class Component {
     });
     this.section.commit(section, this.id);
     if (isSource) {
-      this.section.page.conduit.send("component:setting", section.id, this.id, key, value);
+      this.page.send("component:setting", section.id, this.id, key, value);
     }
   }
 
@@ -180,7 +172,7 @@ export class Component {
     });
     this.section.commit(section, this.id);
     if (isSource) {
-      this.section.page.conduit.send("component:style", section.id, this.id, key, value);
+      this.page.send("component:style", section.id, this.id, key, value);
     }
   }
 
@@ -231,7 +223,7 @@ export class Component {
     this.section.commit(section);
 
     if (isSource) {
-      this.conduit.send("component:removed", section.id, this.id);
+      this.page.send("component:removed", section.id, this.id);
     }
   }
 }

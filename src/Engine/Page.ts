@@ -110,7 +110,9 @@ export class Page extends EventEmitter {
    * Initiates a conduit connection using peer.js
    */
   public share() {
-    this.conduit = new Conduit(this);
+    if (!this.conduit) {
+      this.conduit = new Conduit(this);
+    }
   }
 
   /**
@@ -119,13 +121,27 @@ export class Page extends EventEmitter {
    * @param peerId
    */
   public connect(peerId: string) {
-    if (!this.conduit) {
+    if (this.conduit) {
+      this.conduit.connect(peerId);
+    } else {
       this.share();
       this.once("conduit:open", () => {
         this.conduit!.connect(peerId);
       });
-    } else {
-      this.conduit!.connect(peerId);
+    }
+  }
+
+  /**
+   * Sends a new event to all connected connections.
+   *
+   * @param type
+   * @param args
+   */
+  public send(type: string, ...args: any) {
+    if (this.conduit) {
+      this.conduit.list.forEach(conn => {
+        conn.send(JSON.stringify({ type, args }));
+      });
     }
   }
 
@@ -152,7 +168,7 @@ export class Page extends EventEmitter {
     this.cache();
 
     if (isSource && this.conduit) {
-      this.conduit.send("section:added", section.data);
+      this.send("section:added", section.data);
     }
 
     return section;

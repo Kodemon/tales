@@ -86,7 +86,7 @@ export class Section {
     data.settings[key] = value;
     this.commit(data);
     if (isSource) {
-      this.page.conduit.send("section:setting", this.data.id, key, value);
+      this.page.send("section:setting", this.data.id, key, value);
     }
   }
 
@@ -119,7 +119,7 @@ export class Section {
     section.components.push(data);
     this.commit(section, data.id);
     if (isSource) {
-      this.page.conduit.send("component:added", section.id, data);
+      this.page.send("component:added", section.id, data);
     }
     this.page.emit("edit", this, this.components.find(c => c.id === data.id));
   }

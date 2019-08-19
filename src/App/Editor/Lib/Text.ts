@@ -35,10 +35,10 @@ export function setTextEditor(component: any) {
     if (source === "user") {
       const data = { content: quill.getContents(), delta };
 
-      component.section.page.conduit.send("component:set", component.section.id, component.id, "text", data);
+      component.page.send("component:set", component.section.id, component.id, "text", data);
       component.set("text", data, true);
 
-      component.section.page.conduit.send("component:set", component.section.id, component.id, "html", quill.root.innerHTML);
+      component.page.send("component:set", component.section.id, component.id, "html", quill.root.innerHTML);
       component.set("html", quill.root.innerHTML, true);
     }
   });

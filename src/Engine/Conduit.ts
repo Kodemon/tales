@@ -66,26 +66,13 @@ export class Conduit extends EventEmitter {
   */
 
   /**
-   * Sends a new event to all connected connections.
-   *
-   * @param type
-   * @param args
-   */
-  public send(type: ConduitType, ...args: any) {
-    log("sending", type, args);
-    this.list.forEach(conn => {
-      conn.send(JSON.stringify({ type, args }));
-    });
-  }
-
-  /**
    * Send a new event to the provided connection.
    *
    * @param conn
    * @param type
    * @param args
    */
-  public sendTo(conn: Peer.DataConnection, type: ConduitType, ...args: any) {
+  public sendTo(conn: Peer.DataConnection, type: string, ...args: any) {
     log("sending", type, args);
     conn.send(JSON.stringify({ type, args }));
   }
@@ -254,21 +241,3 @@ export class Conduit extends EventEmitter {
     this.on("ping", ping);
   }
 }
-
-/*
- |--------------------------------------------------------------------------------
- | Types
- |--------------------------------------------------------------------------------
- */
-
-export type ConduitType =
-  | "ping"
-  | "page:load"
-  | "section:added"
-  | "section:setting"
-  | "section:removed"
-  | "component:added"
-  | "component:set"
-  | "component:setting"
-  | "component:style"
-  | "component:removed";
