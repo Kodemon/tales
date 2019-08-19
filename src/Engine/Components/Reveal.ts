@@ -42,8 +42,18 @@ export class Reveal extends Component {
         true
       );
 
+      let mask: PIXI.Graphics | undefined;
       if (index !== 0) {
-        sprite.alpha = 0;
+        switch (item.transition) {
+          case "up":
+          case "right":
+          case "down":
+          case "left": {
+            mask = new PIXI.Graphics();
+            sprite.mask = mask;
+            break;
+          }
+        }
       }
 
       const start = offset * index;
@@ -51,14 +61,42 @@ export class Reveal extends Component {
 
       events.on("progress", (id: string, progress: number) => {
         if (id === this.id) {
-          const percent = (progress - start) / offset; // the percentage of the index 0 - 1
+          const decimal = (progress - start) / offset; // the percentage of the index 0 - 1
           switch (item.transition) {
             case "swap": {
               sprite.alpha = start < progress && progress < end ? 1 : progress < start ? 0 : 1;
               break;
             }
             case "fade": {
-              sprite.alpha = percent > 1 ? 1 : percent < 0 ? 0 : percent;
+              sprite.alpha = decimal > 1 ? 1 : decimal < 0 ? 0 : decimal;
+              break;
+            }
+            case "up": {
+              if (mask) {
+                mask.clear();
+                mask.beginFill(0xff3300 /*0x8bc5ff*/).drawRect(0, viewport.height - viewport.height * decimal, viewport.width, viewport.height * decimal);
+              }
+              break;
+            }
+            case "right": {
+              if (mask) {
+                mask.clear();
+                mask.beginFill(0xff3300 /*0x8bc5ff*/).drawRect(viewport.width - viewport.width * decimal, 0, viewport.width * decimal, viewport.height);
+              }
+              break;
+            }
+            case "down": {
+              if (mask) {
+                mask.clear();
+                mask.beginFill(0xff3300 /*0x8bc5ff*/).drawRect(0, 0, viewport.width, viewport.height * decimal);
+              }
+              break;
+            }
+            case "left": {
+              if (mask) {
+                mask.clear();
+                mask.beginFill(0xff3300 /*0x8bc5ff*/).drawRect(0, 0, viewport.width * decimal, viewport.height);
+              }
               break;
             }
           }
