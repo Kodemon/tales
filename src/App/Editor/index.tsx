@@ -5,6 +5,7 @@ import { Page } from "Engine/Page";
 import { Section } from "Engine/Section";
 import { maybe } from "Engine/Utils";
 
+import { router } from "../../Router";
 import { Sections } from "./Components/Sections";
 import { setTextEditor } from "./Lib/Text";
 import { ImageSettings } from "./Settings/Image";
@@ -13,12 +14,6 @@ import { RevealSettings } from "./Settings/Reveal";
 import { SectionSettings } from "./Settings/Section";
 import { TextSettings } from "./Settings/Text";
 import { Content, Header, SectionSidebar, SettingSidebar, Wrapper } from "./Styles";
-
-declare global {
-  interface Window {
-    page: Page;
-  }
-}
 
 export class Editor extends React.Component<
   {},
@@ -61,7 +56,7 @@ export class Editor extends React.Component<
    * @should update editor on section update events
    */
   public componentDidMount() {
-    window.page = this.page = new Page(this.content, true)
+    window.page = this.page = new Page(router.params.get("page"), this.content, true)
       .on("ready", this.onReady)
       .on("loaded", this.onLoaded)
       .on("refresh", this.onRefresh)
@@ -87,7 +82,7 @@ export class Editor extends React.Component<
    * Triggers when the page container has successfully rendered.
    */
   private onReady = () => {
-    const cache = localStorage.getItem("page");
+    const cache = localStorage.getItem(`page.${router.params.get("page")}`);
     if (cache) {
       this.page.load(JSON.parse(cache));
     }

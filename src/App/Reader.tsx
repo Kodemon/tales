@@ -2,16 +2,8 @@ import * as React from "react";
 
 import { Page } from "Engine/Page";
 
+import { router } from "../Router";
 import { Content } from "./Editor/Styles";
-
-declare global {
-  interface Window {
-    page: Page;
-  }
-}
-
-const urlParams = new URLSearchParams(window.location.search);
-const peerId = urlParams.get("peer");
 
 export class Reader extends React.Component {
   private content: HTMLDivElement | null;
@@ -23,9 +15,9 @@ export class Reader extends React.Component {
       if (cache) {
         this.page.load(JSON.parse(cache));
       }
-      if (peerId) {
+      if (router.query.has("peer")) {
         this.page.on("conduit:open", () => {
-          this.page.connect(peerId);
+          this.page.connect(router.query.get("peer"));
         });
       }
     });

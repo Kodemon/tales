@@ -6,6 +6,12 @@ import { viewport } from "./Viewport";
 
 export class Page extends EventEmitter {
   /**
+   * Unique page id.
+   * @type {string}
+   */
+  public id: string;
+
+  /**
    * Editing state.
    * @type {boolean}
    */
@@ -30,12 +36,14 @@ export class Page extends EventEmitter {
   public sections: Section[] = [];
 
   /**
+   * @param id
    * @param target
    * @param editing
    */
-  constructor(container: any, editing = false) {
+  constructor(id: string, container: any, editing = false) {
     super();
 
+    this.id = id;
     this.container = container;
     this.editing = editing;
 
@@ -73,13 +81,13 @@ export class Page extends EventEmitter {
   /**
    * Load a cached page.
    *
-   * @param list
+   * @param page
    */
-  public load(list: any[]) {
+  public load(page: any) {
     this.container.innerHTML = "";
 
     this.sections = [];
-    for (const data of list) {
+    for (const data of page.sections) {
       this.sections.push(new Section(this, getSection(data)).render());
     }
 
@@ -185,14 +193,21 @@ export class Page extends EventEmitter {
     this.sections.forEach(scene => {
       sections.push(scene.data);
     });
-    localStorage.setItem("page", JSON.stringify(sections));
+    localStorage.setItem(
+      `page.${this.id}`,
+      JSON.stringify({
+        id: this.id,
+        title: "Unknown",
+        sections
+      })
+    );
   }
 
   /**
    * Completely flush the page of all content.
    */
   public flush() {
-    localStorage.removeItem("page");
+    localStorage.removeItem(`page.${this.id}`);
     this.sections = [];
     this.container.innerHTML = "";
   }
