@@ -16,10 +16,9 @@ export class Reveal extends Component {
   public render() {
     const container = document.createElement("div");
     setStyle(container, {
-      position: "sticky",
-      top: 0,
       height: viewport.height
     });
+    container.className = "section-sticky";
 
     const app = new PIXI.Application({
       width: viewport.width,
