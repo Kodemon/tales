@@ -19,30 +19,39 @@ export class Site extends React.Component<
   }
 
   public componentDidMount() {
-    const pages: any[] = [];
-    const cache = localStorage.getItem(`site.${router.params.get("site")}`);
-
-    for (const key in localStorage) {
-      if (key.match("page.")) {
-        pages.push(JSON.parse(localStorage.getItem(key) || ""));
+    const sites = JSON.parse(localStorage.getItem("sites") || "[]");
+    if (sites) {
+      const site = sites.find((s: any) => s.id === router.params.get("site"));
+      if (site) {
+        const pages: any[] = [];
+        for (const pageId of site.pages) {
+          const cache = localStorage.getItem(`page.${pageId}`);
+          if (cache) {
+            const page = JSON.parse(cache);
+            pages.push({
+              id: page.id,
+              title: page.title
+            });
+          }
+        }
+        this.setState(() => ({ site, pages }));
       }
     }
-
-    const site = JSON.parse(cache || "");
-
-    this.setState(() => ({ site, pages }));
   }
 
   private createPage = () => {
     const id = rndm.base62(10);
-    localStorage.setItem(
-      `page.${id}`,
-      JSON.stringify({
-        id,
-        title: "Unknown",
-        sections: []
-      })
-    );
+
+    const sites = JSON.parse(localStorage.getItem("sites") || "[]");
+    if (sites) {
+      for (const site of sites) {
+        if (site.id === router.params.get("site")) {
+          site.pages.push(id);
+        }
+      }
+      localStorage.setItem("sites", JSON.stringify(sites));
+    }
+
     router.goTo(`/edit/${id}`);
   };
 
