@@ -14,6 +14,9 @@ export class Reveal extends Component {
   }
 
   public render() {
+    const wrapper = document.createElement("div");
+    wrapper.className = "component-absolute";
+
     const container = document.createElement("div");
     setStyle(container, {
       height: viewport.height
@@ -104,16 +107,17 @@ export class Reveal extends Component {
       });
     });
 
-    container.onclick = () => {
+    wrapper.onclick = () => {
       this.section.page.emit("edit", this.section, this);
     };
 
     const scroller = document.createElement("div");
     scroller.className = "component-scroll_overlay";
 
-    container.append(scroller);
+    wrapper.append(container);
+    wrapper.append(scroller);
 
-    this.section.append(this.id, container);
+    this.section.append(this.id, wrapper);
 
     this.page.on("loaded", () => {
       enterView({

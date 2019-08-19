@@ -13,7 +13,7 @@ export class Overlay extends Component {
     const type = this.getSetting("type");
     const background = this.getSetting("background");
     const borderWidth = this.getSetting("borderWidth");
-    el.className = "component-absolute";
+    el.className = this.getSetting("sticky", false) ? "section-sticky" : "component-absolute";
     const styles = {
       width: viewport.width,
       height: this.getStyle("height", viewport.height),

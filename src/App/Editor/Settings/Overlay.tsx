@@ -32,6 +32,16 @@ export const OverlaySettings: React.SFC<{
             }}
           />
         </SettingGroup>
+        <SettingGroup>
+          <label className="input">Sticky</label>
+          <input
+            type="checkbox"
+            value={component.getSetting("sticky", false)}
+            onBlur={event => {
+              component.setSetting("sticky", event.target.checked, true);
+            }}
+          />
+        </SettingGroup>
         <ColorPicker label="Background Color" effected={component} />
         <SettingGroup>
           <label>Position</label>
