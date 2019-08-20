@@ -4,7 +4,7 @@ import * as rndm from "rndm";
 import { Conduit } from "./Conduit";
 import { Source } from "./Enums";
 import { Section } from "./Section";
-import { insertElementAfter, insertElementBefore, moveArrayIndex, swapElements } from "./Utils";
+import { insertElementAfter, moveArrayIndex } from "./Utils";
 import { viewport } from "./Viewport";
 
 export class Page extends EventEmitter {
@@ -193,7 +193,7 @@ export class Page extends EventEmitter {
    * @param prevIndex
    * @param nextIndex
    */
-  public moveSection(prevIndex: number, nextIndex: number) {
+  public moveSection(prevIndex: number, nextIndex: number, source: Source = Source.Silent) {
     if (prevIndex === nextIndex) {
       return; // no need to update, indexes are the same
     }
@@ -218,6 +218,10 @@ export class Page extends EventEmitter {
     }
 
     this.emit("refresh");
+
+    if (source === Source.User) {
+      this.send("section:move", this.id, prevIndex, nextIndex);
+    }
   }
 
   /*

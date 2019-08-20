@@ -36,7 +36,7 @@ export class Sections extends React.Component<
 
   private onDragEnd = ({ type, source, destination }: any) => {
     if (type === "SECTION") {
-      this.props.page.moveSection(source.index, destination.index);
+      this.props.page.moveSection(source.index, destination.index, Source.User);
     }
   };
 

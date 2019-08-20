@@ -129,6 +129,12 @@ export class Conduit extends EventEmitter {
       }
     });
 
+    this.on("section:move", (conn, pageId, prevIndex, nextIndex) => {
+      if (pageId === this.page.id) {
+        this.page.moveSection(prevIndex, nextIndex);
+      }
+    });
+
     // ### Stack Events
 
     this.on("stack:added", (conn, pageId, sectionId, data) => {
