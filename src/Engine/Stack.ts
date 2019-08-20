@@ -41,6 +41,7 @@ export class Stack extends DataManager<Data> {
 
     this.section = section;
     this.section.element.append((this.element = document.createElement("div")));
+    this.element.id = data.id;
 
     for (const data of this.data.components) {
       const Component = this.getComponent(data.type);

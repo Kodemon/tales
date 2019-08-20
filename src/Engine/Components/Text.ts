@@ -28,6 +28,7 @@ export class Text extends Component {
     super(stack, data);
 
     this.stack.element.append((this.element = document.createElement("article")));
+    this.element.id = data.id;
 
     if (this.editing) {
       this.loadQuill();

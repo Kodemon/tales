@@ -4,6 +4,7 @@ import * as rndm from "rndm";
 import { Conduit } from "./Conduit";
 import { Source } from "./Enums";
 import { Section } from "./Section";
+import { moveArrayIndex, swapElements } from "./Utils";
 import { viewport } from "./Viewport";
 
 export class Page extends EventEmitter {
@@ -184,6 +185,22 @@ export class Page extends EventEmitter {
     }
 
     return section;
+  }
+
+  public moveSection(prevIndex: number, nextIndex: number) {
+    if (prevIndex === nextIndex) {
+      return; // no need to update, indexes are the same
+    }
+
+    const sectionA = this.sections[prevIndex];
+    const sectionB = this.sections[nextIndex];
+
+    this.sections = moveArrayIndex(this.sections, prevIndex, nextIndex);
+
+    swapElements(sectionA.element, sectionB.element);
+
+    this.cache();
+    this.emit("refresh");
   }
 
   /*

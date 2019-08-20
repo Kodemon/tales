@@ -37,6 +37,7 @@ export class Section extends DataManager<Data> {
 
     this.page = page;
     this.page.element.append((this.element = document.createElement("section")));
+    this.element.id = data.id;
 
     for (const data of this.data.stacks) {
       const stack = new Stack(this, data);

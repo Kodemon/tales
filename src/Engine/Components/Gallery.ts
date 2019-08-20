@@ -11,6 +11,7 @@ export class Gallery extends Component {
     super(stack, data);
 
     this.stack.element.append((this.element = document.createElement("div")));
+    this.element.id = data.id;
 
     const items = this.getSetting("items");
 

@@ -23,6 +23,7 @@ export class Reveal extends Component {
     super(stack, data);
 
     this.stack.element.append((this.element = document.createElement("div")));
+    this.element.id = data.id;
     this.element.className = "component-absolute";
 
     this.container = document.createElement("div");

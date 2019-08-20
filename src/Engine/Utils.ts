@@ -49,6 +49,32 @@ export function maybe<V = any>(obj: any, path: string | string[], fallback?: any
 }
 
 /**
+ * Returns a new array with the updated index positions.
+ *
+ * @example
+ *
+ * const arr1 = ["foo", "bar", "foobar"];
+ * const arr2 = moveArrayIndex(arr1, 2, 0); // ["foobar", "foo", "bar"]
+ *
+ * @param arr
+ * @param prevIndex
+ * @param nextIndex
+ *
+ * @returns sorted array
+ */
+export function moveArrayIndex(arr: any[], prevIndex: number, nextIndex: number) {
+  const result = [...arr];
+  if (nextIndex >= result.length) {
+    let k = nextIndex - result.length;
+    while (k-- + 1) {
+      result.push("");
+    }
+  }
+  result.splice(nextIndex, 0, result.splice(prevIndex, 1)[0]);
+  return result;
+}
+
+/**
  * Deep copies provided object, returning a immutable result. If performance is
  * a minor concern, consider using immutable.js
  *
@@ -140,6 +166,45 @@ export function translate(x: number, y: number, z?: number): string {
     return `translate3d(${posX}${posX !== 0 ? "px" : ""},${posY}${posY !== 0 ? "px" : ""},${posZ}${posZ !== 0 ? "px" : ""})`;
   }
   return `translate(${posX}${posX !== 0 ? "px" : ""},${posY}${posY !== 0 ? "px" : ""})`;
+}
+
+/**
+ * Swaps two elements by their ids.
+ *
+ * @param a
+ * @param b
+ */
+export function swapElementsById(a: string, b: string) {
+  swapElements(document.getElementById(a), document.getElementById(b));
+}
+
+/**
+ * Swaps two DOM elements.
+ *
+ * @param obj1
+ * @param obj2
+ */
+export function swapElements(obj1: any, obj2: any) {
+  // save the location of obj2
+  const parent2 = obj2.parentNode;
+  const next2 = obj2.nextSibling;
+  // special case for obj1 is the next sibling of obj2
+  if (next2 === obj1) {
+    // just put obj1 before obj2
+    parent2.insertBefore(obj1, obj2);
+  } else {
+    // insert obj2 right before obj1
+    obj1.parentNode.insertBefore(obj2, obj1);
+
+    // now insert obj1 where obj2 was
+    if (next2) {
+      // if there was an element after obj2, then insert obj1 right before that
+      parent2.insertBefore(obj1, next2);
+    } else {
+      // otherwise, just append as last child
+      parent2.appendChild(obj1);
+    }
+  }
 }
 
 /*

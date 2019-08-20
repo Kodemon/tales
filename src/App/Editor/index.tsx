@@ -10,7 +10,6 @@ import { Source } from "Engine/Enums";
 import { Stack } from "Engine/Stack";
 import { router } from "../../Router";
 import { Sections } from "./Components/Sections";
-import { setTextEditor } from "./Lib/Text";
 import { GallerySettings } from "./Settings/Gallery";
 import { ImageSettings } from "./Settings/Image";
 import { OverlaySettings } from "./Settings/Overlay";
@@ -187,7 +186,17 @@ export class Editor extends React.Component<
               </button>
             </div>
           </Header>
-          {this.page && <Sections page={this.page} active={maybe(this.state, "component.id", "")} edit={this.onEdit} />}
+          {this.page && (
+            <Sections
+              page={this.page}
+              active={{
+                section: maybe(this.state, "section.id", ""),
+                stack: maybe(this.state, "stack.id", ""),
+                component: maybe(this.state, "component.id", "")
+              }}
+              edit={this.onEdit}
+            />
+          )}
         </SectionSidebar>
         <Content ref={c => (this.content = c)} />
         <SettingSidebar>{this.renderTabs()}</SettingSidebar>
