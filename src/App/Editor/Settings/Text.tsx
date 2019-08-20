@@ -73,6 +73,17 @@ export const TextSettings: React.SFC<{
       </Header>
       <div style={{ padding: 10 }}>
         <SettingGroup>
+          <label className="input">Font Size</label>
+          <input
+            type="text"
+            defaultValue={component.getStyle("fontSize", "")}
+            placeholder="1em"
+            onBlur={event => {
+              component.setStyle("fontSize", event.target.value, Source.User);
+            }}
+          />
+        </SettingGroup>
+        <SettingGroup>
           <label className="input">Color</label>
           <input
             type="text"
@@ -84,13 +95,13 @@ export const TextSettings: React.SFC<{
           />
         </SettingGroup>
         <SettingGroup>
-          <label className="input">Font Size</label>
+          <label className="input">Shadow</label>
           <input
             type="text"
-            defaultValue={component.getStyle("fontSize", "")}
-            placeholder="1em"
+            defaultValue={component.getStyle("textShadow", "")}
+            placeholder="1px 1px 2px #262626"
             onBlur={event => {
-              component.setStyle("fontSize", event.target.value, Source.User);
+              component.setStyle("textShadow", event.target.value, Source.User);
             }}
           />
         </SettingGroup>
@@ -106,13 +117,38 @@ export const TextSettings: React.SFC<{
           />
         </SettingGroup>
         <SettingGroup>
-          <label className="input">Shadow</label>
+          <label className="input">Columns</label>
+          <select
+            value={component.getStyle("columns", "1")}
+            onChange={event => {
+              component.setStyle("columns", event.target.value, Source.User);
+            }}
+          >
+            <option value="1">One</option>
+            <option value="2">Two</option>
+            <option value="3">Three</option>
+            <option value="4">Four</option>
+          </select>
+        </SettingGroup>
+        <SettingGroup>
+          <label className="input">Column Gap</label>
           <input
             type="text"
-            defaultValue={component.getStyle("textShadow", "")}
-            placeholder="1px 1px 2px #262626"
+            defaultValue={component.getStyle("columnGap", "")}
+            placeholder="30px"
             onBlur={event => {
-              component.setStyle("textShadow", event.target.value, Source.User);
+              component.setStyle("columnGap", event.target.value, Source.User);
+            }}
+          />
+        </SettingGroup>
+        <SettingGroup>
+          <label className="input">Column Rule</label>
+          <input
+            type="text"
+            defaultValue={component.getStyle("columnRule", "")}
+            placeholder="2px outset #444"
+            onBlur={event => {
+              component.setStyle("columnRule", event.target.value, Source.User);
             }}
           />
         </SettingGroup>
