@@ -96,7 +96,7 @@ export class Stack extends DataManager<Data> {
     const Component = this.getComponent(data.type);
     if (Component) {
       const component = new Component(this, {
-        id: rndm.base62(10),
+        id: data.id || rndm.base62(10),
         type: data.type,
         area: data.area || "",
         name: data.name,

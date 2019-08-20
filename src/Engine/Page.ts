@@ -148,7 +148,6 @@ export class Page extends EventEmitter {
    */
   public send(type: string, ...args: any) {
     if (this.conduit) {
-      console.log("Sending: ", type, args);
       this.conduit.list.forEach(conn => {
         conn.send(JSON.stringify({ type, args }));
       });
@@ -169,7 +168,7 @@ export class Page extends EventEmitter {
    */
   public addSection(data: any, source: Source = Source.Silent) {
     const section = new Section(this, {
-      id: rndm.base62(10),
+      id: data.id || rndm.base62(10),
       settings: data.settings || {},
       stacks: data.stacks || []
     });

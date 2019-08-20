@@ -205,7 +205,6 @@ export class Conduit extends EventEmitter {
 
     conn.on("data", (data: any) => {
       const { type, args } = JSON.parse(data);
-      console.log("Received data: ", type, args);
       this.emit(type, conn, ...args);
     });
 

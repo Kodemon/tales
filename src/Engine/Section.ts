@@ -87,7 +87,7 @@ export class Section extends DataManager<Data> {
    */
   public addStack(data: any, source: Source = Source.Silent) {
     const stack = new Stack(this, {
-      id: rndm.base62(10),
+      id: data.id || rndm.base62(10),
       name: data.name,
       settings: data.settings || {},
       style: data.style || {},
