@@ -4,7 +4,7 @@ import * as rndm from "rndm";
 import { Conduit } from "./Conduit";
 import { Source } from "./Enums";
 import { Section } from "./Section";
-import { moveArrayIndex, swapElements } from "./Utils";
+import { insertElementAfter, insertElementBefore, moveArrayIndex, swapElements } from "./Utils";
 import { viewport } from "./Viewport";
 
 export class Page extends EventEmitter {
@@ -187,19 +187,36 @@ export class Page extends EventEmitter {
     return section;
   }
 
+  /**
+   * Moves a section to a new position on the page.
+   *
+   * @param prevIndex
+   * @param nextIndex
+   */
   public moveSection(prevIndex: number, nextIndex: number) {
     if (prevIndex === nextIndex) {
       return; // no need to update, indexes are the same
     }
 
     const sectionA = this.sections[prevIndex];
+    if (!sectionA) {
+      return console.error(`Move Section > Could not find the source section at index position ${prevIndex}.`);
+    }
+
     const sectionB = this.sections[nextIndex];
+    if (!sectionA) {
+      return console.error(`Move Section > Could not find the destination section at index position ${nextIndex}.`);
+    }
 
     this.sections = moveArrayIndex(this.sections, prevIndex, nextIndex);
-
-    swapElements(sectionA.element, sectionB.element);
-
     this.cache();
+
+    if (prevIndex > nextIndex) {
+      this.element.insertBefore(sectionA.element, sectionB.element);
+    } else {
+      insertElementAfter(sectionA.element, sectionB.element);
+    }
+
     this.emit("refresh");
   }
 

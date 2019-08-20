@@ -207,6 +207,16 @@ export function swapElements(obj1: any, obj2: any) {
   }
 }
 
+/**
+ * Moves a element to appear after another.
+ *
+ * @param sourceNode
+ * @param referenceNode
+ */
+export function insertElementAfter(sourceNode: any, referenceNode: any) {
+  referenceNode.parentNode.insertBefore(sourceNode, referenceNode.nextSibling);
+}
+
 /*
  |--------------------------------------------------------------------------------
  | Pixi.js Utilities

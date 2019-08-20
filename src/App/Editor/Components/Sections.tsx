@@ -34,23 +34,25 @@ export class Sections extends React.Component<
     this.state = { expanded };
   }
 
-  private onDragEnd = ({ source, destination }: any) => {
-    this.props.page.moveSection(source.index, destination.index);
+  private onDragEnd = ({ type, source, destination }: any) => {
+    if (type === "SECTION") {
+      this.props.page.moveSection(source.index, destination.index);
+    }
   };
 
   public render() {
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
-        <Droppable droppableId="sections" type="SECTIONS">
+        <Droppable droppableId={this.props.page.id} type="SECTION">
           {(provided, snapshot) => (
-            <SectionList ref={provided.innerRef} style={{ backgroundColor: snapshot.isDraggingOver ? "blue" : "#fcfcfc" }} {...provided.droppableProps}>
+            <SectionList ref={provided.innerRef} style={{ backgroundColor: "#fcfcfc" }} {...provided.droppableProps}>
               {this.props.page.sections.map((section, index) => {
                 return (
                   <Draggable key={section.id} draggableId={section.id} index={index}>
                     {(provided, snapshot) => (
-                      <div key={section.id} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                      <div key={section.id} ref={provided.innerRef} {...provided.draggableProps}>
                         <header>
-                          <i className="fa fa-puzzle-piece" style={{ marginRight: 5 }} />
+                          <i className="fa fa-bars" style={{ marginRight: 5 }} {...provided.dragHandleProps} />
                           {index} -
                           <span
                             className="anchor"
@@ -69,7 +71,7 @@ export class Sections extends React.Component<
                             <i className="fa fa-plus" />
                           </button>
                         </header>
-                        {this.renderSection(section)}
+                        {this.renderStacks(section)}
                       </div>
                     )}
                   </Draggable>
@@ -82,28 +84,35 @@ export class Sections extends React.Component<
     );
   }
 
-  private renderSection(section: Section) {
+  private renderStacks(section: Section) {
     return (
-      <Stacks>
-        <ul style={{ listStyle: "none" }}>
-          {section.stacks.map(stack => {
-            return (
-              <li className="stack" key={stack.id}>
-                <i className="fa fa-folder" />{" "}
-                <span
-                  className="anchor"
-                  onClick={() => {
-                    this.props.edit(section, stack);
-                  }}
-                >
-                  {this.props.active.stack === stack.id ? <strong style={{ color: "#1B83BA" }}>{stack.name}</strong> : stack.name}
-                </span>
-                {this.renderStack(section, stack)}
-              </li>
-            );
-          })}
-        </ul>
-      </Stacks>
+      <Droppable droppableId={section.id} type="STACK">
+        {(provided, snapshot) => (
+          <Stacks ref={provided.innerRef} style={{ backgroundColor: snapshot.isDraggingOver ? "#F0F2E8" : "#fcfcfc" }} {...provided.droppableProps}>
+            {section.stacks.map((stack, index) => {
+              return (
+                <Draggable key={section.id} draggableId={stack.id} index={index}>
+                  {(provided, snapshot) => (
+                    <div className="stack" key={stack.id} ref={provided.innerRef} {...provided.draggableProps}>
+                      <i className="fa fa-folder" />
+                      <span
+                        className="anchor"
+                        onClick={() => {
+                          this.props.edit(section, stack);
+                        }}
+                      >
+                        {this.props.active.stack === stack.id ? <strong style={{ color: "#1B83BA" }}>{stack.name}</strong> : stack.name}
+                      </span>
+                      <i className="fa fa-bars" style={{ position: "absolute", right: 0 }} {...provided.dragHandleProps} />
+                      {this.renderStack(section, stack)}
+                    </div>
+                  )}
+                </Draggable>
+              );
+            })}
+          </Stacks>
+        )}
+      </Droppable>
     );
   }
 
@@ -153,8 +162,10 @@ const SectionList = styled.div`
 const Stacks = styled.div`
   border-top: 1px dashed #ccc;
   padding: 10px;
+  min-height: 30px;
 
   .stack {
+    position: relative;
     margin: 5px 0 5px 10px;
   }
 
