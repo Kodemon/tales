@@ -1,40 +1,60 @@
 import * as enterView from "enter-view";
 import { EventEmitter } from "eventemitter3";
 
-import { viewport } from "Engine/Viewport";
-
 import { Component } from "../Component";
+import { Stack } from "../Stack";
 import { setPixiBackground, setStyle } from "../Utils";
+import { viewport } from "../Viewport";
 
 const events = new EventEmitter();
 
 export class Reveal extends Component {
-  public getTitle() {
-    return this.get("title", "Reveal");
+  public element: HTMLDivElement;
+
+  public container: HTMLDivElement;
+
+  public app: any;
+
+  public scroller: HTMLDivElement;
+
+  public offset: number;
+
+  constructor(stack: Stack, data: any) {
+    super(stack, data);
+
+    this.stack.element.append((this.element = document.createElement("div")));
+    this.element.className = "component-absolute";
+
+    this.container = document.createElement("div");
+    this.container.className = "section-sticky";
+    this.element.append(this.container);
+
+    this.app = new PIXI.Application();
+    this.container.append(this.app.view);
+
+    this.loadItems();
+
+    this.scroller = document.createElement("div");
+    this.scroller.className = "component-scroll_overlay";
+    this.container.append(this.scroller);
+
+    this.page.on("loaded", () => {
+      enterView({
+        selector: [this.stack.element],
+        offset: 0,
+        progress: (el: any, progress: any) => {
+          events.emit("progress", this.id, progress);
+        }
+      });
+    });
   }
 
-  public render() {
-    const wrapper = document.createElement("div");
-    wrapper.className = "component-absolute";
-
-    const container = document.createElement("div");
-    setStyle(container, {
-      height: viewport.height
-    });
-    container.className = "section-sticky";
-
-    const app = new PIXI.Application({
-      width: viewport.width,
-      height: viewport.height
-    });
-
-    container.appendChild(app.view);
-
-    const items = this.get("items");
-    const offset = items ? 1 / items.length : 1;
+  private loadItems() {
+    const items = this.getSetting("items");
+    const offset = (this.offset = items ? 1 / items.length : 1);
 
     items.forEach((item: any, index: number) => {
-      const sprite = app.stage.addChild(PIXI.Sprite.from(item.src));
+      const sprite = this.app.stage.addChild(PIXI.Sprite.from(item.src));
 
       setPixiBackground(
         {
@@ -45,7 +65,7 @@ export class Reveal extends Component {
         "cover"
       );
 
-      let mask: PIXI.Graphics | undefined;
+      let mask: any;
       if (index !== 0) {
         switch (item.transition) {
           case "up":
@@ -106,27 +126,12 @@ export class Reveal extends Component {
         }
       });
     });
+  }
 
-    wrapper.onclick = () => {
-      this.page.emit("edit", this.stack, this);
-    };
+  public render() {
+    setStyle(this.container, { height: viewport.height });
 
-    const scroller = document.createElement("div");
-    scroller.className = "component-scroll_overlay";
-
-    wrapper.append(container);
-    wrapper.append(scroller);
-
-    this.stack.append(this.id, wrapper);
-
-    this.page.on("loaded", () => {
-      enterView({
-        selector: [this.stack.element],
-        offset: 0,
-        progress: (el: any, progress: any) => {
-          events.emit("progress", this.id, progress);
-        }
-      });
-    });
+    this.app.view.width = viewport.width;
+    this.app.view.height = viewport.height;
   }
 }

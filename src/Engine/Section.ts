@@ -99,6 +99,7 @@ export class Section extends DataManager<Data> {
     stack.render();
 
     this.page.cache();
+    this.page.emit("refresh");
 
     if (source === Source.User) {
       this.page.send("stack:added", this.page.id, this.id, stack.data);

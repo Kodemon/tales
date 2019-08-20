@@ -7,6 +7,8 @@ declare module "TweenMax";
 declare module "scrollama";
 declare module "enter-view";
 
+declare const PIXI: any;
+
 /*
  |--------------------------------------------------------------------------------
  | PeerJS

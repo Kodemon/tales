@@ -109,6 +109,7 @@ export class Stack extends DataManager<Data> {
       component.render();
 
       this.page.cache();
+      this.page.emit("refresh");
 
       if (source === Source.User) {
         this.page.send("component:added", this.page.id, this.section.id, this.id, component.data);

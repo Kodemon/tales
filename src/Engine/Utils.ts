@@ -156,7 +156,7 @@ export function translate(x: number, y: number, z?: number): string {
  * @param type
  * @param forceSize
  */
-export function setPixiBackground(viewport: { x: number; y: number }, sprite: PIXI.Sprite, type: "cover" | "contain" = "contain", forceSize?: any) {
+export function setPixiBackground(viewport: { x: number; y: number }, sprite: any, type: "cover" | "contain" = "contain", forceSize?: any) {
   const sp = forceSize || { x: sprite.width, y: sprite.height };
 
   const winratio = viewport.x / viewport.y;

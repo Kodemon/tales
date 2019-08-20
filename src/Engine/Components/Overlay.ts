@@ -1,71 +1,60 @@
 import { viewport } from "Engine/Viewport";
 
 import { Component } from "../Component";
+import { Stack } from "../Stack";
 import { setStyle } from "../Utils";
 
 export class Overlay extends Component {
-  public getTitle() {
-    return this.get("title", "Overlay");
+  public element: HTMLDivElement;
+
+  constructor(stack: Stack, data: any) {
+    super(stack, data);
+    this.stack.element.append((this.element = document.createElement("div")));
+    this.element.onclick = () => {
+      this.page.emit("edit", this.section, this.stack, this);
+    };
   }
 
   public render() {
-    const el = document.createElement("div");
     const type = this.getSetting("type");
     const background = this.getSetting("background");
     const borderWidth = this.getSetting("borderWidth");
-    el.className = this.getSetting("sticky", false) ? "section-sticky" : "component-absolute";
-    const styles = {
+
+    this.element.className = this.getSetting("sticky", false) ? "section-sticky" : "component-absolute";
+
+    const style = {
       width: viewport.width,
       height: this.getStyle("height", viewport.height),
       ...(borderWidth ? { border: `${borderWidth}px solid white` } : {}),
       ...(this.data.style || {})
     };
+
     switch (type) {
       case "topToBottom": {
-        setStyle(el, {
-          backgroundImage: `linear-gradient(0deg, ${background} 0%, transparent 100%)`,
-          ...styles
-        });
+        style.backgroundImage = `linear-gradient(0deg, ${background} 0%, transparent 100%)`;
         break;
       }
       case "bottomToTop": {
-        setStyle(el, {
-          backgroundImage: `linear-gradient(180deg, ${background} 0%, transparent 100%)`,
-          ...styles
-        });
+        style.backgroundImage = `linear-gradient(180deg, ${background} 0%, transparent 100%)`;
         break;
       }
       case "rightToLeft": {
-        setStyle(el, {
-          backgroundImage: `linear-gradient(90deg, ${background} 0%, transparent 100%)`,
-          ...styles
-        });
+        style.backgroundImage = `linear-gradient(90deg, ${background} 0%, transparent 100%)`;
         break;
       }
       case "leftToRight": {
-        setStyle(el, {
-          backgroundImage: `linear-gradient(270deg, ${background} 0%, transparent 100%)`,
-          ...styles
-        });
+        style.backgroundImage = `linear-gradient(270deg, ${background} 0%, transparent 100%)`;
         break;
       }
       case "vignette": {
-        setStyle(el, {
-          boxShadow: `inset 0 0 25vmin 10vmin ${background}`,
-          ...styles
-        });
+        style.boxShadow = `inset 0 0 25vmin 10vmin ${background}`;
         break;
       }
       default: {
-        setStyle(el, {
-          background: `${background}`,
-          ...styles
-        });
+        style.background = `${background}`;
       }
     }
-    el.onclick = () => {
-      this.page.emit("edit", this.stack, this);
-    };
-    this.stack.append(this.id, el);
+
+    setStyle(this.element, style);
   }
 }

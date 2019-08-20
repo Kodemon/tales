@@ -1,31 +1,22 @@
 import { viewport } from "Engine/Viewport";
 
 import { Component } from "../Component";
+import { Stack } from "../Stack";
 import { setStyle } from "../Utils";
 
 export class Gallery extends Component {
-  public getTitle() {
-    return this.get("title", "Gallery");
-  }
+  public element: HTMLDivElement;
 
-  public render() {
-    const container = document.createElement("div");
-    setStyle(container, {
-      height: viewport.height,
-      display: "grid",
-      gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-      gridGap: "1em",
-      justifyContent: "center",
-      minWidth: "100%",
-      minHeight: "100%",
+  constructor(stack: Stack, data: any) {
+    super(stack, data);
 
-      ...(this.data.style || {})
-    });
+    this.stack.element.append((this.element = document.createElement("div")));
 
-    const items = this.get("items");
+    const items = this.getSetting("items");
 
     items.forEach((item: any, index: number) => {
       const itemContainer = document.createElement("div");
+
       setStyle(itemContainer, {
         margin: "auto"
       });
@@ -36,12 +27,24 @@ export class Gallery extends Component {
       img.src = item.src;
       setStyle(img, {});
       itemContainer.append(img);
-      container.append(itemContainer);
+      this.element.append(itemContainer);
     });
 
-    container.onclick = () => {
+    this.element.onclick = () => {
       this.page.emit("edit", this.stack, this);
     };
-    this.stack.append(this.id, container);
+  }
+
+  public render() {
+    setStyle(this.element, {
+      height: viewport.height,
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+      gridGap: "1em",
+      justifyContent: "center",
+      minWidth: "100%",
+      minHeight: "100%",
+      ...(this.data.style || {})
+    });
   }
 }
