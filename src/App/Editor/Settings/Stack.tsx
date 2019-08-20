@@ -4,12 +4,14 @@ import styled from "styled-components";
 import { Source } from "Engine/Enums";
 import { Stack } from "Engine/Stack";
 
+import { StackLayout } from "../Components/StackLayout";
 import { SettingGroup, SettingGroupStacked } from "../Styles";
 
 export const StackSettings: React.SFC<{
   stack: Stack;
 }> = function StackSettings({ stack }) {
   return (
+    <StackLayout stack={stack} />
     <Components key={`stack-${stack.id}`} style={{ padding: 10 }}>
       Components
       <div>
