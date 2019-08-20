@@ -104,7 +104,7 @@ export class Sections extends React.Component<
             return (
               <li
                 className="component"
-                key={stack.id}
+                key={component.id}
                 onClick={() => {
                   this.props.edit(section, stack, component);
                 }}
