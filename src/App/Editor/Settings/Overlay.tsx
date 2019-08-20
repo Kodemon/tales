@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { Section } from "Engine/Section";
 
-import { ColorPicker } from "../Lib/ColorPicker";
+import { ColorPicker } from "../Components/ColorPicker";
 import { Header, SettingGroup } from "../Styles";
 
 export const OverlaySettings: React.SFC<{

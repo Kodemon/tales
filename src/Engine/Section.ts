@@ -1,15 +1,13 @@
 import * as rndm from "rndm";
 
-import { Gallery } from "./Components/Gallery";
-import { Image } from "./Components/Image";
-import { Overlay } from "./Components/Overlay";
-import { Reveal } from "./Components/Reveal";
-import { Text } from "./Components/Text";
+import { DataManager } from "./DataManager";
+import { Source } from "./Enums";
 import { Page } from "./Page";
-import { maybe, setStyle } from "./Utils";
+import { Stack } from "./Stack";
+import { setStyle } from "./Utils";
 import { viewport } from "./Viewport";
 
-export class Section {
+export class Section extends DataManager<Data> {
   /**
    * Page to render the section within.
    * @type {Page}
@@ -20,89 +18,65 @@ export class Section {
    * Section container element.
    * @type {HTMLElement}
    */
-  public container: HTMLElement;
+  public element: HTMLElement;
 
   /**
-   * Scene height in pixels, used to determine min height.
+   * Section height in pixels, used to determine min height.
    * @type {height}
    */
   public height: number = 0;
 
   /**
-   * Section schema.
-   * @type {SectionData}
+   * List of stacks living under this section.
+   * @type {Stack[]}
    */
-  public data: SectionData;
+  public stacks: Stack[] = [];
 
-  /**
-   * List of components living under this section.
-   * @type {any[]}
-   */
-  public components: any[] = [];
+  constructor(page: Page, data: Data) {
+    super(data);
 
-  /**
-   * Map of rendered elements, used during re-renders requests
-   * to replace a specific elements.
-   * @type {Map<string, any>}
-   */
-  public elements: Map<string, any> = new Map();
-
-  /**
-   * @param page
-   * @param data
-   */
-  constructor(page: Page, data: SectionData) {
     this.page = page;
-    this.container = document.createElement("section");
+    this.page.element.append((this.element = document.createElement("section")));
 
-    this.setData(data);
-    this.setStyle();
-
-    page.container.append(this.container);
-  }
-
-  /**
-   * Section id.
-   * @type {string}
-   */
-  get id() {
-    return this.data.id;
-  }
-
-  /*
-  |--------------------------------------------------------------------------------
-  | Section Setting Utilities
-  |--------------------------------------------------------------------------------
-  */
-
-  /**
-   * Set a scene setting.
-   *
-   * @param key
-   * @param value
-   * @param isSource
-   */
-  public setSetting(key: SectionSetting, value: any, isSource = false) {
-    const data = { ...this.data };
-    data.settings[key] = value;
-    this.commit(data);
-    if (isSource) {
-      this.page.send("section:setting", this.data.id, key, value);
+    for (const data of this.data.stacks) {
+      const stack = new Stack(this, data);
+      this.stacks.push(stack);
+      stack.render();
     }
   }
 
-  /**
-   * Get a scene setting.
-   *
-   * @param key
+  /*
+   |--------------------------------------------------------------------------------
+   | JSON
+   |--------------------------------------------------------------------------------
    */
-  public getSetting(key: SectionSetting) {
-    return maybe(this.data, `settings.${key}`);
+
+  public toJSON() {
+    return {
+      ...this.data,
+      stacks: this.stacks.map(stack => stack.toJSON())
+    };
+  }
+
+  /*
+   |--------------------------------------------------------------------------------
+   | Emitter
+   |--------------------------------------------------------------------------------
+   */
+
+  /**
+   * Sends a stack set operation to all connected peers.
+   *
+   * @param path
+   * @param value
+   */
+  public send(path: string, value: any) {
+    this.page.send("section:set", this.page.id, this.id, path, value);
   }
 
   /*
   |--------------------------------------------------------------------------------
-  | Component Utilities
+  | Stack Utilities
   |--------------------------------------------------------------------------------
   */
 
@@ -111,46 +85,41 @@ export class Section {
    *
    * @param component
    */
-  public addComponent(component: any, isSource = false) {
-    const section = { ...this.data };
-    const data = {
+  public addStack(data: any, source: Source = Source.Silent) {
+    const stack = new Stack(this, {
       id: rndm.base62(10),
-      ...component
-    };
-    section.components.push(data);
-    this.commit(section, data.id);
-    if (isSource) {
-      this.page.send("component:added", section.id, data);
+      name: data.name,
+      settings: data.settings || {},
+      style: data.style || {},
+      components: data.components || []
+    });
+
+    this.stacks.push(stack);
+
+    stack.render();
+
+    this.page.cache();
+
+    if (source === Source.User) {
+      this.page.send("stack:added", this.page.id, this.id, stack.data);
     }
-    this.page.emit("edit", this, this.components.find(c => c.id === data.id));
+
+    return stack;
   }
 
   /*
   |--------------------------------------------------------------------------------
-  | Storage Utilities
+  | Calculation Utilities
   |--------------------------------------------------------------------------------
   */
 
-  /**
-   * @should format section data
-   * @should set data to the section
-   * @should adjust section style
-   * @should render section
-   * @should persist the section data
-   * @should emit section update
-   *
-   * @param obj
-   */
-  public commit(obj: any, componentId?: string) {
-    const data = getSection(obj);
-
-    this.setData(data);
-    this.setStyle();
-
-    this.render(componentId);
-
-    this.page.cache();
-    this.page.emit("section", this);
+  public getHeight() {
+    const height = this.getSetting("height", 1);
+    if (height > 0) {
+      return viewport.height * height;
+    } else {
+      return 0;
+    }
   }
 
   /*
@@ -159,142 +128,36 @@ export class Section {
   |--------------------------------------------------------------------------------
   */
 
-  /**
-   * Adds the given element to the scene.
-   *
-   * @param componentId
-   * @param nextElement
-   */
-  public append(componentId: string, nextElement: any) {
-    const currentElement = this.elements.get(componentId);
-    if (currentElement) {
-      this.container.replaceChild(nextElement, currentElement);
-    } else {
-      this.container.append(nextElement);
-    }
-    this.elements.set(componentId, nextElement);
-  }
+  public render() {
+    const position = this.getSetting("position", "relative");
+    const background = this.getSetting("background", "white");
 
-  /**
-   * Renders the scene to the dom.
-   *
-   * @param componentId
-   */
-  public render(componentId?: string) {
-    for (const component of this.components) {
-      if (componentId && componentId !== component.id) {
-        continue;
-      }
-      component.render();
-    }
-    return this;
-  }
-
-  /*
-  |--------------------------------------------------------------------------------
-  | Private Utilities
-  |--------------------------------------------------------------------------------
-  */
-
-  /**
-   * Set the scene properties onto the instance.
-   *
-   * @param scene
-   */
-  private setData(data: SectionData) {
-    const height = maybe<number>(data, "settings.height", 0);
-    if (height > 0) {
-      this.height = viewport.height * height;
-    } else {
-      this.height = 0;
-    }
-
-    for (const component of data.components) {
-      const current = this.components.find(c => c.id === component.id);
-      if (current) {
-        current.setData(component);
-      } else {
-        switch (component.type) {
-          case "text": {
-            this.components.push(new Text(this, component));
-            break;
-          }
-          case "overlay": {
-            this.components.push(new Overlay(this, component));
-            break;
-          }
-          case "image": {
-            this.components.push(new Image(this, component));
-            break;
-          }
-          case "gallery": {
-            this.components.push(new Gallery(this, component));
-            break;
-          }
-          case "reveal": {
-            this.components.push(new Reveal(this, component));
-            break;
-          }
-        }
-      }
-    }
-
-    this.data = data;
-  }
-
-  /**
-   * Sets the style of the section based on its settings.
-   */
-  private setStyle() {
-    const position = maybe<string>(this.data, "settings.position", "relative");
-    const background = maybe<string>(this.data, "settings.background", "#fff");
+    this.height = this.getHeight();
 
     switch (position) {
       case "relative": {
-        this.container.className = "section-relative";
+        this.element.className = "section-relative";
         break;
       }
       case "sticky": {
-        this.container.className = "section-sticky";
+        this.element.className = "section-sticky";
         break;
       }
       case "absolute": {
-        this.container.className = "section-absolute";
+        this.element.className = "section-absolute";
         break;
       }
     }
 
-    setStyle(this.container, {
+    setStyle(this.element, {
       background,
       minHeight: this.height
     });
+
+    for (const stack of this.stacks) {
+      stack.render();
+    }
   }
-}
-
-/*
- |--------------------------------------------------------------------------------
- | Utilities
- |--------------------------------------------------------------------------------
- */
-
-/**
- * Gets a section in its raw data form as a immutable object.
- *
- * @param data
- *
- * @returns immutable section data
- */
-export function getSection(data: any = {}): Readonly<SectionData> {
-  return Object.freeze({
-    id: data.id || rndm.base62(10),
-    settings: {
-      background: "#fff",
-      position: "relative",
-      height: 1,
-      ...(data.settings || {})
-    },
-    components: data.components || []
-  });
 }
 
 /*
@@ -311,7 +174,7 @@ type SectionSetting = "background" | "position" | "height";
  |--------------------------------------------------------------------------------
  */
 
-export interface SectionData {
+export interface Data {
   /**
    * Unique section identifier.
    * @type {string}
@@ -322,13 +185,13 @@ export interface SectionData {
    * Section settings.
    * @type {SectionSettings}
    */
-  settings: SectionSettings;
+  settings?: SectionSettings;
 
   /**
-   * Section components.
+   * Section stacks.
    * @type {any[]}
    */
-  components: any[];
+  stacks: any[];
 }
 
 interface SectionSettings {

@@ -1,9 +1,10 @@
 import * as React from "react";
 
+import { Source } from "Engine/Enums";
 import { Section } from "Engine/Section";
 
-import { ColorPicker } from "../Lib/ColorPicker";
-import { SettingGroup, SettingGroupStacked } from "../Styles";
+import { ColorPicker } from "../Components/ColorPicker";
+import { SettingGroup } from "../Styles";
 
 export const SectionSettings: React.SFC<{
   section: Section;
@@ -13,9 +14,9 @@ export const SectionSettings: React.SFC<{
       <SettingGroup>
         <label className="input">Position</label>
         <select
-          value={section.data.settings.position}
+          value={section.getSetting("position", "relative")}
           onChange={event => {
-            section.setSetting("position", event.target.value, true);
+            section.setSetting("position", event.target.value, Source.User);
           }}
         >
           <option value="relative">Relative</option>
@@ -27,9 +28,11 @@ export const SectionSettings: React.SFC<{
         <label className="input">Height</label>
         <input
           type="number"
-          defaultValue={`${section.getSetting("height") * 100}`}
-          onBlur={event => {
-            section.setSetting("height", parseInt(event.target.value, 10) / 100, true);
+          value={`${Math.floor(section.getSetting("height", 1) * 100)}`}
+          placeholder="100"
+          onChange={event => {
+            console.log(event.target.value, parseFloat(event.target.value) / 100);
+            section.setSetting("height", parseFloat(event.target.value) / 100, Source.User);
           }}
         />
       </SettingGroup>

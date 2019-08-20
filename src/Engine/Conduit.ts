@@ -94,7 +94,7 @@ export class Conduit extends EventEmitter {
         this.sendTo(conn, "page:load", {
           id: this.page.id,
           title: "Unknown",
-          sections: this.page.sections.map(s => s.data)
+          sections: this.page.sections.map(s => s.toJSON())
         });
       });
     });
@@ -114,64 +114,77 @@ export class Conduit extends EventEmitter {
 
     // ### Section Events
 
-    this.on("section:added", (conn, data) => {
-      this.page.addSection(data);
+    this.on("section:added", (conn, pageId, data) => {
+      if (pageId === this.page.id) {
+        this.page.addSection(data);
+      }
     });
 
-    this.on("section:setting", (conn, sectionId, key, value) => {
-      const section = this.page.sections.find(s => s.id === sectionId);
-      if (section) {
-        section.setSetting(key, value);
+    this.on("section:set", (conn, pageId, sectionId, key, value) => {
+      if (pageId === this.page.id) {
+        const section = this.page.sections.find(s => s.id === sectionId);
+        if (section) {
+          section.set(key, value);
+        }
+      }
+    });
+
+    // ### Stack Events
+
+    this.on("stack:added", (conn, pageId, sectionId, data) => {
+      if (pageId === this.page.id) {
+        const section = this.page.sections.find(s => s.id === sectionId);
+        if (section) {
+          section.addStack(data);
+        }
+      }
+    });
+
+    this.on("stack:set", (conn, pageId, sectionId, stackId, key, value) => {
+      if (pageId === this.page.id) {
+        const section = this.page.sections.find(s => s.id === sectionId);
+        if (section) {
+          const stack = section.stacks.find(s => s.id === stackId);
+          if (stack) {
+            stack.set(key, value);
+          }
+        }
       }
     });
 
     // ### Component Events
 
-    this.on("component:added", (conn, sectionId, data) => {
-      const section = this.page.sections.find(s => s.id === sectionId);
-      if (section) {
-        section.addComponent(data);
-      }
-    });
-
-    this.on("component:set", (conn, sectionId, componentId, key, value) => {
-      const section = this.page.sections.find(s => s.id === sectionId);
-      if (section) {
-        const component = section.components.find(c => c.id === componentId);
-        if (component) {
-          component.set(key, value);
+    this.on("component:added", (conn, pageId, sectionId, stackId, data) => {
+      if (pageId === this.page.id) {
+        const section = this.page.sections.find(s => s.id === sectionId);
+        if (section) {
+          const stack = section.stacks.find(s => s.id === stackId);
+          if (stack) {
+            stack.addComponent(data);
+          }
         }
       }
     });
 
-    this.on("component:setting", (conn, sectionId, componentId, key, value) => {
-      const section = this.page.sections.find(s => s.id === sectionId);
-      if (section) {
-        const component = section.components.find(c => c.id === componentId);
-        if (component) {
-          component.setSetting(key, value);
+    this.on("component:set", (conn, pageId, sectionId, stackId, componentId, key, value) => {
+      if (pageId === this.page.id) {
+        const section = this.page.sections.find(s => s.id === sectionId);
+        if (section) {
+          const stack = section.stacks.find(s => s.id === stackId);
+          if (stack) {
+            const component = stack.components.find(c => c.id === componentId);
+            if (component) {
+              component.set(key, value);
+            }
+          }
         }
       }
     });
 
-    this.on("component:style", (conn, sectionId, componentId, key, value) => {
-      const section = this.page.sections.find(s => s.id === sectionId);
-      if (section) {
-        const component = section.components.find(c => c.id === componentId);
-        if (component) {
-          component.setStyle(key, value);
-        }
-      }
-    });
+    // ### Quill Events
 
-    this.on("component:removed", (conn, sectionId, componentId) => {
-      const section = this.page.sections.find(s => s.id === sectionId);
-      if (section) {
-        const component = section.components.find(c => c.id === componentId);
-        if (component) {
-          component.remove();
-        }
-      }
+    this.on("quill:delta", (conn, componentId, data) => {
+      this.page.emit("quill:delta", componentId, data);
     });
 
     // ### Cleanup
@@ -192,6 +205,7 @@ export class Conduit extends EventEmitter {
 
     conn.on("data", (data: any) => {
       const { type, args } = JSON.parse(data);
+      console.log("Received data: ", type, args);
       this.emit(type, conn, ...args);
     });
 

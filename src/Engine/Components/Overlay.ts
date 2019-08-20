@@ -1,7 +1,7 @@
 import { viewport } from "Engine/Viewport";
 
+import { Component } from "../Component";
 import { setStyle } from "../Utils";
-import { Component } from "./Component";
 
 export class Overlay extends Component {
   public getTitle() {
@@ -64,8 +64,8 @@ export class Overlay extends Component {
       }
     }
     el.onclick = () => {
-      this.section.page.emit("edit", this.section, this);
+      this.page.emit("edit", this.stack, this);
     };
-    this.section.append(this.id, el);
+    this.stack.append(this.id, el);
   }
 }

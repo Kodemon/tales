@@ -1,72 +1,111 @@
 import { viewport } from "Engine/Viewport";
 
+import { Stack } from "Engine/Stack";
+import { Component } from "../Component";
 import { setStyle } from "../Utils";
-import { Component } from "./Component";
 
 export class Image extends Component {
-  public getTitle() {
-    return this.get("title", "Image");
+  /**
+   * Primary image element.
+   * @type {HTMLElement}
+   */
+  public element: HTMLElement;
+
+  /**
+   * Image element.
+   * @type {HTMLImageElement}
+   */
+  private image?: HTMLImageElement;
+
+  /**
+   * Scroller element, used during sticky positioning.
+   * @type {HTMLDivElement}
+   */
+  private scroller?: HTMLDivElement;
+
+  constructor(stack: Stack, data: any) {
+    super(stack, data);
+    this.stack.element.append((this.element = document.createElement("figure")));
   }
 
   public render() {
-    const image = document.createElement("img");
+    const image = this.image || document.createElement("img");
 
-    image.src = this.get("src");
-    image.title = this.get("title", "");
-    image.alt = this.get("altText", "");
+    image.src = this.getSetting("src");
+    image.title = this.getSetting("title", "");
+    image.alt = this.getSetting("altText", "");
+    image.onclick = () => {
+      this.page.emit("edit", this.section, this.stack, this);
+    };
+
+    if (!this.image) {
+      this.image = image;
+      this.element.append(image);
+    }
+
+    if (this.scroller) {
+      this.scroller.remove();
+      this.scroller = undefined;
+    }
 
     const position = this.getSetting("position");
     switch (position) {
       case "background": {
-        image.className = "component-absolute";
-        setStyle(image, {
-          objectFit: "cover",
-          width: "100%",
-          height: "100%"
-        });
-        image.onclick = () => {
-          this.section.page.emit("edit", this.section, this);
-        };
-        this.section.append(this.id, image);
+        this.element.className = "component-absolute";
+        this.image.className = "";
+        setStyle(
+          image,
+          {
+            objectFit: "cover",
+            width: viewport.width,
+            height: "100%"
+          },
+          true
+        );
         break;
       }
 
       case "sticky": {
-        const container = document.createElement("div");
-        container.className = "component-fixed_container";
+        this.element.className = "component-fixed_container";
 
         const scroller = document.createElement("div");
         scroller.className = "component-scroll_overlay";
-
-        image.className = "component-fixed_component";
-        setStyle(image, {
-          objectFit: "cover",
-          objectPosition: "50% 0",
-          width: viewport.width,
-          height: "100%"
-        });
-
-        container.append(image);
-        container.append(scroller);
-
-        container.onclick = () => {
-          this.section.page.emit("edit", this.section, this);
+        scroller.onclick = () => {
+          this.page.emit("edit", this.section, this.stack, this);
         };
 
-        this.section.append(this.id, container);
+        image.className = "component-fixed_component";
+        setStyle(
+          image,
+          {
+            objectFit: "cover",
+            objectPosition: "50% 0",
+            width: viewport.width,
+            height: "100%"
+          },
+          true
+        );
+
+        if (!this.scroller) {
+          this.scroller = scroller;
+          this.element.append(scroller);
+        }
+
         break;
       }
 
       default: {
-        setStyle(image, {
-          display: "block",
-          width: "100%",
-          ...(this.data.style || {})
-        });
-        image.onclick = () => {
-          this.section.page.emit("edit", this.section, this);
-        };
-        this.section.append(this.id, image);
+        this.element.className = "";
+        this.image.className = "";
+        setStyle(
+          image,
+          {
+            display: "block",
+            width: viewport.width,
+            ...(this.data.style || {})
+          },
+          true
+        );
       }
     }
   }

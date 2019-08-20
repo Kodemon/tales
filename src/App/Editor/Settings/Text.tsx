@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { Section } from "Engine/Section";
 
+import { Source } from "Engine/Enums";
 import { Toolbar } from "../Components/Toolbar";
 import { Header, SettingGroup } from "../Styles";
 
@@ -12,6 +13,16 @@ export const TextSettings: React.SFC<{
   return (
     <React.Fragment key={`component-${component.id}`}>
       <div style={{ padding: 10, borderBottom: "1px dashed #ccc" }}>
+        <SettingGroup>
+          <label className="input">Name</label>
+          <input
+            type="text"
+            value={component.get("name", "")}
+            onChange={event => {
+              component.set("name", event.target.value, Source.User);
+            }}
+          />
+        </SettingGroup>
         <Toolbar quill={component.quill} />
       </div>
 
@@ -23,10 +34,10 @@ export const TextSettings: React.SFC<{
           <label className="input">Min Width</label>
           <input
             type="number"
-            defaultValue={component.getSetting("min", "")}
+            value={component.getSetting("min", "")}
             placeholder="280"
-            onBlur={event => {
-              component.setSetting("min", event.target.value, true);
+            onChange={event => {
+              component.setSetting("min", event.target.value, Source.User);
             }}
           />
         </SettingGroup>
@@ -34,10 +45,10 @@ export const TextSettings: React.SFC<{
           <label className="input">Max Width</label>
           <input
             type="number"
-            defaultValue={component.getSetting("max", "")}
+            value={component.getSetting("max", "")}
             placeholder="580"
-            onBlur={event => {
-              component.setSetting("max", event.target.value, true);
+            onChange={event => {
+              component.setSetting("max", event.target.value, Source.User);
             }}
           />
         </SettingGroup>
@@ -46,7 +57,7 @@ export const TextSettings: React.SFC<{
           <select
             value={component.getSetting("layout", "middle")}
             onChange={event => {
-              component.setSetting("layout", event.target.value, true);
+              component.setSetting("layout", event.target.value, Source.User);
             }}
           >
             <option value="left">Left</option>
@@ -68,7 +79,7 @@ export const TextSettings: React.SFC<{
             defaultValue={component.getStyle("color", "")}
             placeholder="#262626"
             onBlur={event => {
-              component.setStyle("color", event.target.value, true);
+              component.setStyle("color", event.target.value, Source.User);
             }}
           />
         </SettingGroup>
@@ -79,7 +90,7 @@ export const TextSettings: React.SFC<{
             defaultValue={component.getStyle("fontSize", "")}
             placeholder="1em"
             onBlur={event => {
-              component.setStyle("fontSize", event.target.value, true);
+              component.setStyle("fontSize", event.target.value, Source.User);
             }}
           />
         </SettingGroup>
@@ -90,7 +101,7 @@ export const TextSettings: React.SFC<{
             defaultValue={component.getStyle("padding", "")}
             placeholder="40px 20px"
             onBlur={event => {
-              component.setStyle("padding", event.target.value, true);
+              component.setStyle("padding", event.target.value, Source.User);
             }}
           />
         </SettingGroup>
@@ -101,7 +112,7 @@ export const TextSettings: React.SFC<{
             defaultValue={component.getStyle("textShadow", "")}
             placeholder="1px 1px 2px #262626"
             onBlur={event => {
-              component.setStyle("textShadow", event.target.value, true);
+              component.setStyle("textShadow", event.target.value, Source.User);
             }}
           />
         </SettingGroup>
@@ -110,7 +121,7 @@ export const TextSettings: React.SFC<{
       <div style={{ borderTop: "1px dashed #ccc", padding: 10, textAlign: "center" }}>
         <button
           onClick={() => {
-            component.remove(true);
+            component.remove(Source.User);
           }}
         >
           Delete Text

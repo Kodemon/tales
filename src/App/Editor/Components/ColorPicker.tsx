@@ -1,7 +1,8 @@
 import * as React from "react";
 import { SketchPicker } from "react-color";
 
-import { Component } from "Engine/Components/Component";
+import { Component } from "Engine/Component";
+import { Source } from "Engine/Enums";
 import { Section } from "Engine/Section";
 
 import { SettingGroupStacked } from "../Styles";
@@ -41,7 +42,7 @@ export class ColorPicker extends React.Component<
             style={{ boxShadow: "none", background: "none" }}
             color={this.props.effected.getSetting("background")}
             onChangeComplete={(color: any) => {
-              this.props.effected.setSetting("background", `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`, true);
+              this.props.effected.setSetting("background", `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`, Source.User);
             }}
           />
         )}

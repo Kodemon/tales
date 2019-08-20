@@ -1,14 +1,16 @@
 import * as React from "react";
 import styled from "styled-components";
 
+import { Source } from "Engine/Enums";
 import { Page } from "Engine/Page";
 import { Section } from "Engine/Section";
+import { Stack } from "Engine/Stack";
 
 export class Sections extends React.Component<
   {
     page: Page;
     active: string;
-    editComponent: (section: Section, component: any) => void;
+    edit: (section: Section, stack?: Stack, component?: any) => void;
   },
   {
     expanded: Set<string>;
@@ -27,132 +29,17 @@ export class Sections extends React.Component<
     this.state = { expanded };
   }
 
-  /**
-   * Add a new image component to the provided section.
-   *
-   * @param section
-   */
-  private addImage = (section: Section) => {
-    section.addComponent(
-      {
-        type: "image",
-        src: "https://jdrf.org.uk/wp-content/uploads/2017/06/placeholder-image.jpg",
-        style: {
-          maxWidth: "100%",
-          height: "auto"
-        }
-      },
-      true
-    );
-  };
-
-  /**
-   * Add a new gallery component to the provided section.
-   *
-   * @param section
-   */
-  private addGallery = (section: Section) => {
-    section.addComponent(
-      {
-        type: "gallery",
-        items: [
-          {
-            src: "https://images.unsplash.com/photo-1497431187953-886f6a75d2a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
-          },
-          {
-            src: "https://images.unsplash.com/photo-1547782793-e1444139967a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80"
-          },
-          {
-            src: "https://images.unsplash.com/photo-1495887633121-f1156ca7f6a0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80"
-          },
-          {
-            src: "https://images.unsplash.com/photo-1517697471339-4aa32003c11a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1355&q=80"
-          },
-          {
-            src: "https://images.unsplash.com/photo-1554726425-ac299472ae80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1329&q=80"
-          }
-        ]
-      },
-      true
-    );
-  };
-
-  /**
-   * Add a new overlay component to the provided section.
-   *
-   * @param section
-   */
-  private addOverlay = (section: Section) => {
-    section.addComponent(
-      {
-        type: "overlay",
-        settings: {
-          type: "topToBottom",
-          background: "rgba(0,0,0,.5)"
-        }
-      },
-      true
-    );
-  };
-
-  /**
-   * Add a new text component to the provided section.
-   *
-   * @param section
-   */
-  private addText = (section: Section) => {
-    section.addComponent(
-      {
-        type: "text",
-        style: {
-          padding: "40px 20px"
-        }
-      },
-      true
-    );
-  };
-
-  /**
-   * Add a new text component to the provided section.
-   *
-   * @param section
-   */
-  private addReveal = (section: Section) => {
-    section.addComponent(
-      {
-        type: "reveal",
-        items: [
-          {
-            src: "https://images.unsplash.com/photo-1497431187953-886f6a75d2a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-            transition: "none"
-          },
-          {
-            src: "https://images.unsplash.com/photo-1547782793-e1444139967a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
-            transition: "up"
-          },
-          {
-            src: "https://images.unsplash.com/photo-1495887633121-f1156ca7f6a0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
-            transition: "right"
-          },
-          {
-            src: "https://images.unsplash.com/photo-1497048679117-1a29644559e3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
-            transition: "down"
-          },
-          {
-            src: "https://images.unsplash.com/photo-1517697471339-4aa32003c11a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1355&q=80",
-            transition: "left"
-          },
-          {
-            src: "https://images.unsplash.com/photo-1554726425-ac299472ae80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1329&q=80",
-            transition: "fade"
-          }
-        ]
-      },
-      true
-    );
-  };
-
   public render() {
+    /*
+    const expanded = this.state.expanded;
+    if (expanded.has(section.id)) {
+      expanded.delete(section.id);
+    } else {
+      expanded.add(section.id);
+    }
+    this.setState(() => ({ expanded }));
+    localStorage.setItem("editor.sections", JSON.stringify(Array.from(expanded)));
+    */
     return (
       <SectionList>
         {this.props.page.sections.map((section, index) => {
@@ -160,18 +47,19 @@ export class Sections extends React.Component<
             <li key={section.id}>
               <header
                 onClick={() => {
-                  const expanded = this.state.expanded;
-                  if (expanded.has(section.id)) {
-                    expanded.delete(section.id);
-                  } else {
-                    expanded.add(section.id);
-                  }
-                  this.setState(() => ({ expanded }));
-                  localStorage.setItem("editor.sections", JSON.stringify(Array.from(expanded)));
+                  this.props.edit(section);
                 }}
               >
                 <i className="fa fa-puzzle-piece" style={{ marginRight: 5 }} />
                 {index} - {section.id}
+                <button
+                  style={{ position: "absolute", top: 10, right: 10, padding: "0 2px", cursor: "pointer" }}
+                  onClick={() => {
+                    section.addStack({}, Source.User);
+                  }}
+                >
+                  <i className="fa fa-plus" />
+                </button>
               </header>
               {this.renderSection(section)}
             </li>
@@ -182,61 +70,50 @@ export class Sections extends React.Component<
   }
 
   private renderSection(section: Section) {
-    if (!this.state.expanded.has(section.id)) {
-      return null;
-    }
+    // if (!this.state.expanded.has(section.id)) {
+    //   return null;
+    // }
     return (
-      <Components>
+      <Stacks>
         <ul style={{ listStyle: "none" }}>
-          {section.components.map(component => {
+          {section.stacks.map(stack => {
             return (
-              <li
-                className="component"
-                key={component.id}
-                onClick={() => {
-                  this.props.editComponent(section, component);
-                }}
-              >
-                {getComponentIcon(component.type)} {this.props.active === component.id ? <strong style={{ color: "#1B83BA" }}>{component.getTitle()}</strong> : component.getTitle()}
+              <li className="stack" key={stack.id}>
+                <i className="fa fa-folder" />{" "}
+                <span
+                  onClick={() => {
+                    this.props.edit(section, stack);
+                  }}
+                >
+                  {stack.name}
+                </span>
+                {this.renderStack(section, stack)}
               </li>
             );
           })}
         </ul>
-        <button
-          onClick={() => {
-            this.addImage(section);
-          }}
-        >
-          + Image
-        </button>
-        <button
-          onClick={() => {
-            this.addGallery(section);
-          }}
-        >
-          + Gallery
-        </button>
-        <button
-          onClick={() => {
-            this.addOverlay(section);
-          }}
-        >
-          + Overlay
-        </button>
-        <button
-          onClick={() => {
-            this.addText(section);
-          }}
-        >
-          + Text
-        </button>
-        <button
-          onClick={() => {
-            this.addReveal(section);
-          }}
-        >
-          + Reveal
-        </button>
+      </Stacks>
+    );
+  }
+
+  private renderStack(section: Section, stack: Stack) {
+    return (
+      <Components>
+        <ul style={{ listStyle: "none" }}>
+          {stack.components.map(component => {
+            return (
+              <li
+                className="component"
+                key={stack.id}
+                onClick={() => {
+                  this.props.edit(section, stack, component);
+                }}
+              >
+                {getComponentIcon(component.type)} {this.props.active === component.id ? <strong style={{ color: "#1B83BA" }}>{component.name}</strong> : component.name}
+              </li>
+            );
+          })}
+        </ul>
       </Components>
     );
   }
@@ -248,6 +125,7 @@ const SectionList = styled.ul`
     font-size: 13px;
 
     > header {
+      position: relative;
       padding: 10px;
       &:hover {
         cursor: pointer;
@@ -256,12 +134,23 @@ const SectionList = styled.ul`
   }
 `;
 
-const Components = styled.div`
+const Stacks = styled.div`
   border-top: 1px dashed #ccc;
   padding: 10px;
 
+  .stack {
+    margin: 5px 0 5px 10px;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+`;
+
+const Components = styled.div`
+  padding: 5px 10px;
+
   .component {
-    margin: 5px 0 5px 20px;
+    margin: 5px 0 5px 10px;
     &:hover {
       cursor: pointer;
     }

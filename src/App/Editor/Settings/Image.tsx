@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import { Source } from "Engine/Enums";
 import { Section } from "Engine/Section";
 
 import { Header, SettingGroup } from "../Styles";
@@ -12,12 +13,22 @@ export const ImageSettings: React.SFC<{
     <React.Fragment key={`component-${component.id}`}>
       <div style={{ padding: 10, borderBottom: "1px dashed #ccc" }}>
         <SettingGroup>
+          <label className="input">Name</label>
+          <input
+            type="text"
+            value={component.get("name", "")}
+            onChange={event => {
+              component.set("name", event.target.value, Source.User);
+            }}
+          />
+        </SettingGroup>
+        <SettingGroup>
           <label className="input">Title</label>
           <input
             type="text"
-            defaultValue={component.get("title", "")}
-            onBlur={event => {
-              component.set("title", event.target.value, true);
+            value={component.getSetting("title", "")}
+            onChange={event => {
+              component.setSetting("title", event.target.value, Source.User);
             }}
           />
         </SettingGroup>
@@ -26,9 +37,9 @@ export const ImageSettings: React.SFC<{
           <input
             type="text"
             placeholder="http://path.to/image"
-            defaultValue={component.get("src", "")}
-            onBlur={event => {
-              component.set("src", event.target.value, true);
+            value={component.getSetting("src", "")}
+            onChange={event => {
+              component.setSetting("src", event.target.value, Source.User);
             }}
           />
         </SettingGroup>
@@ -36,9 +47,9 @@ export const ImageSettings: React.SFC<{
           <label className="input">Alt Text</label>
           <input
             type="text"
-            defaultValue={component.get("altText", "")}
-            onBlur={event => {
-              component.set("altText", event.target.value, true);
+            value={component.getSetting("altText", "")}
+            onChange={event => {
+              component.setSetting("altText", event.target.value, Source.User);
             }}
           />
         </SettingGroup>
@@ -47,7 +58,7 @@ export const ImageSettings: React.SFC<{
           <select
             value={component.getSetting("position")}
             onChange={event => {
-              component.setSetting("position", event.target.value, true);
+              component.setSetting("position", event.target.value, Source.User);
             }}
           >
             <option>None</option>
@@ -67,7 +78,7 @@ export const ImageSettings: React.SFC<{
             type="text"
             defaultValue={component.getStyle("maxWidth", "")}
             onBlur={event => {
-              component.setStyle("maxWidth", event.target.value, true);
+              component.setStyle("maxWidth", event.target.value, Source.User);
             }}
           />
         </SettingGroup>
@@ -77,7 +88,7 @@ export const ImageSettings: React.SFC<{
             type="text"
             defaultValue={component.getStyle("height", "")}
             onBlur={event => {
-              component.setStyle("height", event.target.value, true);
+              component.setStyle("height", event.target.value, Source.User);
             }}
           />
         </SettingGroup>
@@ -87,7 +98,7 @@ export const ImageSettings: React.SFC<{
             type="text"
             defaultValue={component.getStyle("margin", "")}
             onBlur={event => {
-              component.setStyle("margin", event.target.value, true);
+              component.setStyle("margin", event.target.value, Source.User);
             }}
           />
         </SettingGroup>
@@ -95,7 +106,7 @@ export const ImageSettings: React.SFC<{
       <div style={{ borderTop: "1px dashed #ccc", padding: 10, textAlign: "center" }}>
         <button
           onClick={() => {
-            component.remove(true);
+            component.remove(Source.User);
           }}
         >
           Delete Image

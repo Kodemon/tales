@@ -130,6 +130,7 @@ export const Content = styled.div`
   .ql-container {
     font-family: "Merriweather", serif;
     font-size: 1em;
+    height: auto;
 
     &.ql-snow {
       border: none;
@@ -139,6 +140,7 @@ export const Content = styled.div`
   .ql-editor {
     line-height: 1.77em;
     overflow: visible;
+    height: auto;
   }
 
   .ql-toolbar {

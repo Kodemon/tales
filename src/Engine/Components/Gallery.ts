@@ -1,7 +1,7 @@
 import { viewport } from "Engine/Viewport";
 
+import { Component } from "../Component";
 import { setStyle } from "../Utils";
-import { Component } from "./Component";
 
 export class Gallery extends Component {
   public getTitle() {
@@ -40,8 +40,8 @@ export class Gallery extends Component {
     });
 
     container.onclick = () => {
-      this.section.page.emit("edit", this.section, this);
+      this.page.emit("edit", this.stack, this);
     };
-    this.section.append(this.id, container);
+    this.stack.append(this.id, container);
   }
 }

@@ -1,7 +1,9 @@
 import { EventEmitter } from "eventemitter3";
+import * as rndm from "rndm";
 
 import { Conduit } from "./Conduit";
-import { getSection, Section } from "./Section";
+import { Source } from "./Enums";
+import { Section } from "./Section";
 import { viewport } from "./Viewport";
 
 export class Page extends EventEmitter {
@@ -12,16 +14,10 @@ export class Page extends EventEmitter {
   public id: string;
 
   /**
-   * Editing state.
-   * @type {boolean}
-   */
-  public editing: boolean;
-
-  /**
    * Container.
    * @type {HTMLDivElement}
    */
-  public container: HTMLDivElement;
+  public element: HTMLDivElement;
 
   /**
    * Peer
@@ -36,16 +32,29 @@ export class Page extends EventEmitter {
   public sections: Section[] = [];
 
   /**
-   * @param id
-   * @param target
-   * @param editing
+   * Editing state.
+   * @type {boolean}
    */
-  constructor(id: string, container: any, editing = false) {
+  public editing: boolean;
+
+  /**
+   * Quill, injected from the editor when in edit mode.
+   * @type {Quill}
+   */
+  public Quill: any;
+
+  /**
+   * @param element
+   * @param data
+   */
+  constructor(element: any, data: any) {
     super();
 
-    this.id = id;
-    this.container = container;
-    this.editing = editing;
+    this.element = element;
+
+    this.id = data.id;
+    this.editing = data.editing;
+    this.Quill = data.Quill;
 
     // ### Resize Event Handler
 
@@ -60,9 +69,9 @@ export class Page extends EventEmitter {
     // ### Load Page
 
     const loader = setInterval(() => {
-      if (this.container.offsetHeight > 0) {
+      if (this.element.offsetHeight > 0) {
         clearInterval(loader);
-        viewport.setContainer(this.container);
+        viewport.setContainer(this.element);
         this.emit("ready");
       }
     }, 100);
@@ -80,13 +89,13 @@ export class Page extends EventEmitter {
    * @param page
    */
   public load(page: any) {
-    this.container.innerHTML = "";
-
+    this.element.innerHTML = "";
     this.sections = [];
     for (const data of page.sections) {
-      this.sections.push(new Section(this, getSection(data)).render());
+      const section = new Section(this, data);
+      this.sections.push(section);
+      section.render();
     }
-
     this.emit("loaded");
   }
 
@@ -94,7 +103,7 @@ export class Page extends EventEmitter {
    * Re-render all the components.
    */
   public refresh() {
-    viewport.setContainer(this.container);
+    viewport.setContainer(this.element);
     for (const section of this.sections) {
       section.render();
     }
@@ -139,6 +148,7 @@ export class Page extends EventEmitter {
    */
   public send(type: string, ...args: any) {
     if (this.conduit) {
+      console.log("Sending: ", type, args);
       this.conduit.list.forEach(conn => {
         conn.send(JSON.stringify({ type, args }));
       });
@@ -152,62 +162,29 @@ export class Page extends EventEmitter {
   */
 
   /**
-   * Add a new scene to the editor.
+   * Add a new section to the page.
    *
    * @param data
-   * @param isSource
+   * @param source
    */
-  public addSection(data: any, isSource: boolean = false) {
-    const section = new Section(this, getSection(data));
+  public addSection(data: any, source: Source = Source.Silent) {
+    const section = new Section(this, {
+      id: rndm.base62(10),
+      settings: data.settings || {},
+      stacks: data.stacks || []
+    });
 
     this.sections.push(section);
 
     section.render();
 
-    this.emit("section", section);
     this.cache();
 
-    if (isSource && this.conduit) {
-      this.send("section:added", section.data);
+    if (source === Source.User) {
+      this.send("section:added", this.id, section.data);
     }
 
     return section;
-  }
-
-  /**
-   * Update a section.
-   *
-   * @param data
-   */
-  public updateSection(data: any) {
-    const section = this.sections.find(s => s.id === data.id);
-    if (section) {
-      section.commit(data);
-    }
-  }
-
-  /**
-   * Removes a section.
-   *
-   * @param section
-   */
-  public removeSection(section: Section) {
-    this.sections = this.sections.reduce((list: Section[], cached: Section) => {
-      if (section !== cached) {
-        list.push(cached);
-      } else {
-        section.container.remove();
-      }
-      return list;
-    }, []);
-
-    this.cache();
-
-    for (const section of this.sections) {
-      section.render();
-    }
-
-    this.emit("loaded");
   }
 
   /*
@@ -221,8 +198,8 @@ export class Page extends EventEmitter {
    */
   public cache() {
     const sections: any = [];
-    this.sections.forEach(scene => {
-      sections.push(scene.data);
+    this.sections.forEach(section => {
+      sections.push(section.toJSON());
     });
     localStorage.setItem(
       `page.${this.id}`,
@@ -240,7 +217,7 @@ export class Page extends EventEmitter {
   public flush() {
     localStorage.removeItem(`page.${this.id}`);
     this.sections = [];
-    this.container.innerHTML = "";
+    this.element.innerHTML = "";
   }
 }
 

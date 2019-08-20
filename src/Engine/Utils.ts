@@ -109,9 +109,13 @@ export function cleanObjectProperties(obj: any = {}) {
  *
  * @param element
  * @param styles
+ * @param reset
  */
-export function setStyle(element: any, styles: any): void {
+export function setStyle(element: any, styles: any, reset = false): void {
   fastdom.mutate(() => {
+    if (reset) {
+      element.setAttribute("style", "");
+    }
     for (const key in styles) {
       element.style[key] = styles[key];
     }
@@ -136,26 +140,6 @@ export function translate(x: number, y: number, z?: number): string {
     return `translate3d(${posX}${posX !== 0 ? "px" : ""},${posY}${posY !== 0 ? "px" : ""},${posZ}${posZ !== 0 ? "px" : ""})`;
   }
   return `translate(${posX}${posX !== 0 ? "px" : ""},${posY}${posY !== 0 ? "px" : ""})`;
-}
-
-function setBackground(viewport: { x: number; y: number }, sprite: PIXI.Sprite, type: "cover" | "contain" = "contain", forceSize?: any) {
-  const sp = forceSize || { x: sprite.width, y: sprite.height };
-
-  const winratio = viewport.x / viewport.y;
-  const spratio = sp.x / sp.y;
-  const pos = new PIXI.Point(0, 0);
-
-  let scale = 1;
-  if (type === "cover" ? winratio > spratio : winratio < spratio) {
-    scale = viewport.x / sp.x;
-    pos.y = -(sp.y * scale - viewport.y) / 2;
-  } else {
-    scale = viewport.y / sp.y;
-    pos.x = -(sp.x * scale - viewport.x) / 2;
-  }
-
-  sprite.scale = new PIXI.Point(scale, scale);
-  sprite.position = pos;
 }
 
 /*

@@ -3,8 +3,8 @@ import { EventEmitter } from "eventemitter3";
 
 import { viewport } from "Engine/Viewport";
 
+import { Component } from "../Component";
 import { setPixiBackground, setStyle } from "../Utils";
-import { Component } from "./Component";
 
 const events = new EventEmitter();
 
@@ -108,7 +108,7 @@ export class Reveal extends Component {
     });
 
     wrapper.onclick = () => {
-      this.section.page.emit("edit", this.section, this);
+      this.page.emit("edit", this.stack, this);
     };
 
     const scroller = document.createElement("div");
@@ -117,11 +117,11 @@ export class Reveal extends Component {
     wrapper.append(container);
     wrapper.append(scroller);
 
-    this.section.append(this.id, wrapper);
+    this.stack.append(this.id, wrapper);
 
     this.page.on("loaded", () => {
       enterView({
-        selector: [this.section.container],
+        selector: [this.stack.element],
         offset: 0,
         progress: (el: any, progress: any) => {
           events.emit("progress", this.id, progress);

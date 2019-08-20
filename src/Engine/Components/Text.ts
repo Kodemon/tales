@@ -1,121 +1,111 @@
-import { getSection } from "Engine/Section";
+import { Source } from "Engine/Enums";
+import { Component } from "../Component";
+import { Stack } from "../Stack";
+import { maybe, setStyle } from "../Utils";
 
-import { deepCopy, maybe, setStyle } from "../Utils";
-import { Component } from "./Component";
+let currentSelection = "";
 
 export class Text extends Component {
   /**
-   * Text container element.
-   * @type {HTMLDivElement}
+   * Text article element.
+   * @type {HTMLElement}
    */
-  public grid: HTMLDivElement;
+  public element: HTMLElement;
 
   /**
-   * Quill instance passed by the editor.
+   * Text content element, when rendering in read mode.
+   * @type {HTMLDivElement}
+   */
+  public content: HTMLDivElement;
+
+  /**
+   * Quill editor instance, when working in edit mode.
    * @type {Quill}
    */
   public quill: any;
 
-  /**
-   * Quill editors body element.
-   * @type {HTMLElement}
-   */
-  public body: HTMLElement;
+  constructor(stack: Stack, data: any) {
+    super(stack, data);
 
-  public setQuill(quill: any, body: HTMLElement) {
+    this.stack.element.append((this.element = document.createElement("article")));
+
     if (this.editing) {
-      this.quill = quill;
-      this.body = body;
-      this.renderQuill();
+      this.loadQuill();
     }
+
+    this.page.on("quill:delta", this.onQuillDelta);
   }
 
-  public getTitle() {
-    if (this.quill) {
-      return `${this.quill.getText(0, 20)}`;
-    }
-    return "Text";
-  }
-
-  public set(key: string, value: any, isSource = false) {
-    const section = deepCopy(this.section.data);
-    section.components = section.components.map((component: any) => {
-      if (component.id === this.id) {
-        component[key] = key === "html" ? value : value.content;
+  /**
+   * Create a quill instance.
+   */
+  private loadQuill() {
+    this.quill = new this.page.Quill(this.element, {
+      theme: "snow",
+      placeholder: "Compose an epic...",
+      modules: {
+        toolbar: false
       }
-      return component;
     });
 
-    this.section.data = getSection(section);
-    this.section.page.cache();
+    // ### Selection Change
+    // 1. Send a component edit selection when selection has changed.
 
-    if (!isSource) {
-      if (key === "text" && this.quill) {
-        this.quill.updateContents(value.delta);
-      } else if (key === "html" && !this.editing) {
-        this.renderHTML(value);
+    this.quill.on("selection-change", (range: any) => {
+      if (range && this.id !== currentSelection) {
+        currentSelection = this.id;
+        this.page.emit("edit", this.section, this.stack, this);
+      }
+    });
+
+    // ### Text Change
+    // 1. Update the text, and html keys on the component.
+    // 2. Send text, and html update events to all connected peers.
+
+    this.quill.on("text-change", (delta: any, oldDelta: any, source: Source) => {
+      if (source === Source.User) {
+        const data = { content: this.quill.getContents(), delta };
+
+        this.setSetting("text", data);
+        this.setSetting("html", this.quill.root.innerHTML);
+
+        this.page.send("quill:delta", this.id, { data, html: this.quill.root.innerHTML });
+      }
+    });
+
+    // ### Content
+    // 1. Assign the initial component quill text.
+
+    this.quill.setContents(this.getSetting("text", {}).content);
+  }
+
+  private onQuillDelta = (componentId: string, { data, html }: any) => {
+    if (componentId === this.id) {
+      if (this.editing) {
+        this.quill.updateContents(data.delta);
+      } else {
+        this.setSetting("text", data);
+        this.setSetting("html", html);
       }
     }
-  }
+  };
 
   public render() {
-    this.grid = document.createElement("div");
-
-    this.grid.className = "tale-text";
-
-    setStyle(this.grid, {
-      ...getGridLayout(maybe<string>(this.data, "settings.layout"), maybe<number>(this.data, "settings.min"), maybe<number>(this.data, "settings.max")),
-      minHeight: this.section.height
+    setStyle(this.element, {
+      gridArea: "text",
+      ...maybe(this.data, "style", {})
     });
 
-    if (maybe<boolean>(this.data, "settings.sticky", false)) {
-      setStyle(this.grid, {
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width: "100%"
-      });
-    }
-
-    this.section.append(this.id, this.grid);
-
     if (!this.editing) {
-      this.renderHTML();
-    } else if (this.quill) {
-      this.renderQuill();
-    }
-  }
+      this.element.className = "ql-container ql-snow";
 
-  private renderHTML(html = this.get("html")) {
-    if (html) {
-      const article = document.createElement("article");
-      setStyle(article, {
-        gridArea: "text",
-        ...maybe(this.data, "style", {})
-      });
+      if (!this.content) {
+        this.content = document.createElement("div");
+        this.content.className = "ql-editor";
+        this.element.append(this.content);
+      }
 
-      article.className = "ql-container ql-snow";
-
-      const wrapper = document.createElement("div");
-
-      wrapper.className = "ql-editor";
-      wrapper.innerHTML = html;
-
-      article.append(wrapper);
-
-      this.grid.innerHTML = "";
-      this.grid.append(article);
-    }
-  }
-
-  private renderQuill() {
-    if (this.body) {
-      setStyle(this.body, {
-        gridArea: "text",
-        ...maybe(this.data, "style", {})
-      });
-      this.grid.innerHTML = "";
-      this.grid.append(this.body);
+      this.content.innerHTML = this.getSetting("html");
     }
   }
 }

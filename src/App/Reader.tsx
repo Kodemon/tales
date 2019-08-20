@@ -10,7 +10,10 @@ export class Reader extends React.Component {
   private page: Page;
 
   public componentDidMount() {
-    window.page = this.page = new Page(router.params.get("page"), this.content).on("ready", () => {
+    window.page = this.page = new Page(this.content, {
+      id: router.params.get("page"),
+      editing: false
+    }).on("ready", () => {
       const cache = localStorage.getItem(`page.${router.params.get("page")}`);
       if (cache) {
         this.page.load(JSON.parse(cache));
