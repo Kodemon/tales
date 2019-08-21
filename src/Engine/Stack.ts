@@ -1,5 +1,3 @@
-import * as rndm from "rndm";
-
 import { template } from "../App/Editor/Components/StackLayout/Parser/Template";
 import { Gallery } from "./Components/Gallery";
 import { Image } from "./Components/Image";
