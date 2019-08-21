@@ -130,6 +130,8 @@ export class Reveal extends Component {
   }
 
   public render() {
+    super.render();
+
     setStyle(this.container, { height: viewport.height });
 
     this.app.view.width = viewport.width;

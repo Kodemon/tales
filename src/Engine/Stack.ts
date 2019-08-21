@@ -8,6 +8,7 @@ import { DataManager } from "./DataManager";
 import { Source } from "./Enums";
 import { Section } from "./Section";
 import { generateId, setStyle } from "./Utils";
+import { viewport } from "./Viewport";
 
 const DEFAULT_GRID = {
   width: 1,
@@ -47,6 +48,7 @@ export class Stack extends DataManager<Data> {
     this.section = section;
     this.section.element.append((this.element = document.createElement("div")));
     this.element.id = data.id;
+    this.element.setAttribute("data-type", "stack");
 
     for (const data of this.data.components) {
       const Component = this.getComponentClass(data.type);
@@ -209,7 +211,6 @@ export class Stack extends DataManager<Data> {
     }
 
     const grid = this.getSetting("grid");
-    console.log(grid);
     const gridStyle: any = {};
     if (grid) {
       gridStyle.display = "grid";
@@ -221,8 +222,8 @@ export class Stack extends DataManager<Data> {
     setStyle(this.element, {
       ...(this.data.style || {}),
       ...gridStyle,
-      minWidth: "100%",
-      minHeight: "100%"
+      width: viewport.width,
+      height: "auto"
     });
 
     for (const component of this.components) {

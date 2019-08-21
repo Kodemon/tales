@@ -15,7 +15,7 @@ export class Image extends Component {
    * Image element.
    * @type {HTMLImageElement}
    */
-  private image?: HTMLImageElement;
+  private image: HTMLImageElement;
 
   /**
    * Scroller element, used during sticky positioning.
@@ -25,24 +25,23 @@ export class Image extends Component {
 
   constructor(stack: Stack, data: any) {
     super(stack, data);
+
     this.area.append((this.element = document.createElement("figure")));
     this.element.id = data.id;
+
+    this.image = document.createElement("img");
+    this.image.onclick = () => {
+      this.page.emit("edit", this.section, this.stack, this);
+    };
+    this.element.append(this.image);
   }
 
   public render() {
-    const image = this.image || document.createElement("img");
+    super.render();
 
-    image.src = this.getSetting("src");
-    image.title = this.getSetting("title", "");
-    image.alt = this.getSetting("altText", "");
-    image.onclick = () => {
-      this.page.emit("edit", this.section, this.stack, this);
-    };
-
-    if (!this.image) {
-      this.image = image;
-      this.element.append(image);
-    }
+    this.image.src = this.getSetting("src");
+    this.image.title = this.getSetting("title", "");
+    this.image.alt = this.getSetting("altText", "");
 
     if (this.scroller) {
       this.scroller.remove();
@@ -55,7 +54,7 @@ export class Image extends Component {
         this.element.className = "position-fixed";
         this.image.className = "";
         setStyle(
-          image,
+          this.image,
           {
             objectFit: "cover",
             width: "100%",
@@ -68,9 +67,9 @@ export class Image extends Component {
 
       case "sticky": {
         this.element.className = "position-fixed";
-        image.className = "position-sticky";
+        this.image.className = "position-sticky";
         setStyle(
-          image,
+          this.image,
           {
             objectFit: "cover",
             objectPosition: "50% 0",
@@ -91,9 +90,9 @@ export class Image extends Component {
           this.page.emit("edit", this.section, this.stack, this);
         };
 
-        image.className = "position-fixed_component";
+        this.image.className = "position-fixed_component";
         setStyle(
-          image,
+          this.image,
           {
             objectFit: "cover",
             objectPosition: "50% 0",
@@ -115,7 +114,7 @@ export class Image extends Component {
         this.element.className = "";
         this.image.className = "";
         setStyle(
-          image,
+          this.image,
           {
             display: "block",
             width: viewport.width,

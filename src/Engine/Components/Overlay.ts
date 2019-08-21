@@ -17,6 +17,8 @@ export class Overlay extends Component {
   }
 
   public render() {
+    super.render();
+
     const type = this.getSetting("type");
     const background = this.getSetting("background");
     const borderWidth = this.getSetting("borderWidth");

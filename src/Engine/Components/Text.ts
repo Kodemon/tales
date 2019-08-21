@@ -92,6 +92,8 @@ export class Text extends Component {
   };
 
   public render() {
+    super.render();
+
     setStyle(this.element, {
       ...maybe(this.data, "style", {})
     });

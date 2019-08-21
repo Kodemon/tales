@@ -65,14 +65,7 @@ export class Sections extends React.Component<
                           <button
                             style={{ position: "absolute", top: 10, right: 10, padding: "0 2px", cursor: "pointer" }}
                             onClick={() => {
-                              section.addStack(
-                                {
-                                  settings: {
-                                    position: "absolute"
-                                  }
-                                },
-                                Source.User
-                              );
+                              section.addStack({}, Source.User);
                             }}
                           >
                             <i className="fa fa-plus" />

@@ -50,31 +50,9 @@ export class Component extends DataManager<Data> {
   constructor(stack: Stack, data: any) {
     super(data);
     this.stack = stack;
-    this.area = document.createElement("div");
 
-    switch (this.getSetting("position", "relative")) {
-      case "absolute": {
-        setStyle(this.area, {
-          gridArea: this.id
-        });
-        break;
-      }
-      case "sticky": {
-        this.area.className = "position-sticky";
-        setStyle(this.area, {
-          gridArea: this.id
-        });
-        break;
-      }
-      default: {
-        setStyle(this.area, {
-          gridArea: this.id,
-          position: "relative",
-          minWidth: "100%",
-          minHeight: "100%"
-        });
-      }
-    }
+    this.area = document.createElement("div");
+    this.area.setAttribute("data-type", "component-area");
 
     this.stack.element.append(this.area);
   }
@@ -96,10 +74,10 @@ export class Component extends DataManager<Data> {
   }
 
   /*
-  |--------------------------------------------------------------------------------
-  | Removal Utilties
-  |--------------------------------------------------------------------------------
-  */
+   |--------------------------------------------------------------------------------
+   | Removal Utilties
+   |--------------------------------------------------------------------------------
+   */
 
   /**
    * Removes the component from the page.
@@ -134,6 +112,46 @@ export class Component extends DataManager<Data> {
       this.page.send("component:removed", section.id, this.id);
     }
     */
+  }
+
+  /*
+   |--------------------------------------------------------------------------------
+   | Rendering
+   |--------------------------------------------------------------------------------
+   */
+
+  public render() {
+    switch (this.getSetting("position", "relative")) {
+      case "absolute": {
+        this.area.className = "position-absolute";
+        setStyle(this.area, {
+          gridArea: this.id
+        });
+        break;
+      }
+      case "sticky": {
+        this.area.className = "position-sticky";
+        setStyle(this.area, {
+          gridArea: this.id
+        });
+        break;
+      }
+      case "fixed": {
+        this.area.className = "position-fixed";
+        setStyle(this.area, {
+          gridArea: this.id
+        });
+        break;
+      }
+      default: {
+        this.area.className = "position-relaive";
+        setStyle(this.area, {
+          gridArea: this.id,
+          minWidth: "100%",
+          minHeight: "100%"
+        });
+      }
+    }
   }
 }
 

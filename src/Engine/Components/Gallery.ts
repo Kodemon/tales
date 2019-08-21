@@ -37,6 +37,8 @@ export class Gallery extends Component {
   }
 
   public render() {
+    super.render();
+
     setStyle(this.element, {
       height: viewport.height,
       display: "grid",
