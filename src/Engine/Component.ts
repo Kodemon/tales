@@ -1,5 +1,6 @@
 import { DataManager } from "./DataManager";
 import { Stack } from "./Stack";
+import { setStyle } from "./Utils";
 
 export class Component extends DataManager<Data> {
   /**
@@ -10,9 +11,9 @@ export class Component extends DataManager<Data> {
 
   /**
    * Root component element.
-   * @type {any}
+   * @type {HTMLDivElement}
    */
-  public element: any;
+  public area: HTMLDivElement;
 
   /**
    * Component type.
@@ -20,14 +21,6 @@ export class Component extends DataManager<Data> {
    */
   get type() {
     return this.data.type;
-  }
-
-  /**
-   * Component render target.
-   * @type {HTMLDivElement}
-   */
-  get area() {
-    return this.stack.getArea(this.id) || this.stack.element;
   }
 
   /**
@@ -57,6 +50,11 @@ export class Component extends DataManager<Data> {
   constructor(stack: Stack, data: any) {
     super(data);
     this.stack = stack;
+    this.area = document.createElement("div");
+    setStyle(this.area, {
+      // set the default grid area stuff here...
+    });
+    this.stack.element.append(this.area);
   }
 
   /*
@@ -64,15 +62,6 @@ export class Component extends DataManager<Data> {
    | Lifecycle
    |--------------------------------------------------------------------------------
    */
-
-  /**
-   * Update component.
-   */
-  public update() {
-    if (this.element.parentNode !== this.area) {
-      this.area.append(this.element);
-    }
-  }
 
   /*
    |--------------------------------------------------------------------------------

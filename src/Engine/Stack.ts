@@ -23,12 +23,6 @@ export class Stack extends DataManager<Data> {
   public element: HTMLDivElement;
 
   /**
-   * Stack area elements.
-   * @type {Map<string, HTMLDivElement>}
-   */
-  public areas: Map<string, HTMLDivElement> = new Map();
-
-  /**
    * List of instanced components to render in the stack.
    * @type {any[]}
    */
@@ -48,11 +42,6 @@ export class Stack extends DataManager<Data> {
     this.section = section;
     this.section.element.append((this.element = document.createElement("div")));
     this.element.id = data.id;
-
-    const areas = this.getSetting("areas", []);
-    for (const id of areas) {
-      this.addArea(id, document.createElement("div"));
-    }
 
     for (const data of this.data.components) {
       const Component = this.getComponentClass(data.type);
@@ -91,45 +80,6 @@ export class Stack extends DataManager<Data> {
    */
   public send(path: string, value: any) {
     this.page.send("stack:set", this.page.id, this.section.id, this.id, path, value);
-  }
-
-  /*
-  |--------------------------------------------------------------------------------
-  | Area Utilities
-  |--------------------------------------------------------------------------------
-  */
-
-  /**
-   * Add a container area to the stack.
-   *
-   * @param id Component identifier.
-   * @param element
-   */
-  public addArea(id: string, element: HTMLDivElement) {
-    this.areas.set(id, element);
-    this.element.append(element);
-  }
-
-  /**
-   * Returns the container element for the provided id.
-   *
-   * @param id Component identifier.
-   */
-  public getArea(id: string) {
-    return this.areas.get(id);
-  }
-
-  /**
-   * Removes a area from the stack.
-   *
-   * @param id
-   */
-  public deleteArea(id: string) {
-    const element = this.getArea(id);
-    if (element) {
-      element.remove();
-    }
-    this.areas.delete(id);
   }
 
   /*
