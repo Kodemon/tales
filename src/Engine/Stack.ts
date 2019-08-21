@@ -49,6 +49,11 @@ export class Stack extends DataManager<Data> {
     this.section.element.append((this.element = document.createElement("div")));
     this.element.id = data.id;
 
+    const areas = this.getSetting("areas", []);
+    for (const id of areas) {
+      this.addArea(id, document.createElement("div"));
+    }
+
     for (const data of this.data.components) {
       const Component = this.getComponentClass(data.type);
       if (Component) {
