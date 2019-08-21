@@ -120,7 +120,7 @@ export class Editor extends React.Component<
    */
   private onEdit = (section: Section, stack?: Stack, component?: any) => {
     this.setState(() => ({
-      tab: component ? "component" : stack ? "stack" : "section",
+      tab: component ? "component" : stack ? "stack" : section ? "section" : "",
       section,
       stack,
       component

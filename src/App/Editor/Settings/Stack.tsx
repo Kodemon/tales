@@ -167,6 +167,15 @@ export const StackSettings: React.SFC<{
           </button>
         </div>
       </Components>
+      <div style={{ borderTop: "1px dashed #ccc", padding: 10, textAlign: "center" }}>
+        <button
+          onClick={() => {
+            stack.remove(Source.User);
+          }}
+        >
+          Delete Stack
+        </button>
+      </div>
     </React.Fragment>
   );
 };
