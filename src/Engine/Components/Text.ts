@@ -93,7 +93,6 @@ export class Text extends Component {
 
   public render() {
     setStyle(this.element, {
-      gridArea: "text",
       ...maybe(this.data, "style", {})
     });
 

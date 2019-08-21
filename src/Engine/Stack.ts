@@ -213,17 +213,16 @@ export class Stack extends DataManager<Data> {
     const gridStyle: any = {};
     if (grid) {
       gridStyle.display = "grid";
-      (gridStyle.gridTemplateColumns = "1fr ".repeat(grid.width).trim()),
-        (gridStyle.gridTemplateRows = "1fr ".repeat(grid.height).trim()),
-        (gridStyle.gridTemplateAreas = template(grid));
+      gridStyle.gridTemplateColumns = "1fr ".repeat(grid.width).trim();
+      gridStyle.gridTemplateRows = "1fr ".repeat(grid.height).trim();
+      gridStyle.gridTemplateAreas = template(grid);
     }
 
     setStyle(this.element, {
       ...(this.data.style || {}),
       ...gridStyle,
-      width: "100%",
-      height: "100%",
-      minHeight: this.section.getHeight()
+      minWidth: "100%",
+      minHeight: "100%"
     });
 
     for (const component of this.components) {

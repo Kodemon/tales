@@ -67,6 +67,22 @@ export class Image extends Component {
       }
 
       case "sticky": {
+        this.element.className = "component-absolute";
+        image.className = "section-sticky";
+        setStyle(
+          image,
+          {
+            objectFit: "cover",
+            objectPosition: "50% 0",
+            width: "100%",
+            height: "100%"
+          },
+          true
+        );
+        break;
+      }
+
+      case "fixed": {
         this.element.className = "component-fixed_container";
 
         const scroller = document.createElement("div");

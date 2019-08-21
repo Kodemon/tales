@@ -51,15 +51,31 @@ export class Component extends DataManager<Data> {
     super(data);
     this.stack = stack;
     this.area = document.createElement("div");
-    setStyle(this.area, {
-      gridArea: this.id,
-      position: "relative",
-      width: "100%",
-      height: "100%",
-      maxWidth: "100%",
-      maxHeight: "100%",
-      overflow: "hidden"
-    });
+
+    switch (this.getSetting("position", "relative")) {
+      case "absolute": {
+        setStyle(this.area, {
+          gridArea: this.id
+        });
+        break;
+      }
+      case "sticky": {
+        this.area.className = "section-sticky";
+        setStyle(this.area, {
+          gridArea: this.id
+        });
+        break;
+      }
+      default: {
+        setStyle(this.area, {
+          gridArea: this.id,
+          position: "relative",
+          minWidth: "100%",
+          minHeight: "100%"
+        });
+      }
+    }
+
     this.stack.element.append(this.area);
   }
 
