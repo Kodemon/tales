@@ -24,10 +24,10 @@ export class Reveal extends Component {
 
     this.area.append((this.element = document.createElement("div")));
     this.element.id = data.id;
-    this.element.className = "component-absolute";
+    this.element.className = "position-fixed";
 
     this.container = document.createElement("div");
-    this.container.className = "section-sticky";
+    this.container.className = "position-sticky";
     this.element.append(this.container);
 
     this.app = new PIXI.Application();
@@ -36,7 +36,7 @@ export class Reveal extends Component {
     this.loadItems();
 
     this.scroller = document.createElement("div");
-    this.scroller.className = "component-scroll_overlay";
+    this.scroller.className = "position-scroll_overlay";
     this.container.append(this.scroller);
 
     this.page.on("loaded", () => {

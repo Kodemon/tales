@@ -138,15 +138,15 @@ export class Section extends DataManager<Data> {
 
     switch (position) {
       case "relative": {
-        this.element.className = "section-relative";
+        this.element.className = "position-relative";
         break;
       }
       case "sticky": {
-        this.element.className = "section-sticky";
+        this.element.className = "position-sticky";
         break;
       }
       case "absolute": {
-        this.element.className = "section-absolute";
+        this.element.className = "position-absolute";
         break;
       }
     }

@@ -21,7 +21,7 @@ export class Overlay extends Component {
     const background = this.getSetting("background");
     const borderWidth = this.getSetting("borderWidth");
 
-    this.element.className = this.getSetting("sticky", false) ? "section-sticky" : "component-absolute";
+    this.element.className = this.getSetting("sticky", false) ? "position-sticky" : "position-fixed";
 
     const style = {
       width: viewport.width,

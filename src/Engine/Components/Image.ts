@@ -52,7 +52,7 @@ export class Image extends Component {
     const position = this.getSetting("position");
     switch (position) {
       case "background": {
-        this.element.className = "component-absolute";
+        this.element.className = "position-fixed";
         this.image.className = "";
         setStyle(
           image,
@@ -67,8 +67,8 @@ export class Image extends Component {
       }
 
       case "sticky": {
-        this.element.className = "component-absolute";
-        image.className = "section-sticky";
+        this.element.className = "position-fixed";
+        image.className = "position-sticky";
         setStyle(
           image,
           {
@@ -83,15 +83,15 @@ export class Image extends Component {
       }
 
       case "fixed": {
-        this.element.className = "component-fixed_container";
+        this.element.className = "position-fixed_container";
 
         const scroller = document.createElement("div");
-        scroller.className = "component-scroll_overlay";
+        scroller.className = "position-scroll_overlay";
         scroller.onclick = () => {
           this.page.emit("edit", this.section, this.stack, this);
         };
 
-        image.className = "component-fixed_component";
+        image.className = "position-fixed_component";
         setStyle(
           image,
           {

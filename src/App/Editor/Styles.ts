@@ -72,28 +72,28 @@ export const Content = styled.div`
 
   /* Position Classes */
 
-  .section-relative {
+  .position-relative {
     position: relative;
   }
 
-  .section-absolute {
+  .position-absolute {
     position: absolute;
   }
 
-  .section-sticky {
+  .position-sticky {
     position: -webkit-sticky;
     position: sticky;
     top: 0;
   }
-  .section-sticky:before,
-  .section-sticky:after {
+  .position-sticky:before,
+  .position-sticky:after {
     content: "";
     display: table;
   }
 
   /* Fixed Sticky */
 
-  .component-absolute {
+  .position-fixed {
     position: absolute;
     top: 0;
     right: 0;
@@ -101,7 +101,7 @@ export const Content = styled.div`
     left: 0;
   }
 
-  .component-fixed_container {
+  .position-fixed_container {
     position: absolute;
     top: 0;
     right: 0;
@@ -112,7 +112,7 @@ export const Content = styled.div`
     /* clip-path: polygon(0px 0px, 0px 100%, 100% 100%, 100% 0px); */
   }
 
-  .component-scroll_overlay {
+  .position-scroll_overlay {
     position: absolute;
     top: 0;
     right: 0;
@@ -120,7 +120,7 @@ export const Content = styled.div`
     left: 0;
   }
 
-  .component-fixed_component {
+  .position-fixed_component {
     position: fixed;
     top: 0;
   }

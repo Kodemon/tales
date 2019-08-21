@@ -60,7 +60,7 @@ export class Component extends DataManager<Data> {
         break;
       }
       case "sticky": {
-        this.area.className = "section-sticky";
+        this.area.className = "position-sticky";
         setStyle(this.area, {
           gridArea: this.id
         });
