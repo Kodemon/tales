@@ -223,7 +223,7 @@ export class Stack extends DataManager<Data> {
       ...(this.data.style || {}),
       ...gridStyle,
       width: viewport.width,
-      height: "auto"
+      minHeight: this.section.getHeight()
     });
 
     for (const component of this.components) {

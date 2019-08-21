@@ -125,7 +125,9 @@ export class Component extends DataManager<Data> {
       case "absolute": {
         this.area.className = "position-absolute";
         setStyle(this.area, {
-          gridArea: this.id
+          gridArea: this.id,
+          width: "100%",
+          height: "100%"
         });
         break;
       }

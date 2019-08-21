@@ -56,14 +56,15 @@ export const ImageSettings: React.SFC<{
         <SettingGroup>
           <label>Position</label>
           <select
-            value={component.getSetting("position")}
+            value={component.getSetting("position", "relative")}
             onChange={event => {
               component.setSetting("position", event.target.value, Source.User);
             }}
           >
-            <option>None</option>
-            <option value="background">Background</option>
+            <option value="relative">Relative</option>
+            <option value="absolute">Absolute</option>
             <option value="sticky">Sticky</option>
+            <option value="fixed">Fixed</option>
           </select>
         </SettingGroup>
       </div>

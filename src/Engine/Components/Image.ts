@@ -50,7 +50,7 @@ export class Image extends Component {
 
     const position = this.getSetting("position");
     switch (position) {
-      case "background": {
+      case "absolute": {
         this.element.className = "position-fixed";
         this.image.className = "";
         setStyle(
