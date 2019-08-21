@@ -17,11 +17,11 @@ export class Component extends DataManager<Data> {
   }
 
   /**
-   * Component render area.
-   * @type {string}
+   * Component render target.
+   * @type {HTMLDivElement}
    */
   get area() {
-    return this.data.area;
+    return this.stack.getArea(this.id) || this.stack.element;
   }
 
   /**

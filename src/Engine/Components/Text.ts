@@ -27,7 +27,7 @@ export class Text extends Component {
   constructor(stack: Stack, data: any) {
     super(stack, data);
 
-    this.stack.element.append((this.element = document.createElement("article")));
+    this.area.append((this.element = document.createElement("article")));
     this.element.id = data.id;
 
     if (this.editing) {

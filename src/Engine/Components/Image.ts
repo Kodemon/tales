@@ -25,7 +25,7 @@ export class Image extends Component {
 
   constructor(stack: Stack, data: any) {
     super(stack, data);
-    this.stack.element.append((this.element = document.createElement("figure")));
+    this.area.append((this.element = document.createElement("figure")));
     this.element.id = data.id;
   }
 

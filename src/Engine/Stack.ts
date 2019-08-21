@@ -23,6 +23,12 @@ export class Stack extends DataManager<Data> {
   public element: HTMLDivElement;
 
   /**
+   * Stack area elements.
+   * @type {Map<string, HTMLDivElement>}
+   */
+  public areas: Map<string, HTMLDivElement> = new Map();
+
+  /**
    * List of instanced components to render in the stack.
    * @type {any[]}
    */
@@ -44,7 +50,7 @@ export class Stack extends DataManager<Data> {
     this.element.id = data.id;
 
     for (const data of this.data.components) {
-      const Component = this.getComponent(data.type);
+      const Component = this.getComponentClass(data.type);
       if (Component) {
         const component = new Component(this, data);
         this.components.push(component);
@@ -84,6 +90,45 @@ export class Stack extends DataManager<Data> {
 
   /*
   |--------------------------------------------------------------------------------
+  | Area Utilities
+  |--------------------------------------------------------------------------------
+  */
+
+  /**
+   * Add a container area to the stack.
+   *
+   * @param id Component identifier.
+   * @param element
+   */
+  public addArea(id: string, element: HTMLDivElement) {
+    this.areas.set(id, element);
+    this.element.append(element);
+  }
+
+  /**
+   * Returns the container element for the provided id.
+   *
+   * @param id Component identifier.
+   */
+  public getArea(id: string) {
+    return this.areas.get(id);
+  }
+
+  /**
+   * Removes a area from the stack.
+   *
+   * @param id
+   */
+  public deleteArea(id: string) {
+    const element = this.getArea(id);
+    if (element) {
+      element.remove();
+    }
+    this.areas.delete(id);
+  }
+
+  /*
+  |--------------------------------------------------------------------------------
   | Component Utilities
   |--------------------------------------------------------------------------------
   */
@@ -94,7 +139,7 @@ export class Stack extends DataManager<Data> {
    * @param component
    */
   public addComponent(data: any, source: Source = Source.Silent) {
-    const Component = this.getComponent(data.type);
+    const Component = this.getComponentClass(data.type);
     if (Component) {
       const component = new Component(this, {
         id: data.id || rndm.base62(10),
@@ -121,13 +166,33 @@ export class Stack extends DataManager<Data> {
   }
 
   /**
+   * Get a component from the stack.
+   *
+   * @param id
+   *
+   * @returns component instance
+   */
+  public getComponent(id: string) {
+    return this.components.find(c => c.id === id);
+  }
+
+  /**
+   * Get the raw component data from the stack.
+   *
+   * @param id
+   */
+  public getComponentData(id: string) {
+    return this.data.components.find(c => c.id === id);
+  }
+
+  /**
    * Get a component class based on provided type.
    *
    * @param type
    *
    * @returns component class
    */
-  public getComponent(type: any) {
+  public getComponentClass(type: any) {
     switch (type) {
       case "text": {
         return Text;

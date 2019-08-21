@@ -10,7 +10,7 @@ export class Gallery extends Component {
   constructor(stack: Stack, data: any) {
     super(stack, data);
 
-    this.stack.element.append((this.element = document.createElement("div")));
+    this.area.append((this.element = document.createElement("div")));
     this.element.id = data.id;
 
     const items = this.getSetting("items");
