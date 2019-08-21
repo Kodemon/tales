@@ -91,7 +91,7 @@ export class Sections extends React.Component<
           <Stacks ref={provided.innerRef} style={{ backgroundColor: snapshot.isDraggingOver ? "#F0F2E8" : "#fcfcfc" }} {...provided.droppableProps}>
             {section.stacks.map((stack, index) => {
               return (
-                <Draggable key={section.id} draggableId={stack.id} index={index}>
+                <Draggable key={stack.id} draggableId={stack.id} index={index}>
                   {(provided, snapshot) => (
                     <div className="stack" key={stack.id} ref={provided.innerRef} {...provided.draggableProps}>
                       <i className="fa fa-folder" />

@@ -150,7 +150,7 @@ export class Component extends DataManager<Data> {
         setStyle(this.area, {
           gridArea: this.id,
           minWidth: "100%",
-          minHeight: "100%"
+          minHeight: this.section.getHeight()
         });
       }
     }

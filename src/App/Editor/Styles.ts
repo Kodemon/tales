@@ -125,6 +125,13 @@ export const Content = styled.div`
     top: 0;
   }
 
+  /* Flex */
+
+  .display-flex {
+    display: -webkit-flex; /* Safari */
+    display: flex;
+  }
+
   /* Quill */
 
   .ql-container {

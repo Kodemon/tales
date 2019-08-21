@@ -103,7 +103,6 @@ export class Editor extends React.Component<
    */
   private onLoaded = () => {
     this.forceUpdate();
-    this.page.sections.forEach(section => this.setTextEditors(section));
   };
 
   /**
@@ -127,26 +126,6 @@ export class Editor extends React.Component<
       component
     }));
   };
-
-  /*
-  |--------------------------------------------------------------------------------
-  | Utilities
-  |--------------------------------------------------------------------------------
-  */
-
-  /**
-   * Sets a text editor instance on any text components in the
-   * provided section.
-   *
-   * @param section
-   */
-  private setTextEditors(section: Section) {
-    // section.components.forEach(component => {
-    //   if (component.type === "text") {
-    //     setTextEditor(component);
-    //   }
-    // });
-  }
 
   /*
   |--------------------------------------------------------------------------------

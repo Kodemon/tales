@@ -46,7 +46,7 @@ export const TextSettings: React.SFC<{
           <input
             type="number"
             value={component.getSetting("max", "")}
-            placeholder="580"
+            placeholder="780"
             onChange={event => {
               component.setSetting("max", event.target.value, Source.User);
             }}
@@ -55,15 +55,20 @@ export const TextSettings: React.SFC<{
         <SettingGroup>
           <label className="input">Layout</label>
           <select
-            value={component.getSetting("layout", "middle")}
+            value={component.getSetting("layout", "top,center")}
             onChange={event => {
               component.setSetting("layout", event.target.value, Source.User);
             }}
           >
-            <option value="left">Left</option>
-            <option value="middle">Middle</option>
-            <option value="right">Right</option>
-            <option value="center">Center</option>
+            <option value="flex-start,flex-start">Top Left</option>
+            <option value="flex-start,center">Top Center</option>
+            <option value="flex-start,flex-end">Top Right</option>
+            <option value="center,left">Center Left</option>
+            <option value="center,center">Center Center</option>
+            <option value="center,flex-end">Center Right</option>
+            <option value="flex-end,flex-start">Bottom Left</option>
+            <option value="flex-end,center">Bottom Center</option>
+            <option value="flex-end,flex-end">Bottom Right</option>
           </select>
         </SettingGroup>
       </div>

@@ -94,11 +94,25 @@ export class Text extends Component {
   public render() {
     super.render();
 
+    this.area.className = "display-flex";
+
+    const [align, justify] = this.getSetting("layout", "top,center").split(",");
+    setStyle(this.area, {
+      alignItems: align,
+      justifyContent: justify
+    });
+
     setStyle(this.element, {
+      minWidth: this.getSetting("min", 280),
+      maxWidth: this.getSetting("max", 780),
       ...maybe(this.data, "style", {})
     });
 
-    if (!this.editing) {
+    if (this.editing) {
+      // setStyle(this.quill.root, {
+      //   display: "flex"
+      // })
+    } else {
       this.element.className = "ql-container ql-snow";
 
       if (!this.content) {
