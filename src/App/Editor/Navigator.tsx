@@ -59,7 +59,7 @@ export class Navigator extends React.Component<
       <React.Fragment>
         <PaneHeader>
           <h1>Sections</h1>
-          <div>
+          <div style={{ paddingTop: 6, textAlign: "right" }}>
             <button
               onClick={() => {
                 this.props.page.flush();
@@ -74,7 +74,7 @@ export class Navigator extends React.Component<
                 // this.setState(() => ({ section: this.props.page.addSection({}, Source.User) }));
               }}
             >
-              <i className="fa fa-plus" />
+              <i className="fa fa-plus" /> Add Section
             </button>
           </div>
         </PaneHeader>
@@ -93,6 +93,7 @@ export class Navigator extends React.Component<
 const Sidebar = styled.div`
   position: relative;
   background: #f6f6f6;
+  border-right: 1px solid #ccc;
   font-family: "Roboto", sans-serif;
 `;
 
@@ -110,12 +111,17 @@ const Icon = styled.i`
     width: 41px;
     z-index: 100;
   }
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const Pane = styled.div`
   display: grid;
   grid-template-columns: 10px 1fr;
   grid-template-rows: 1fr;
+  grid-template-areas: "bar content";
 
   position: absolute;
   top: 0;
@@ -128,17 +134,22 @@ const Pane = styled.div`
 `;
 
 const PaneBar = styled.div`
+  grid-area: bar;
+
   background: #fcfcfc;
   border-left: 1px solid #ccc;
   border-right: 1px solid #ccc;
 `;
 
 const PaneContent = styled.div`
+  grid-area: content;
+
   background: #f6f6f6;
   border-right: 1px solid #ccc;
 `;
 
 const PaneHeader = styled.div`
+  display: flex;
   position: relative;
 
   background: #fcfcfc;
@@ -149,6 +160,13 @@ const PaneHeader = styled.div`
   h1 {
     font-size: 1.2em;
     font-weight: 300;
+    width: 50%;
+  }
+
+  button {
+    background: none;
+    border: none;
+    width: 50%;
   }
 `;
 
