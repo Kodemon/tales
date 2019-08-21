@@ -63,7 +63,11 @@ export class DataManager<Data = any> {
   public set(path: string, value: any, source: Source = Source.Silent) {
     const data = deepCopy(this.data);
 
-    objectPath.set(data, path, value);
+    if (value === undefined || value === null || value === "") {
+      objectPath.del(data, path);
+    } else {
+      objectPath.set(data, path, value);
+    }
 
     this.data = Object.freeze(data);
 
