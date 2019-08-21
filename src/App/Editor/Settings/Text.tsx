@@ -46,7 +46,7 @@ export const TextSettings: React.SFC<{
           <input
             type="number"
             value={component.getSetting("max", "")}
-            placeholder="780"
+            placeholder="762"
             onChange={event => {
               component.setSetting("max", event.target.value, Source.User);
             }}
@@ -85,6 +85,17 @@ export const TextSettings: React.SFC<{
             placeholder="1em"
             onBlur={event => {
               component.setStyle("fontSize", event.target.value, Source.User);
+            }}
+          />
+        </SettingGroup>
+        <SettingGroup>
+          <label className="input">Line Height</label>
+          <input
+            type="text"
+            defaultValue={component.getStyle("lineHeight", "")}
+            placeholder="1.77"
+            onBlur={event => {
+              component.setStyle("lineHeight", event.target.value, Source.User);
             }}
           />
         </SettingGroup>

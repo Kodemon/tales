@@ -145,7 +145,7 @@ export const Content = styled.div`
   }
 
   .ql-editor {
-    line-height: 1.77em;
+    line-height: inherit;
     overflow: visible;
     height: auto;
   }

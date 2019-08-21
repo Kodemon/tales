@@ -103,8 +103,11 @@ export class Text extends Component {
     });
 
     setStyle(this.element, {
+      color: "#262626",
       minWidth: this.getSetting("min", 280),
-      maxWidth: this.getSetting("max", 780),
+      maxWidth: this.getSetting("max", 762),
+      fontSize: "1em",
+      lineHeight: "1.71",
       ...maybe(this.data, "style", {})
     });
 
