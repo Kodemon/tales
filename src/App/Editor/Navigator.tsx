@@ -1,6 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 
+import { Source } from "Engine/Enums";
 import { Page } from "Engine/Page";
 import { Section } from "Engine/Section";
 import { Stack } from "Engine/Stack";
@@ -58,6 +59,24 @@ export class Navigator extends React.Component<
       <React.Fragment>
         <PaneHeader>
           <h1>Sections</h1>
+          <div>
+            <button
+              onClick={() => {
+                this.props.page.flush();
+                // this.setState(() => ({ section: undefined, component: undefined }));
+              }}
+            >
+              <i className="fa fa-trash" />
+            </button>
+            <button
+              onClick={() => {
+                this.props.page.addSection({}, Source.User);
+                // this.setState(() => ({ section: this.props.page.addSection({}, Source.User) }));
+              }}
+            >
+              <i className="fa fa-plus" />
+            </button>
+          </div>
         </PaneHeader>
         <Sections page={this.props.page} active={{ section: "", stack: "", component: "" }} edit={this.props.edit} />
       </React.Fragment>
