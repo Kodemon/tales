@@ -1,3 +1,4 @@
+import { Component } from "Engine/Component";
 import * as React from "react";
 import { StyledGrid, StyledGridLine, StyledGridText } from "./Styles";
 
@@ -5,15 +6,17 @@ export class GridPreview extends React.Component<{
   width: number;
   height: number;
   areas: any;
+  components: Component[];
 }> {
   public renderArea = (area: any) => {
     const { width, height, areas } = this.props;
     const { row, column } = areas[area];
-
+    const component: Component | undefined = this.props.components.find(f => f.id === area);
+    console.log(component && component.name);
     return Array.from({ length: row.span }, (_, r) =>
       Array.from({ length: column.span }, (_, c) => (
         <StyledGridText key={`area${r}${c}`} x={`${((column.start + c - 0.5) / width) * 100}%`} y={`${((row.start + r - 0.5) / height) * 100}%`}>
-          {area}
+          {component ? component.name : ""} ({area})
         </StyledGridText>
       ))
     );

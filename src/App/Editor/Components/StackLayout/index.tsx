@@ -33,81 +33,55 @@ export class StackLayout extends React.Component<
   },
   {
     show: boolean;
-    grid: Grid;
   }
 > {
   constructor(props: any) {
     super(props);
     this.state = {
-      show: true,
-      grid: {
-        width: 2,
-        height: 1,
-        areas: {
-          text: {
-            column: { start: 1, end: 2, span: 1 },
-            row: { start: 1, end: 2, span: 1 }
-          },
-          image: {
-            column: { start: 2, end: 3, span: 1 },
-            row: { start: 1, end: 2, span: 1 }
-          }
-        }
-      }
+      show: true
     };
   }
-
-  // <select
-  // value={section.getSetting("position", "relative")}
-  // onChange={event => {
-  //   section.setSetting("position", event.target.value, Source.User);
-  // }}
-
   public setTracks = (evt: any) => {
-    this.setState(() => ({ grid: grid(evt.target.value) }));
+    this.props.stack.setSetting("grid", grid(evt.target.value));
   };
 
   public setWidth = (evt: any) => {
-    this.setState(({ grid }) => ({
-      grid: {
-        ...grid,
-        width: integer(evt.target.value, grid.width, 1, 100)
-      }
-    }));
+    const grid = this.props.stack.getSetting("grid");
+    this.props.stack.setSetting("grid", {
+      ...grid,
+      width: integer(evt.target.value, grid.width, 1, 100)
+    });
   };
 
   public setHeight = (evt: any) => {
-    this.setState(({ grid }) => ({
-      grid: {
-        ...grid,
-        height: integer(evt.target.value, grid.height, 1, 100)
-      }
-    }));
+    const grid = this.props.stack.getSetting("grid");
+    this.props.stack.setSetting("grid", {
+      ...grid,
+      height: integer(evt.target.value, grid.height, 1, 100)
+    });
   };
 
   public setArea = (key: string, value: any) => {
-    this.setState(({ grid }) => ({
-      grid: {
-        ...grid,
-        areas: {
-          ...grid.areas,
-          [key]: value
-        }
+    const grid = this.props.stack.getSetting("grid");
+    this.props.stack.setSetting("grid", {
+      ...grid,
+      areas: {
+        ...grid.areas,
+        [key]: value
       }
-    }));
-  };
-
-  public save = () => {
-    console.log(this.state.grid);
-    console.log(template(this.state.grid));
-    this.props.stack.setStyle("display", "grid", Source.User);
-    this.props.stack.setStyle("gridTemplateColumns", "1fr ".repeat(this.state.grid.width).trim(), Source.User);
-    this.props.stack.setStyle("gridTemplateRows", "1fr ".repeat(this.state.grid.height).trim(), Source.User);
-    this.props.stack.setStyle("gridTemplateAreas", template(this.state.grid), Source.User);
+    });
   };
 
   public renderSetting() {
-    const { grid } = this.state;
+    const grid = this.props.stack.getSetting("grid");
+    if (!grid || !grid.width) {
+      return (
+        <Container>
+          <Hint>Add a Component to get started.</Hint>
+        </Container>
+      );
+    }
+
     const { width, height, areas } = grid;
     const tpl = template(grid);
 
@@ -135,10 +109,9 @@ export class StackLayout extends React.Component<
             </Text>
           </Settings>
           <MainInner>
-            <GridPreview width={width} height={height} areas={areas} />
+            <GridPreview width={width} height={height} areas={areas} components={this.props.stack.components} />
             <Preview tpl={tpl} width={width} height={height} areas={areas} setArea={this.setArea} />
           </MainInner>
-          <button onClick={this.save}>Apply</button>
         </StyledMain>
       </Container>
     );

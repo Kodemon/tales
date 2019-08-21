@@ -52,7 +52,8 @@ export class Component extends DataManager<Data> {
     this.stack = stack;
     this.area = document.createElement("div");
     setStyle(this.area, {
-      // set the default grid area stuff here...
+      gridArea: this.id,
+      position: "relative"
     });
     this.stack.element.append(this.area);
   }

@@ -1,4 +1,5 @@
 import * as fastdom from "fastdom";
+import * as rndm from "rndm";
 
 /*
  |--------------------------------------------------------------------------------
@@ -249,4 +250,20 @@ export function setPixiBackground(viewport: { x: number; y: number }, sprite: an
 
   sprite.scale = new PIXI.Point(scale, scale);
   sprite.position = pos;
+}
+
+/**
+ * Generate a random id string.
+ *
+ * @param length
+ * @param prefix
+ *
+ * @returns a generated id
+ */
+export function generateId(length: number = 12, prefix: string = "C"): string {
+  if (typeof length === "string") {
+    prefix = length;
+    length = 12;
+  }
+  return `${prefix}${rndm.base62(length)}`;
 }

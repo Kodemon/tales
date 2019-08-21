@@ -1,5 +1,6 @@
 import * as rndm from "rndm";
 
+import { template } from "../App/Editor/Components/StackLayout/Parser/Template";
 import { Gallery } from "./Components/Gallery";
 import { Image } from "./Components/Image";
 import { Overlay } from "./Components/Overlay";
@@ -8,7 +9,13 @@ import { Text } from "./Components/Text";
 import { DataManager } from "./DataManager";
 import { Source } from "./Enums";
 import { Section } from "./Section";
-import { setStyle } from "./Utils";
+import { generateId, setStyle } from "./Utils";
+
+const DEFAULT_GRID = {
+  width: 1,
+  height: 0,
+  areas: {}
+};
 
 export class Stack extends DataManager<Data> {
   /**
@@ -96,8 +103,9 @@ export class Stack extends DataManager<Data> {
   public addComponent(data: any, source: Source = Source.Silent) {
     const Component = this.getComponentClass(data.type);
     if (Component) {
+      const id = data.id || generateId();
       const component = new Component(this, {
-        id: data.id || rndm.base62(10),
+        id,
         type: data.type,
         area: data.area || "",
         name: data.name,
@@ -105,8 +113,20 @@ export class Stack extends DataManager<Data> {
         style: data.style || {}
       });
 
-      this.components.push(component);
+      const grid = this.getSetting("grid", DEFAULT_GRID);
+      this.setSetting("grid", {
+        width: grid.width,
+        height: grid.height + 1,
+        areas: {
+          ...grid.areas,
+          [id]: {
+            column: { start: 1, end: grid.width + 1, span: grid.width },
+            row: { start: grid.height + 1, end: grid.height + 2, span: 1 }
+          }
+        }
+      });
 
+      this.components.push(component);
       component.render();
 
       this.page.cache();
@@ -190,8 +210,19 @@ export class Stack extends DataManager<Data> {
       }
     }
 
+    const grid = this.getSetting("grid");
+    console.log(grid);
+    const gridStyle: any = {};
+    if (grid) {
+      gridStyle.display = "grid";
+      (gridStyle.gridTemplateColumns = "1fr ".repeat(grid.width).trim()),
+        (gridStyle.gridTemplateRows = "1fr ".repeat(grid.height).trim()),
+        (gridStyle.gridTemplateAreas = template(grid));
+    }
+
     setStyle(this.element, {
       ...(this.data.style || {}),
+      ...gridStyle,
       minHeight: this.section.getHeight()
     });
 
