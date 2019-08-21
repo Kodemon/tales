@@ -12,6 +12,20 @@ export const StackSettings: React.SFC<{
 }> = function StackSettings({ stack }) {
   return (
     <React.Fragment>
+      <SettingGroup>
+        <label className="input">Position</label>
+        <select
+          value={stack.getSetting("position", "relative")}
+          onChange={event => {
+            stack.setSetting("position", event.target.value, Source.User);
+          }}
+        >
+          <option value="relative">Relative</option>
+          <option value="sticky">Sticky</option>
+          <option value="absolute">Absolute</option>
+        </select>
+      </SettingGroup>
+
       <StackLayout stack={stack} />
       <Components key={`stack-${stack.id}`} style={{ padding: 10 }}>
         Components

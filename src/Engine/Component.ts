@@ -53,7 +53,12 @@ export class Component extends DataManager<Data> {
     this.area = document.createElement("div");
     setStyle(this.area, {
       gridArea: this.id,
-      position: "relative"
+      position: "relative",
+      width: "100%",
+      height: "100%",
+      maxWidth: "100%",
+      maxHeight: "100%",
+      overflow: "hidden"
     });
     this.stack.element.append(this.area);
   }

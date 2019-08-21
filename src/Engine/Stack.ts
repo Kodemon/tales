@@ -221,6 +221,8 @@ export class Stack extends DataManager<Data> {
     setStyle(this.element, {
       ...(this.data.style || {}),
       ...gridStyle,
+      width: "100%",
+      height: "100%",
       minHeight: this.section.getHeight()
     });
 

@@ -58,7 +58,7 @@ export class Image extends Component {
           image,
           {
             objectFit: "cover",
-            width: viewport.width,
+            width: "100%",
             height: "100%"
           },
           true
