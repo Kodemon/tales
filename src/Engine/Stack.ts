@@ -91,6 +91,31 @@ export class Stack extends DataManager<Data> {
 
   /*
   |--------------------------------------------------------------------------------
+  | Stack Utilities
+  |--------------------------------------------------------------------------------
+  */
+
+  public remove(source: Source = Source.Silent) {
+    this.section.stacks = this.section.stacks.reduce((stacks: Stack[], stack: Stack) => {
+      if (stack.id !== this.id) {
+        stacks.push(stack);
+      } else {
+        stack.element.remove();
+      }
+      return stacks;
+    }, []);
+
+    this.page.cache();
+    this.page.emit("refresh");
+    this.page.emit("edit");
+
+    if (source === Source.User) {
+      this.page.emit("stack:remove", this.page.id, this.section.id, this.id);
+    }
+  }
+
+  /*
+  |--------------------------------------------------------------------------------
   | Component Utilities
   |--------------------------------------------------------------------------------
   */
