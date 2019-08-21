@@ -103,7 +103,7 @@ export class Stack extends DataManager<Data> {
   public addComponent(data: any, source: Source = Source.Silent) {
     const Component = this.getComponentClass(data.type);
     if (Component) {
-      const id = data.id || generateId();
+      const id = data.id || generateId(5, "c");
       const component = new Component(this, {
         id,
         type: data.type,
