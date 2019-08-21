@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const Wrapper = styled.div`
   display: grid;
-  grid-template-columns: 240px auto 280px;
+  grid-template-columns: 40px auto 380px;
   grid-template-rows: 1fr;
   width: 100%;
   height: 100%;
@@ -17,26 +17,6 @@ export const Wrapper = styled.div`
  | Editor Styles
  |--------------------------------------------------------------------------------
  */
-
-export const SectionSidebar = styled.div`
-  background: #f6f6f6;
-  border-right: 1px solid #ccc;
-  font-family: "Roboto", sans-serif;
-
-  header {
-    > div {
-      position: absolute;
-      top: 6px;
-      right: 10px;
-
-      button {
-        cursor: pointer;
-        margin: 0 3px;
-        padding: 3px;
-      }
-    }
-  }
-`;
 
 export const SettingSidebar = styled.div`
   background: #f6f6f6;

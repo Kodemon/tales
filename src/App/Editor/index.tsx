@@ -10,6 +10,7 @@ import { Source } from "Engine/Enums";
 import { Stack } from "Engine/Stack";
 import { router } from "../../Router";
 import { Sections } from "./Components/Sections";
+import { Navigator } from "./Navigator";
 import { GallerySettings } from "./Settings/Gallery";
 import { ImageSettings } from "./Settings/Image";
 import { OverlaySettings } from "./Settings/Overlay";
@@ -18,7 +19,7 @@ import { RevealSettings } from "./Settings/Reveal";
 import { SectionSettings } from "./Settings/Section";
 import { StackSettings } from "./Settings/Stack";
 import { TextSettings } from "./Settings/Text";
-import { Content, Header, SectionSidebar, SettingSidebar, Wrapper } from "./Styles";
+import { Content, Header, SettingSidebar, Wrapper } from "./Styles";
 
 export class Editor extends React.Component<
   {},
@@ -136,47 +137,7 @@ export class Editor extends React.Component<
   public render() {
     return (
       <Wrapper>
-        <SectionSidebar>
-          <Header>
-            <h1>Page</h1>
-          </Header>
-          {this.page && <PageSettings page={this.page} />}
-          <Header>
-            <h1>Sections</h1>
-            <div>
-              <button
-                onClick={() => {
-                  if (this.page) {
-                    this.page.flush();
-                    this.setState(() => ({ section: undefined, component: undefined }));
-                  }
-                }}
-              >
-                <i className="fa fa-trash" />
-              </button>
-              <button
-                onClick={() => {
-                  if (this.page) {
-                    this.setState(() => ({ section: this.page.addSection({}, Source.User) }));
-                  }
-                }}
-              >
-                <i className="fa fa-plus" />
-              </button>
-            </div>
-          </Header>
-          {this.page && (
-            <Sections
-              page={this.page}
-              active={{
-                section: maybe(this.state, "section.id", ""),
-                stack: maybe(this.state, "stack.id", ""),
-                component: maybe(this.state, "component.id", "")
-              }}
-              edit={this.onEdit}
-            />
-          )}
-        </SectionSidebar>
+        <Navigator page={this.page} edit={this.onEdit} />
         <Content ref={c => (this.content = c)} />
         <SettingSidebar>{this.renderTabs()}</SettingSidebar>
       </Wrapper>
