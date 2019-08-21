@@ -74,7 +74,7 @@ export class Navigator extends React.Component<
                 // this.setState(() => ({ section: this.props.page.addSection({}, Source.User) }));
               }}
             >
-              <i className="fa fa-plus" /> Add Section
+              <i className="fa fa-plus" /> Section
             </button>
           </div>
         </PaneHeader>
@@ -149,7 +149,6 @@ const PaneContent = styled.div`
 `;
 
 const PaneHeader = styled.div`
-  display: flex;
   position: relative;
 
   background: #fcfcfc;
@@ -157,16 +156,22 @@ const PaneHeader = styled.div`
   margin-left: -1px;
   padding: 10px;
 
-  h1 {
+  > h1 {
     font-size: 1.2em;
     font-weight: 300;
-    width: 50%;
+  }
+
+  > div {
+    position: absolute;
+    top: 4px;
+    right: 14px;
   }
 
   button {
+    cursor: pointer;
     background: none;
     border: none;
-    width: 50%;
+    margin-left: 14px;
   }
 `;
 

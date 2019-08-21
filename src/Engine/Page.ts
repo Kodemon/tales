@@ -179,6 +179,7 @@ export class Page extends EventEmitter {
     section.render();
 
     this.cache();
+    this.emit("refresh");
 
     if (source === Source.User) {
       this.send("section:added", this.id, section.data);
