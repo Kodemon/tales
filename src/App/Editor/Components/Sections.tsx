@@ -41,43 +41,64 @@ export class Sections extends React.Component<
   };
 
   public render() {
+    if (this.props.page.sections.length === 0) {
+      return (
+        <AddSectionButton
+          onClick={() => {
+            this.props.page.addSection({}, 0, Source.User);
+          }}
+        >
+          Add Section
+        </AddSectionButton>
+      );
+    }
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
         <Droppable droppableId={this.props.page.id} type="SECTION">
           {(provided, snapshot) => (
-            <SectionList ref={provided.innerRef} style={{ backgroundColor: "#fcfcfc" }} {...provided.droppableProps}>
+            <SectionIndex ref={provided.innerRef} style={{ backgroundColor: "#fcfcfc" }} {...provided.droppableProps}>
               {this.props.page.sections.map((section, index) => {
                 return (
-                  <Draggable key={section.id} draggableId={section.id} index={index}>
-                    {(provided, snapshot) => (
-                      <div key={section.id} ref={provided.innerRef} {...provided.draggableProps}>
-                        <header>
-                          <i className="fa fa-bars" style={{ marginRight: 5 }} {...provided.dragHandleProps} />
-                          {index} -
-                          <span
-                            className="anchor"
-                            onClick={() => {
-                              this.props.edit(section);
-                            }}
-                          >
-                            {this.props.active.section === section.id ? <strong style={{ color: "#1B83BA" }}>{section.name}</strong> : section.name}
-                          </span>
-                          <button
-                            style={{ position: "absolute", top: 10, right: 10, padding: "0 2px", cursor: "pointer" }}
-                            onClick={() => {
-                              section.addStack({}, Source.User);
-                            }}
-                          >
-                            <i className="fa fa-plus" />
-                          </button>
-                        </header>
-                        {this.renderStacks(section)}
-                      </div>
-                    )}
-                  </Draggable>
+                  <React.Fragment key={section.id}>
+                    <Draggable draggableId={section.id} index={index}>
+                      {(provided, snapshot) => (
+                        <div key={section.id} ref={provided.innerRef} {...provided.draggableProps}>
+                          <header>
+                            <i className="fa fa-bars" style={{ marginRight: 5, fontSize: "0.9rem" }} {...provided.dragHandleProps} />
+                            {index} -
+                            <span
+                              className="anchor"
+                              onClick={() => {
+                                this.props.edit(section);
+                              }}
+                            >
+                              {this.props.active.section === section.id ? <strong style={{ color: "#1B83BA" }}>{section.name}</strong> : section.name}
+                            </span>
+                            <RemoveSection
+                              onClick={() => {
+                                section.remove();
+                              }}
+                            >
+                              <i className="fa fa-trash" />
+                            </RemoveSection>
+                          </header>
+                          {this.renderStacks(section)}
+                        </div>
+                      )}
+                    </Draggable>
+                    <AddSection>
+                      <button
+                        onClick={() => {
+                          this.props.page.addSection({}, index + 1, Source.User);
+                        }}
+                      >
+                        <i className="fa fa-plus" />
+                      </button>
+                    </AddSection>
+                  </React.Fragment>
                 );
               })}
-            </SectionList>
+            </SectionIndex>
           )}
         </Droppable>
       </DragDropContext>
@@ -86,33 +107,42 @@ export class Sections extends React.Component<
 
   private renderStacks(section: Section) {
     return (
-      <Droppable droppableId={section.id} type="STACK">
-        {(provided, snapshot) => (
-          <Stacks ref={provided.innerRef} style={{ backgroundColor: snapshot.isDraggingOver ? "#F0F2E8" : "#fcfcfc" }} {...provided.droppableProps}>
-            {section.stacks.map((stack, index) => {
-              return (
-                <Draggable key={stack.id} draggableId={stack.id} index={index}>
-                  {(provided, snapshot) => (
-                    <div className="stack" key={stack.id} ref={provided.innerRef} {...provided.draggableProps}>
-                      <i className="fa fa-folder" />
-                      <span
-                        className="anchor"
-                        onClick={() => {
-                          this.props.edit(section, stack);
-                        }}
-                      >
-                        {this.props.active.stack === stack.id ? <strong style={{ color: "#1B83BA" }}>{stack.name}</strong> : stack.name}
-                      </span>
-                      <i className="fa fa-bars" style={{ position: "absolute", right: 0 }} {...provided.dragHandleProps} />
-                      {this.renderStack(section, stack)}
-                    </div>
-                  )}
-                </Draggable>
-              );
-            })}
-          </Stacks>
-        )}
-      </Droppable>
+      <React.Fragment>
+        <Droppable droppableId={section.id} type="STACK">
+          {(provided, snapshot) => (
+            <Stacks ref={provided.innerRef} style={{ backgroundColor: snapshot.isDraggingOver ? "#F0F2E8" : "#fcfcfc" }} {...provided.droppableProps}>
+              {section.stacks.map((stack, index) => {
+                return (
+                  <Draggable key={stack.id} draggableId={stack.id} index={index}>
+                    {(provided, snapshot) => (
+                      <div className="stack" key={stack.id} ref={provided.innerRef} {...provided.draggableProps}>
+                        <i className="fa fa-folder" />
+                        <span
+                          className="anchor"
+                          onClick={() => {
+                            this.props.edit(section, stack);
+                          }}
+                        >
+                          {this.props.active.stack === stack.id ? <strong style={{ color: "#1B83BA" }}>{stack.name}</strong> : stack.name}
+                        </span>
+                        <i className="fa fa-bars" style={{ position: "absolute", top: 7, right: 10, fontSize: "0.9rem" }} {...provided.dragHandleProps} />
+                        {this.renderStack(section, stack)}
+                      </div>
+                    )}
+                  </Draggable>
+                );
+              })}
+            </Stacks>
+          )}
+        </Droppable>
+        <AddStack
+          onClick={() => {
+            section.addStack({}, Source.User);
+          }}
+        >
+          Add Stack
+        </AddStack>
+      </React.Fragment>
     );
   }
 
@@ -141,10 +171,9 @@ export class Sections extends React.Component<
   }
 }
 
-const SectionList = styled.div`
+const SectionIndex = styled.div`
   > div {
-    background: #fcfcfc;
-    border-bottom: 1px dashed #ccc;
+    background: #fafafa;
     font-size: 13px;
 
     > header {
@@ -159,14 +188,77 @@ const SectionList = styled.div`
   }
 `;
 
-const Stacks = styled.div`
-  border-top: 1px dashed #ccc;
+const AddSectionButton = styled.button`
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 0px;
+  margin: 10px;
   padding: 10px;
-  min-height: 30px;
+  width: 260px;
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+const AddSection = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: center;
+
+  border-top: 1px solid #ccc;
+
+  > button {
+    position: absolute;
+    top: -10px;
+
+    background: #fcfcfc;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+
+    font-size: 0.68rem;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    z-index: 1;
+  }
+`;
+
+const RemoveSection = styled.button`
+  position: absolute;
+  top: 8px;
+  right: 10px;
+
+  background: none;
+  border: 1px solid #e15a5a;
+
+  cursor: pointer;
+  padding: 3px 6px;
+
+  i {
+    color: #e15a5a !important;
+    font-size: 0.73rem;
+  }
+
+  &:hover {
+    background: #e15a5a;
+    i {
+      color: #fff !important;
+    }
+  }
+`;
+
+const Stacks = styled.div`
+  border-top: 1px solid #ccc;
 
   .stack {
     position: relative;
     margin: 5px 0 5px 10px;
+    padding: 5px;
   }
 
   .anchor {
@@ -175,9 +267,20 @@ const Stacks = styled.div`
   }
 `;
 
-const Components = styled.div`
-  padding: 5px 10px;
+const AddStack = styled.button`
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 0px;
+  margin: 10px 56px 15px;
+  padding: 6px;
+  width: 160px;
 
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+const Components = styled.div`
   .component {
     margin: 5px 0 5px 10px;
   }

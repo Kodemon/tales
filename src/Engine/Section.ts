@@ -77,6 +77,31 @@ export class Section extends DataManager<Data> {
 
   /*
   |--------------------------------------------------------------------------------
+  | Section Utilities
+  |--------------------------------------------------------------------------------
+  */
+
+  public remove(source: Source = Source.Silent) {
+    this.page.sections = this.page.sections.reduce((sections: Section[], section: Section) => {
+      if (section.id !== this.id) {
+        sections.push(section);
+      } else {
+        section.element.remove();
+      }
+      return sections;
+    }, []);
+
+    this.page.cache();
+    this.page.emit("refresh");
+    this.page.emit("edit");
+
+    if (source === Source.User) {
+      this.page.emit("section:remove", this.page.id, this.id);
+    }
+  }
+
+  /*
+  |--------------------------------------------------------------------------------
   | Stack Utilities
   |--------------------------------------------------------------------------------
   */
@@ -103,6 +128,7 @@ export class Section extends DataManager<Data> {
     this.page.emit("refresh");
 
     if (source === Source.User) {
+      this.page.emit("edit", this, stack);
       this.page.send("stack:added", this.page.id, this.id, stack.data);
     }
 
@@ -153,7 +179,8 @@ export class Section extends DataManager<Data> {
 
     setStyle(this.element, {
       background,
-      minHeight: this.height
+      minHeight: this.height,
+      width: viewport.width
     });
 
     for (const stack of this.stacks) {
@@ -161,14 +188,6 @@ export class Section extends DataManager<Data> {
     }
   }
 }
-
-/*
- |--------------------------------------------------------------------------------
- | Types
- |--------------------------------------------------------------------------------
- */
-
-type SectionSetting = "background" | "position" | "height";
 
 /*
  |--------------------------------------------------------------------------------

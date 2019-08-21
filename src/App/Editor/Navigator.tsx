@@ -7,6 +7,7 @@ import { Section } from "Engine/Section";
 import { Stack } from "Engine/Stack";
 
 import { Sections } from "./Components/Sections";
+import { PageSettings } from "./Settings/Page";
 
 export class Navigator extends React.Component<
   {
@@ -17,6 +18,8 @@ export class Navigator extends React.Component<
     pane: string;
   }
 > {
+  private isHovering = false;
+
   constructor(props: any) {
     super(props);
     this.state = {
@@ -24,12 +27,33 @@ export class Navigator extends React.Component<
     };
   }
 
+  public componentDidMount() {
+    window.addEventListener("mouseup", this.onMouseUp);
+  }
+
+  public componentWillUnmount() {
+    window.removeEventListener("mouseup", this.onMouseUp);
+  }
+
+  private onMouseUp = () => {
+    if (this.isHovering === false) {
+      this.setState(() => ({ pane: "" }));
+    }
+  };
+
   public render() {
     if (!this.props.page) {
-      return null;
+      return <Sidebar />;
     }
     return (
-      <Sidebar>
+      <Sidebar
+        onMouseOver={() => {
+          this.isHovering = true;
+        }}
+        onMouseOut={() => {
+          this.isHovering = false;
+        }}
+      >
         <Icons>
           <Icon
             className={`fa fa-file-o${this.state.pane === "page" ? " active" : ""}`}
@@ -47,10 +71,24 @@ export class Navigator extends React.Component<
         {this.state.pane !== "" && (
           <Pane>
             <PaneBar />
-            <PaneContent>{this.state.pane === "sections" && this.renderSections()}</PaneContent>
+            <PaneContent>
+              {this.state.pane === "page" && this.renderPage()}
+              {this.state.pane === "sections" && this.renderSections()}
+            </PaneContent>
           </Pane>
         )}
       </Sidebar>
+    );
+  }
+
+  private renderPage() {
+    return (
+      <React.Fragment>
+        <PaneHeader>
+          <h1>Page</h1>
+        </PaneHeader>
+        <PageSettings page={this.props.page} />
+      </React.Fragment>
     );
   }
 
@@ -59,24 +97,6 @@ export class Navigator extends React.Component<
       <React.Fragment>
         <PaneHeader>
           <h1>Sections</h1>
-          <div style={{ paddingTop: 6, textAlign: "right" }}>
-            <button
-              onClick={() => {
-                this.props.page.flush();
-                // this.setState(() => ({ section: undefined, component: undefined }));
-              }}
-            >
-              <i className="fa fa-trash" />
-            </button>
-            <button
-              onClick={() => {
-                this.props.page.addSection({}, Source.User);
-                // this.setState(() => ({ section: this.props.page.addSection({}, Source.User) }));
-              }}
-            >
-              <i className="fa fa-plus" /> Section
-            </button>
-          </div>
         </PaneHeader>
         <Sections page={this.props.page} active={{ section: "", stack: "", component: "" }} edit={this.props.edit} />
       </React.Fragment>
@@ -101,25 +121,34 @@ const Icons = styled.div``;
 
 const Icon = styled.i`
   border-bottom: 1px solid #ccc;
+  font-size: 0.9rem;
   padding: 10px 0;
   text-align: center;
   width: 40px;
 
   &.active {
     position: relative;
-    background: #fcfcfc;
-    width: 41px;
+    background: #fafafa;
+    width: 40px;
     z-index: 100;
   }
 
   &:hover {
+    background: #fafafa;
     cursor: pointer;
+    margin-left: -1px;
+  }
+
+  &.active {
+    &:hover {
+      margin-left: 0;
+    }
   }
 `;
 
 const Pane = styled.div`
   display: grid;
-  grid-template-columns: 10px 1fr;
+  grid-template-columns: 7px 1fr;
   grid-template-rows: 1fr;
   grid-template-areas: "bar content";
 
@@ -128,7 +157,7 @@ const Pane = styled.div`
   right: -280px;
   bottom: 0;
 
-  background: #f6f6f6;
+  background: #fafafa;
   width: 280px;
   z-index: 99;
 `;
@@ -136,7 +165,7 @@ const Pane = styled.div`
 const PaneBar = styled.div`
   grid-area: bar;
 
-  background: #fcfcfc;
+  background: #fafafa;
   border-left: 1px solid #ccc;
   border-right: 1px solid #ccc;
 `;
@@ -151,9 +180,8 @@ const PaneContent = styled.div`
 const PaneHeader = styled.div`
   position: relative;
 
-  background: #fcfcfc;
+  background: #fafafa;
   border-bottom: 1px solid #ccc;
-  margin-left: -1px;
   padding: 10px;
 
   > h1 {

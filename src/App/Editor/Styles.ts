@@ -2,8 +2,10 @@ import styled from "styled-components";
 
 export const Wrapper = styled.div`
   display: grid;
-  grid-template-columns: 40px 1fr 380px;
+  grid-template-columns: 40px auto 364px;
   grid-template-rows: 1fr;
+
+  background: #f2f2f2;
   width: 100%;
   height: 100%;
 
@@ -42,12 +44,6 @@ export const Content = styled.div`
   overflow-x: visible;
   -webkit-overflow-scrolling: touch;
 
-  /*
-  color: #303030;
-  font-family: "Merriweather", serif;
-  font-size: 1em;
-  line-height: 1.77em;
-  */
   text-rendering: optimizeLegibility;
 
   /* Position Classes */

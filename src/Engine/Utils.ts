@@ -8,6 +8,22 @@ import * as rndm from "rndm";
  */
 
 /**
+ * Generate a random id string.
+ *
+ * @param length
+ * @param prefix
+ *
+ * @returns a generated id
+ */
+export function generateId(length: number = 12, prefix: string = "C"): string {
+  if (typeof length === "string") {
+    prefix = length;
+    length = 12;
+  }
+  return `${prefix}${rndm.base62(length)}`;
+}
+
+/**
  * Safely retrieve a value from a deep nested object.
  *
  * @example
@@ -144,7 +160,7 @@ export function setStyle(element: any, styles: any, reset = false): void {
       element.setAttribute("style", "");
     }
     for (const key in styles) {
-      element.style[key] = styles[key];
+      element.style[key] = typeof styles[key] === "number" ? `${styles[key]}px` : styles[key];
     }
   });
 }
@@ -250,20 +266,4 @@ export function setPixiBackground(viewport: { x: number; y: number }, sprite: an
 
   sprite.scale = new PIXI.Point(scale, scale);
   sprite.position = pos;
-}
-
-/**
- * Generate a random id string.
- *
- * @param length
- * @param prefix
- *
- * @returns a generated id
- */
-export function generateId(length: number = 12, prefix: string = "C"): string {
-  if (typeof length === "string") {
-    prefix = length;
-    length = 12;
-  }
-  return `${prefix}${rndm.base62(length)}`;
 }
