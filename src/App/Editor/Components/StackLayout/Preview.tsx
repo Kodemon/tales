@@ -1,6 +1,7 @@
+import { Component } from "Engine/Component";
 import * as React from "react";
 import { clamp } from "./Parser/Types";
-import { StyledHandler, StyledPreview, StyledTrack } from "./Styles";
+import { ComponentDetails, StyledHandler, StyledPreview, StyledTrack } from "./Styles";
 
 export class Preview extends React.Component<
   {
@@ -9,11 +10,13 @@ export class Preview extends React.Component<
     height: number;
     areas: any;
     setArea: any;
+    components: Component[];
   },
   {
     isDragging: boolean;
     draggedArea?: string;
     draggedPosition?: string;
+    activatedComponent?: string;
   }
 > {
   private dx: number = 0;
@@ -25,7 +28,8 @@ export class Preview extends React.Component<
     this.state = {
       isDragging: false,
       draggedArea: undefined,
-      draggedPosition: undefined
+      draggedPosition: undefined,
+      activatedComponent: undefined
     };
   }
 
@@ -86,6 +90,11 @@ export class Preview extends React.Component<
   public makeHandlerMouseDown = (draggedArea: any) => (draggedPosition: any) => (evt: any) => {
     evt.preventDefault();
     this.setState(() => ({ isDragging: true, draggedArea, draggedPosition }));
+  };
+
+  public activateComponent = (area: string) => (evt: any) => {
+    evt.preventDefault();
+    this.setState(() => ({ activatedComponent: area }));
   };
 
   public moveTrack = (x: number, y: number) => {
@@ -212,9 +221,27 @@ export class Preview extends React.Component<
     }
   };
 
+  public renderComponent() {
+    const component = this.props.components.find(f => f.id === this.state.activatedComponent);
+    if (!component) {
+      return null;
+    }
+    return (
+      <div>
+        <button onClick={() => this.setState(() => ({ activatedComponent: undefined }))}>
+          <i className="fa fa-close" />
+        </button>
+        <div>{component.name}</div>
+        <div>{component.id}</div>
+      </div>
+    );
+  }
+
   public render() {
-    const { tpl, width, height, areas } = this.props;
-    const { isDragging, draggedArea, draggedPosition } = this.state;
+    const { tpl, width, height, areas, components } = this.props;
+    const { activatedComponent, isDragging, draggedArea, draggedPosition } = this.state;
+
+    // onClick={this.activateComponent(area)}
 
     return (
       <StyledPreview tpl={tpl} width={width} height={height} ref={e => (this.node = e)}>
@@ -222,6 +249,7 @@ export class Preview extends React.Component<
           <Track
             key={area}
             area={area}
+            component={components.find(f => f.id === area)}
             column={areas[area].column}
             row={areas[area].row}
             grabbing={isDragging && draggedArea === area && typeof draggedPosition !== "string"}
@@ -229,6 +257,7 @@ export class Preview extends React.Component<
             onHandlerMouseDown={this.makeHandlerMouseDown(area)}
           />
         ))}
+        {activatedComponent && this.renderComponent()}
       </StyledPreview>
     );
   }
@@ -238,23 +267,32 @@ function Track({
   area,
   column,
   row,
+  component,
   grabbing,
   onMouseDown,
-  onHandlerMouseDown
+  onHandlerMouseDown,
+  onClick
 }: {
   area: string;
   column: string;
   row: string;
+  component?: Component;
   grabbing: boolean;
   onMouseDown: any;
   onHandlerMouseDown: any;
+  onClick?: any;
 }) {
   return (
-    <StyledTrack area={area} grabbing={grabbing} onMouseDown={onMouseDown}>
+    <StyledTrack area={area} grabbing={grabbing} onMouseDown={onMouseDown} onClick={onClick}>
       <Handler position="top" onMouseDown={onHandlerMouseDown("top")} />
       <Handler position="right" onMouseDown={onHandlerMouseDown("right")} />
       <Handler position="bottom" onMouseDown={onHandlerMouseDown("bottom")} />
       <Handler position="left" onMouseDown={onHandlerMouseDown("left")} />
+      {component && (
+        <ComponentDetails>
+          {component.name} - {component.id}
+        </ComponentDetails>
+      )}
     </StyledTrack>
   );
 }

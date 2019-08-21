@@ -31,7 +31,7 @@ export const MainInner = styled.div`
   height: 160px;
 `;
 
-export const StyledGrid = styled.svg`
+export const SvgGrid = styled.svg`
   position: absolute;
   top: 0;
   right: 0;
@@ -41,7 +41,7 @@ export const StyledGrid = styled.svg`
   height: 100%;
 `;
 
-export const StyledGridText = styled.text`
+export const SvgText = styled.text`
   font-family: "Roboto Mono", monospace;
   font-weight: 500;
   font-size: 1rem;
@@ -50,7 +50,7 @@ export const StyledGridText = styled.text`
   fill: ${transparentize(0.75, colors.secondary)};
 `;
 
-export const StyledGridLine = styled.line`
+export const SvgLine = styled.line`
   stroke: ${darken(0.01, "#eee")};
   stroke-width: 1px;
 `;
@@ -68,6 +68,8 @@ export const StyledPreview = styled.div<{ width: number; height: number; tpl: st
 
 export const StyledTrack = styled.div<{ area: string; grabbing?: boolean }>`
   position: relative;
+  width: 100%;
+  height: 100%;
   grid-area: ${props => props.area};
   cursor: ${props => (props.grabbing ? "grabbing" : "grab")};
   background: ${transparentize(0.97, colors.secondary)};
@@ -181,4 +183,15 @@ export const SettingInput = styled.input`
     outline: 0;
     background: #fff;
   }
+`;
+
+export const ComponentDetails = styled.div`
+  font-family: "Roboto Mono", monospace;
+  font-weight: 500;
+  font-size: 1rem;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;

@@ -41,6 +41,7 @@ export class StackLayout extends React.Component<
       show: true
     };
   }
+
   public setTracks = (evt: any) => {
     this.props.stack.setSetting("grid", grid(evt.target.value));
   };
@@ -110,7 +111,7 @@ export class StackLayout extends React.Component<
           </Settings>
           <MainInner>
             <GridPreview width={width} height={height} areas={areas} components={this.props.stack.components} />
-            <Preview tpl={tpl} width={width} height={height} areas={areas} setArea={this.setArea} />
+            <Preview tpl={tpl} width={width} height={height} areas={areas} setArea={this.setArea} components={this.props.stack.components} />
           </MainInner>
         </StyledMain>
       </Container>
