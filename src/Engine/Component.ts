@@ -9,6 +9,12 @@ export class Component extends DataManager<Data> {
   public stack: Stack;
 
   /**
+   * Root component element.
+   * @type {any}
+   */
+  public element: any;
+
+  /**
    * Component type.
    * @type {string}
    */
@@ -51,6 +57,21 @@ export class Component extends DataManager<Data> {
   constructor(stack: Stack, data: any) {
     super(data);
     this.stack = stack;
+  }
+
+  /*
+   |--------------------------------------------------------------------------------
+   | Lifecycle
+   |--------------------------------------------------------------------------------
+   */
+
+  /**
+   * Update component.
+   */
+  public update() {
+    if (this.element.parentNode !== this.area) {
+      this.area.append(this.element);
+    }
   }
 
   /*
