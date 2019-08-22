@@ -1,41 +1,33 @@
 import * as React from "react";
 
-import { Source } from "Engine/Enums";
 import { Section } from "Engine/Section";
 
 import { ColorPicker } from "../Components/ColorPicker";
-import { SettingGroup } from "../Styles";
+import { DataSetting } from "../Components/DataSetting";
 
 export const SectionSettings: React.SFC<{
   section: Section;
 }> = function SectionSettings({ section }) {
   return (
     <div key={`section-${section.id}`} style={{ padding: 10 }}>
-      <SettingGroup>
-        <label className="input">Position</label>
-        <select
-          value={section.getSetting("position", "relative")}
-          onChange={event => {
-            section.setSetting("position", event.target.value, Source.User);
-          }}
-        >
-          <option value="relative">Relative</option>
-          <option value="sticky">Sticky</option>
-          <option value="absolute">Absolute</option>
-        </select>
-      </SettingGroup>
-      <SettingGroup>
-        <label className="input">Height</label>
-        <input
-          type="number"
-          value={`${Math.floor(section.getSetting("height", 1) * 100)}`}
-          placeholder="100"
-          onChange={event => {
-            console.log(event.target.value, parseFloat(event.target.value) / 100);
-            section.setSetting("height", parseFloat(event.target.value) / 100, Source.User);
-          }}
-        />
-      </SettingGroup>
+      <DataSetting entity={section} type="input" label="Name" attr="settings.name" placeholder={section.id} />
+      <DataSetting
+        entity={section}
+        type="select"
+        label="Position"
+        attr="settings.position"
+        options={[{ label: "Relative", value: "relative" }, { label: "Absolute", value: "absolute" }, { label: "Sticky", value: "sticky" }]}
+      />
+      <DataSetting
+        entity={section}
+        type="input"
+        label="Height"
+        attr="settings.height"
+        fallback={1}
+        placeholder="100"
+        onValue={value => value * 100}
+        onChange={value => (value === "" ? 0 : parseFloat(value) / 100)}
+      />
       <ColorPicker label="Background Color" effected={section} />
     </div>
   );

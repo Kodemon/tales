@@ -22,8 +22,6 @@ export class Navigator extends React.Component<
     ratio: string;
   }
 > {
-  private isHovering = false;
-
   constructor(props: any) {
     super(props);
     this.state = {
@@ -32,33 +30,12 @@ export class Navigator extends React.Component<
     };
   }
 
-  public componentDidMount() {
-    window.addEventListener("mouseup", this.onMouseUp);
-  }
-
-  public componentWillUnmount() {
-    window.removeEventListener("mouseup", this.onMouseUp);
-  }
-
-  private onMouseUp = () => {
-    if (this.isHovering === false) {
-      this.setState(() => ({ pane: "" }));
-    }
-  };
-
   public render() {
     if (!this.props.page) {
       return <Sidebar />;
     }
     return (
-      <Sidebar
-        onMouseOver={() => {
-          this.isHovering = true;
-        }}
-        onMouseOut={() => {
-          this.isHovering = false;
-        }}
-      >
+      <Sidebar>
         <Icons>
           <Icon
             className={`fa fa-file-o${this.state.pane === "page" ? " active" : ""}`}

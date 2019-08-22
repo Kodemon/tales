@@ -72,7 +72,11 @@ export class Sections extends React.Component<
                                 this.props.edit(section);
                               }}
                             >
-                              {this.props.active.section === section.id ? <strong style={{ color: "#1B83BA" }}>{section.name}</strong> : section.name}
+                              {this.props.active.section === section.id ? (
+                                <strong style={{ color: "#1B83BA" }}>{section.getSetting("name", section.id)}</strong>
+                              ) : (
+                                section.getSetting("name", section.id)
+                              )}
                             </span>
                             <RemoveSection
                               onClick={() => {
@@ -82,7 +86,7 @@ export class Sections extends React.Component<
                               <i className="fa fa-trash" />
                             </RemoveSection>
                           </header>
-                          {this.renderStacks(section)}
+                          {this.state.expanded.has(section.id) && this.renderStacks(section)}
                         </div>
                       )}
                     </Draggable>
