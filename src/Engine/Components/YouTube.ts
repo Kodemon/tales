@@ -42,7 +42,7 @@ export class YouTube extends Component {
   public render() {
     super.render();
 
-    this.frame.src = "https://www.youtube.com/embed/05ZHUuQVvJM?controls=0";
+    this.frame.src = `${this.getSetting("src")}?controls=0&showinfo=0&rel=0&autoplay=1&loop=1&mute=1`;
 
     if (this.scroller) {
       this.scroller.remove();
