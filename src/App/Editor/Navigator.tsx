@@ -7,6 +7,7 @@ import { Section } from "Engine/Section";
 import { Stack } from "Engine/Stack";
 
 import { Sections } from "./Components/Sections";
+import { aspectRatios } from "./Lib/AspectRatio/Aspects";
 import { PageSettings } from "./Settings/Page";
 import { SettingGroup } from "./Styles";
 
@@ -14,7 +15,7 @@ export class Navigator extends React.Component<
   {
     page: Page;
     edit: (section: Section, stack?: Stack, component?: any) => void;
-    ratio: (ratio: number[]) => void;
+    ratio: (ratio: string) => void;
   },
   {
     pane: string;
@@ -27,7 +28,7 @@ export class Navigator extends React.Component<
     super(props);
     this.state = {
       pane: "",
-      ratio: "16,9"
+      ratio: ""
     };
   }
 
@@ -101,12 +102,15 @@ export class Navigator extends React.Component<
               this.setState(() => ({
                 ratio: value
               }));
-              this.props.ratio(value.split(",").map(v => parseInt(v, 10)));
+              this.props.ratio(value);
             }}
           >
-            <option value="16:9">WideScreen</option>
-            <option value="9:16">Apple iPhone 7 Plus</option>
-            <option value="5:9">Samsung Galaxy S8+</option>
+            <option value="">All available</option>
+            {aspectRatios.map(a => (
+              <option key={a.name} value={a.name}>
+                {a.name}
+              </option>
+            ))}
           </select>
         </SettingGroup>
       </React.Fragment>

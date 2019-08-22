@@ -7,6 +7,7 @@ import { Section } from "Engine/Section";
 import { Stack } from "Engine/Stack";
 
 import { router } from "../../Router";
+import { fitAspect } from "./Lib/AspectRatio";
 import { Navigator } from "./Navigator";
 import { GallerySettings } from "./Settings/Gallery";
 import { ImageSettings } from "./Settings/Image";
@@ -53,8 +54,8 @@ export class Editor extends React.Component<
     this.state = {
       tab: "",
       ratio: {
-        width: "50%",
-        height: "80%"
+        width: "100%",
+        height: "100%"
       },
       section: undefined,
       stack: undefined,
@@ -138,9 +139,9 @@ export class Editor extends React.Component<
     }));
   };
 
-  private setRatio = (value: number[]) => {
+  private setRatio = (ratioName: string) => {
     if (this.content) {
-      const ratio = getPercent(this.content, value);
+      const ratio = ratioName === "" ? { width: 100, height: 100 } : fitAspect(this.content, ratioName);
       this.setState(
         () => ({
           ratio: {
@@ -167,7 +168,10 @@ export class Editor extends React.Component<
     return (
       <Wrapper>
         <Navigator page={this.page} edit={this.onEdit} ratio={this.setRatio} />
-        <Content ref={c => (this.content = c)} style={{ gridTemplateColumns: `1fr ${this.state.ratio.width} 1fr`, gridTemplateRows: `1fr ${this.state.ratio.height} 1fr` }}>
+        <Content
+          ref={c => (this.content = c)}
+          style={{ gridTemplateColumns: `1fr ${this.state.ratio.width} 1fr`, gridTemplateRows: `1fr ${this.state.ratio.height} 1fr`, padding: "26px" }}
+        >
           <Viewport ref={c => (this.viewport = c)} />
         </Content>
         <SettingSidebar>{this.renderTabs()}</SettingSidebar>
@@ -239,19 +243,6 @@ export class Editor extends React.Component<
       }
     }
   }
-}
-
-function getPercent(container: HTMLDivElement, [x, y]: number[], padding?: number): { width: number; height: number } {
-  const isPortrait = container.clientWidth < container.clientHeight;
-  return isPortrait
-    ? {
-        width: container.clientWidth,
-        height: (container.clientWidth / x) * y
-      }
-    : {
-        width: container.clientWidth,
-        height: (container.clientWidth / x) * y
-      };
 }
 
 const Content = styled.div`
