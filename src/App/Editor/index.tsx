@@ -4,7 +4,6 @@ import styled from "styled-components";
 
 import { Page } from "Engine/Page";
 import { Section } from "Engine/Section";
-import { Stack } from "Engine/Stack";
 
 import { router } from "../../Router";
 import { fitAspect } from "./Lib/AspectRatio";
@@ -22,8 +21,8 @@ export class Editor extends React.Component<
       height: string;
     };
     section?: Section;
-    stack?: Stack;
-    component?: any;
+    stack?: string;
+    component?: string;
   }
 > {
   /**
@@ -54,8 +53,8 @@ export class Editor extends React.Component<
         height: "100%"
       },
       section: undefined,
-      stack: undefined,
-      component: undefined
+      stack: "",
+      component: ""
     };
   }
 
@@ -178,7 +177,7 @@ export class Editor extends React.Component<
         >
           <Viewport ref={c => (this.viewport = c)} />
         </Content>
-        <Sidebar section={this.state.section} />
+        <Sidebar page={this.page} section={this.state.section} />
       </Wrapper>
     );
   }

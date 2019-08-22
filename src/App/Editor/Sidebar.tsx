@@ -2,10 +2,11 @@ import * as React from "react";
 import styled from "styled-components";
 
 import { Component } from "Engine/Component";
+import { Source } from "Engine/Enums";
+import { Page } from "Engine/Page";
 import { Section } from "Engine/Section";
 import { Stack } from "Engine/Stack";
 
-import { Source } from "Engine/Enums";
 import { ColorPicker } from "./Components/ColorPicker";
 import { DataSetting } from "./Components/DataSetting";
 import { StackLayout } from "./Components/StackLayout";
@@ -17,6 +18,7 @@ import { TextSettings } from "./Settings/Text";
 
 export class Sidebar extends React.Component<
   {
+    page: Page;
     section?: Section;
   },
   {
@@ -24,6 +26,8 @@ export class Sidebar extends React.Component<
     component: string;
   }
 > {
+  private editListenerEnabled = false;
+
   constructor(props: any) {
     super(props);
     this.state = {
@@ -32,8 +36,22 @@ export class Sidebar extends React.Component<
     };
   }
 
+  public ComponentDidUpdate(prevState: any, prevProps: any) {
+    if (this.props.page && !this.editListenerEnabled) {
+      console.log("Updated");
+      this.editListenerEnabled = true;
+      this.props.page.on("edit", (section: Section, stack: Stack, component: Component) => {
+        console.log(stack, component);
+        this.setState(() => ({
+          stack: stack ? stack.id : "",
+          component: component ? component.id : ""
+        }));
+      });
+    }
+  }
+
   public render() {
-    const section = this.props.section;
+    const { section } = this.props;
     if (!section) {
       return (
         <Container>
@@ -116,6 +134,11 @@ export class Sidebar extends React.Component<
             )}
           </StackContainer>
         ))}
+        <StackContainer key="stack:add">
+          <StackHeader style={{ textAlign: "center", cursor: "pointer" }} onClick={() => section.addStack({}, Source.User)}>
+            <h1>Add Stack</h1>
+          </StackHeader>
+        </StackContainer>
       </Stacks>
     );
   }
@@ -127,7 +150,7 @@ export class Sidebar extends React.Component<
     return (
       <Components>
         {stack.components.map(component => (
-          <ComponentContainer>
+          <ComponentContainer key={component.id}>
             <ComponentHeader onClick={() => this.setState(() => ({ component: this.state.component === component.id ? "" : component.id }))}>
               <h1>
                 {component.getSetting("name", component.id)}
@@ -450,6 +473,14 @@ const ComponentHeader = styled.div`
 const ComponentContent = styled.div`
   border-bottom: 1px solid #ccc;
   padding: 10px;
+
+  > h1 {
+    border-bottom: 1px solid #ccc;
+    font-size: 0.77em;
+    font-weight: 300;
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }
 `;
 
 const ComponentList = styled.div`

@@ -73,7 +73,7 @@ export class Text extends Component {
     this.quill.on("selection-change", (range: any) => {
       if (range && this.id !== currentSelection) {
         currentSelection = this.id;
-        this.page.emit("edit", this.section);
+        this.page.emit("edit", this.section, this.stack, this);
       }
     });
 
