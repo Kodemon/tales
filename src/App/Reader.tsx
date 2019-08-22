@@ -3,6 +3,7 @@ import * as React from "react";
 import { Page } from "Engine/Page";
 
 import { router } from "../Router";
+import { Viewport } from "./Style";
 
 export class Reader extends React.Component {
   private content: HTMLDivElement | null;
@@ -24,6 +25,6 @@ export class Reader extends React.Component {
   }
 
   public render() {
-    return <div ref={c => (this.content = c)} style={{ height: "100vh", width: "100vw" }} />;
+    return <Viewport ref={c => (this.content = c)} style={{ border: "none", height: "100vh", width: "100vw" }} />;
   }
 }
