@@ -5,6 +5,7 @@ import { Component } from "Engine/Component";
 import { Section } from "Engine/Section";
 import { Stack } from "Engine/Stack";
 
+import { Source } from "Engine/Enums";
 import { ColorPicker } from "./Components/ColorPicker";
 import { DataSetting } from "./Components/DataSetting";
 import { StackLayout } from "./Components/StackLayout";
@@ -83,7 +84,7 @@ export class Sidebar extends React.Component<
           <CategoryHeader>
             <h1>Components</h1>
           </CategoryHeader>
-          {this.state.stack && this.renderComponents(section, section.getStack(this.state.stack))}
+          {this.state.stack && this.renderComponents(section.getStack(this.state.stack))}
         </Category>
       </Container>
     );
@@ -119,7 +120,7 @@ export class Sidebar extends React.Component<
     );
   }
 
-  private renderComponents(section: Section, stack?: Stack) {
+  private renderComponents(stack?: Stack) {
     if (!stack) {
       return null;
     }
@@ -137,6 +138,143 @@ export class Sidebar extends React.Component<
               </div>
             </ComponentHeader>
             {this.state.component && this.renderComponent(component)}
+            <ComponentList>
+              <button
+                type="button"
+                onClick={() => {
+                  stack.addComponent(
+                    {
+                      type: "text",
+                      style: {
+                        padding: "40px 20px"
+                      }
+                    },
+                    Source.User
+                  );
+                }}
+              >
+                <i className="fa fa-font" /> <span>Text</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  stack.addComponent(
+                    {
+                      type: "image",
+                      settings: {
+                        src: "https://jdrf.org.uk/wp-content/uploads/2017/06/placeholder-image.jpg"
+                      },
+                      style: {
+                        maxWidth: "100%",
+                        height: "auto"
+                      }
+                    },
+                    Source.User
+                  );
+                }}
+              >
+                <i className="fa fa-picture-o" /> <span>Image</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  stack.addComponent(
+                    {
+                      type: "overlay",
+                      settings: {
+                        type: "topToBottom",
+                        background: "rgba(0,0,0,.5)"
+                      }
+                    },
+                    Source.User
+                  );
+                }}
+              >
+                <i className="fa fa-adjust" /> <span>Overlay</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  stack.addComponent(
+                    {
+                      type: "gallery",
+                      settings: {
+                        items: [
+                          {
+                            src: "https://images.unsplash.com/photo-1497431187953-886f6a75d2a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+                            transition: "none"
+                          },
+                          {
+                            src: "https://images.unsplash.com/photo-1547782793-e1444139967a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
+                            transition: "up"
+                          },
+                          {
+                            src: "https://images.unsplash.com/photo-1495887633121-f1156ca7f6a0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
+                            transition: "right"
+                          },
+                          {
+                            src: "https://images.unsplash.com/photo-1497048679117-1a29644559e3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
+                            transition: "down"
+                          },
+                          {
+                            src: "https://images.unsplash.com/photo-1517697471339-4aa32003c11a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1355&q=80",
+                            transition: "left"
+                          },
+                          {
+                            src: "https://images.unsplash.com/photo-1554726425-ac299472ae80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1329&q=80",
+                            transition: "fade"
+                          }
+                        ]
+                      }
+                    },
+                    Source.User
+                  );
+                }}
+              >
+                <i className="fa fa-picture-o" /> <span>Gallery</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  stack.addComponent(
+                    {
+                      type: "reveal",
+                      settings: {
+                        items: [
+                          {
+                            src: "https://images.unsplash.com/photo-1497431187953-886f6a75d2a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+                            transition: "none"
+                          },
+                          {
+                            src: "https://images.unsplash.com/photo-1547782793-e1444139967a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
+                            transition: "up"
+                          },
+                          {
+                            src: "https://images.unsplash.com/photo-1495887633121-f1156ca7f6a0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
+                            transition: "right"
+                          },
+                          {
+                            src: "https://images.unsplash.com/photo-1497048679117-1a29644559e3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
+                            transition: "down"
+                          },
+                          {
+                            src: "https://images.unsplash.com/photo-1517697471339-4aa32003c11a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1355&q=80",
+                            transition: "left"
+                          },
+                          {
+                            src: "https://images.unsplash.com/photo-1554726425-ac299472ae80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1329&q=80",
+                            transition: "fade"
+                          }
+                        ]
+                      }
+                    },
+                    Source.User
+                  );
+                }}
+              >
+                <i className="fa fa-eye" /> <span>Reveal</span>
+              </button>
+            </ComponentList>
           </Component>
         ))}
       </Components>
@@ -309,6 +447,20 @@ const ComponentHeader = styled.div`
 const ComponentContent = styled.div`
   border-bottom: 1px solid #ccc;
   padding: 10px;
+`;
+
+const ComponentList = styled.div`
+  padding: 10px;
+
+  button {
+    padding: 10px;
+    margin: 5px;
+    width: calc(50% - 10px);
+
+    > span {
+      display: block;
+    }
+  }
 `;
 
 /*
