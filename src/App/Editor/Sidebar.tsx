@@ -96,6 +96,13 @@ export class Sidebar extends React.Component<{
             >
               <h1>{stack.getSetting("name", stack.id)}</h1>
               <div>
+                <RemoveStack
+                  onClick={() => {
+                    stack.remove();
+                  }}
+                >
+                  <i className="fa fa-trash" />
+                </RemoveStack>
                 <i className={`fa fa-caret-${this.props.editing.stack === stack.id ? "up" : "down"}`} />
               </div>
             </StackHeader>
@@ -445,6 +452,28 @@ const StackHeader = styled.div`
 
   > div {
     float: right;
+  }
+`;
+
+const RemoveStack = styled.button`
+  background: none;
+  border: none;
+
+  margin-right: 10px;
+
+  cursor: pointer;
+  padding: 3px 6px;
+
+  i {
+    color: #e15a5a !important;
+    font-size: 0.73rem;
+  }
+
+  &:hover {
+    background: #e15a5a;
+    i {
+      color: #fff !important;
+    }
   }
 `;
 
