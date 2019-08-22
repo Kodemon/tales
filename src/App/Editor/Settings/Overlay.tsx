@@ -9,7 +9,6 @@ export const OverlaySettings: React.SFC<{
   return (
     <React.Fragment key={`component-${component.id}`}>
       <DataSetting entity={component} type="input" label="Name" attr="settings.name" placeholder={component.id} />
-      <DataSetting entity={component} type="checkbox" label="Sticky" attr="settings.sticky" />
       <DataSetting
         entity={component}
         type="select"
@@ -23,10 +22,11 @@ export const OverlaySettings: React.SFC<{
           { label: "Vignette", value: "vignette" }
         ]}
       />
+      <DataSetting entity={component} type="checkbox" label="Sticky" attr="settings.sticky" />
 
       <h1>Style</h1>
-      <DataSetting entity={component} type="input" label="Height" attr="style.height" placeholder={component.id} />
-      <DataSetting entity={component} type="input" label="Border Width" attr="style.borderWidth" fallback={0} placeholder={component.id} />
+      <DataSetting entity={component} type="input" label="Height" attr="style.height" />
+      <DataSetting entity={component} type="input" label="Border Width" attr="style.borderWidth" fallback={0} />
       <ColorPicker label="Background Color" effected={component} />
     </React.Fragment>
   );

@@ -26,7 +26,8 @@ export class DataSetting extends React.Component<{
 
   public shouldComponentUpdate() {
     const { entity, attr, fallback, onValue } = this.props;
-    const value = onValue ? onValue(entity.get(attr, fallback || "")) : entity.get(attr, fallback || "");
+    const fallbackValue = fallback !== undefined ? fallback : "";
+    const value = onValue ? onValue(entity.get(attr, fallbackValue)) : entity.get(attr, fallbackValue);
     if (value !== this.current) {
       this.current = value;
       return true;
@@ -36,6 +37,7 @@ export class DataSetting extends React.Component<{
 
   public render() {
     const { entity, type, label, attr, fallback, options, placeholder, onValue, onChange } = this.props;
+    const fallbackValue = fallback !== undefined ? fallback : "";
     switch (type) {
       case "input": {
         return (
@@ -43,7 +45,7 @@ export class DataSetting extends React.Component<{
             <label className="input">{label}</label>
             <input
               type="text"
-              value={onValue ? onValue(entity.get(attr, fallback || "")) : entity.get(attr, fallback || "")}
+              value={onValue ? onValue(entity.get(attr, fallbackValue)) : entity.get(attr, fallbackValue)}
               placeholder={placeholder || ""}
               onChange={event => {
                 entity.set(attr, onChange ? onChange(event.target.value) : event.target.value, Source.User);
@@ -71,7 +73,7 @@ export class DataSetting extends React.Component<{
           <SettingGroup>
             <label className="input">{label}</label>
             <select
-              value={onValue ? onValue(entity.get(attr, fallback || "")) : entity.get(attr, fallback || "")}
+              value={onValue ? onValue(entity.get(attr, fallbackValue)) : entity.get(fallbackValue)}
               onChange={event => {
                 entity.set(attr, onChange ? onChange(event.target.value) : event.target.value, Source.User);
               }}
