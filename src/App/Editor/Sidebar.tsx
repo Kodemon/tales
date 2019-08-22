@@ -74,12 +74,12 @@ export class Sidebar extends React.Component<{
           </CategoryHeader>
           {this.renderStacks(section)}
         </Category>
-        <Category>
+        {/* <Category>
           <CategoryHeader>
             <h1>Components</h1>
           </CategoryHeader>
           {this.props.editing.stack && this.renderComponents(section.getStack(this.props.editing.stack))}
-        </Category>
+        </Category> */}
       </Container>
     );
   }
@@ -110,12 +110,19 @@ export class Sidebar extends React.Component<{
                   options={[{ label: "Relative", value: "relative" }, { label: "Absolute", value: "absolute" }, { label: "Sticky", value: "sticky" }]}
                 />
                 <StackLayout stack={stack} />
+                {this.renderComponents(stack)}
               </StackContent>
             )}
           </StackContainer>
         ))}
         <StackContainer key="stack:add">
-          <StackHeader style={{ textAlign: "center", cursor: "pointer" }} onClick={() => section.addStack({}, Source.User)}>
+          <StackHeader
+            style={{ textAlign: "center", cursor: "pointer" }}
+            onClick={() => {
+              const stack = section.addStack({}, Source.User);
+              this.props.edit(section.id, stack.id);
+            }}
+          >
             <h1>Add Stack</h1>
           </StackHeader>
         </StackContainer>
