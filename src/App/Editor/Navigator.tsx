@@ -69,6 +69,11 @@ export class Navigator extends React.Component<
         <PaneHeader>
           <h1>Page</h1>
         </PaneHeader>
+        <SettingGroup>
+          <a href={`/read/${this.props.page.id}`} target="_blank">
+            Preview
+          </a>
+        </SettingGroup>
         <PageSettings page={this.props.page} />
         <SettingGroup>
           <label className="input">Screen Ratio</label>
