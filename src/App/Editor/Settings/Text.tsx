@@ -1,7 +1,6 @@
 import * as React from "react";
 
 import { Source } from "Engine/Enums";
-import { Toolbar } from "../Components/Toolbar";
 import { Header, SettingGroup } from "../Styles";
 
 export const TextSettings: React.SFC<{
@@ -20,7 +19,6 @@ export const TextSettings: React.SFC<{
             }}
           />
         </SettingGroup>
-        <Toolbar quill={component.quill} />
       </div>
 
       <Header>

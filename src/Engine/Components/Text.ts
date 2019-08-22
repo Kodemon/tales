@@ -42,11 +42,8 @@ export class Text extends Component {
    */
   private loadQuill() {
     this.quill = new this.page.Quill(this.element, {
-      theme: "snow",
-      placeholder: "Compose an epic...",
-      modules: {
-        toolbar: false
-      }
+      theme: "bubble",
+      placeholder: "Compose an epic..."
     });
 
     // ### Selection Change

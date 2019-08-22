@@ -273,10 +273,6 @@ const Viewport = styled.div`
     font-family: "Merriweather", serif;
     font-size: 1em;
     height: auto;
-
-    &.ql-snow {
-      border: none;
-    }
   }
 
   .ql-editor {
@@ -285,8 +281,8 @@ const Viewport = styled.div`
     height: auto;
   }
 
-  .ql-toolbar {
-    display: none;
+  .ql-tooltip {
+    border-radius: 3px;
   }
 
   .ql-blank::before {
