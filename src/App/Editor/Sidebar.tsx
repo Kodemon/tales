@@ -94,7 +94,7 @@ export class Sidebar extends React.Component<
     return (
       <Stacks>
         {section.stacks.map(stack => (
-          <Stack key={stack.id}>
+          <StackContainer key={stack.id}>
             <StackHeader onClick={() => this.setState(() => ({ stack: this.state.stack === stack.id ? "" : stack.id }))}>
               <h1>{stack.getSetting("name", stack.id)}</h1>
               <div>
@@ -114,7 +114,7 @@ export class Sidebar extends React.Component<
                 <StackLayout stack={stack} />
               </StackContent>
             )}
-          </Stack>
+          </StackContainer>
         ))}
       </Stacks>
     );
@@ -127,7 +127,7 @@ export class Sidebar extends React.Component<
     return (
       <Components>
         {stack.components.map(component => (
-          <Component>
+          <ComponentContainer>
             <ComponentHeader onClick={() => this.setState(() => ({ component: this.state.component === component.id ? "" : component.id }))}>
               <h1>
                 {component.getSetting("name", component.id)}
@@ -275,7 +275,7 @@ export class Sidebar extends React.Component<
                 <i className="fa fa-eye" /> <span>Reveal</span>
               </button>
             </ComponentList>
-          </Component>
+          </ComponentContainer>
         ))}
       </Components>
     );
@@ -378,7 +378,7 @@ const CategoryContent = styled.div`
 
 const Stacks = styled.div``;
 
-const Stack = styled.div``;
+const StackContainer = styled.div``;
 
 const StackHeader = styled.div`
   position: relative;
@@ -417,7 +417,7 @@ const StackContent = styled.div`
 
 const Components = styled.div``;
 
-const Component = styled.div``;
+const ComponentContainer = styled.div``;
 
 const ComponentHeader = styled.div`
   position: relative;
