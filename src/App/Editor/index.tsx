@@ -133,12 +133,19 @@ export class Editor extends React.Component<
   };
 
   private setRatio = (width: number, height: number) => {
-    this.setState(() => ({
-      ratio: {
-        width: `${width}%`,
-        height: `${height}%`
+    this.setState(
+      () => ({
+        ratio: {
+          width: `${width}%`,
+          height: `${height}%`
+        }
+      }),
+      () => {
+        setTimeout(() => {
+          this.page.refresh();
+        }, 250);
       }
-    }));
+    );
   };
 
   /*

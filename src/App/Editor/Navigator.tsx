@@ -97,8 +97,7 @@ export class Navigator extends React.Component<
           <select
             value={this.state.ratio}
             onChange={event => {
-              // ...
-              // this.props.page.refresh()
+              // this.props.ratio(width, height); // numbers
             }}
           >
             <option value="16:9">WideScreen</option>
