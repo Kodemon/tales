@@ -218,7 +218,7 @@ export class Sidebar extends React.Component<
                 );
               }}
             >
-              <i className="fa fa-video-o" /> <span>YouTube</span>
+              <i className="fa fa-youtube-play" /> <span>YouTube</span>
             </button>
             <button
               type="button"
