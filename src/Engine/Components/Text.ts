@@ -106,6 +106,7 @@ export class Text extends Component {
       color: "#262626",
       minWidth: this.getSetting("min", 280),
       maxWidth: this.getSetting("max", 762),
+      width: "100%",
       fontSize: "1em",
       lineHeight: "1.71",
       ...maybe(this.data, "style", {})

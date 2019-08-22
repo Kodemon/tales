@@ -37,10 +37,16 @@ export class Editor extends React.Component<
   private page: Page;
 
   /**
-   * Page target container element.
+   * Content element.
    * @type {HTMLDivElement | null}
    */
   private content: HTMLDivElement | null;
+
+  /**
+   * Viewport element, where we render the page.
+   * @type {HTMLDivElement | null}
+   */
+  private viewport: HTMLDivElement | null;
 
   constructor(props: any, state: any) {
     super(props, state);
@@ -68,7 +74,7 @@ export class Editor extends React.Component<
    * @should update editor on section update events
    */
   public componentDidMount() {
-    window.page = this.page = new Page(this.content, {
+    window.page = this.page = new Page(this.viewport, {
       id: router.params.get("page"),
       editing: true,
       Quill
@@ -132,20 +138,23 @@ export class Editor extends React.Component<
     }));
   };
 
-  private setRatio = (width: number, height: number) => {
-    this.setState(
-      () => ({
-        ratio: {
-          width: `${width}%`,
-          height: `${height}%`
+  private setRatio = (value: number[]) => {
+    if (this.content) {
+      const ratio = getPercent(this.content, value);
+      this.setState(
+        () => ({
+          ratio: {
+            width: `${ratio.width}%`,
+            height: `${ratio.height}%`
+          }
+        }),
+        () => {
+          setTimeout(() => {
+            this.page.refresh();
+          }, 250);
         }
-      }),
-      () => {
-        setTimeout(() => {
-          this.page.refresh();
-        }, 250);
-      }
-    );
+      );
+    }
   };
 
   /*
@@ -158,8 +167,8 @@ export class Editor extends React.Component<
     return (
       <Wrapper>
         <Navigator page={this.page} edit={this.onEdit} ratio={this.setRatio} />
-        <Content style={{ gridTemplateColumns: `1fr ${this.state.ratio.width} 1fr`, gridTemplateRows: `1fr ${this.state.ratio.height} 1fr` }}>
-          <Viewport ref={c => (this.content = c)} />
+        <Content ref={c => (this.content = c)} style={{ gridTemplateColumns: `1fr ${this.state.ratio.width} 1fr`, gridTemplateRows: `1fr ${this.state.ratio.height} 1fr` }}>
+          <Viewport ref={c => (this.viewport = c)} />
         </Content>
         <SettingSidebar>{this.renderTabs()}</SettingSidebar>
       </Wrapper>
@@ -230,6 +239,19 @@ export class Editor extends React.Component<
       }
     }
   }
+}
+
+function getPercent(container: HTMLDivElement, [x, y]: number[], padding?: number): { width: number; height: number } {
+  const isPortrait = container.clientWidth < container.clientHeight;
+  return isPortrait
+    ? {
+        width: container.clientWidth,
+        height: (container.clientWidth / x) * y
+      }
+    : {
+        width: container.clientWidth,
+        height: (container.clientWidth / x) * y
+      };
 }
 
 const Content = styled.div`

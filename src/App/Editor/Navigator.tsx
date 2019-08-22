@@ -14,7 +14,7 @@ export class Navigator extends React.Component<
   {
     page: Page;
     edit: (section: Section, stack?: Stack, component?: any) => void;
-    ratio: (width: number, height: number) => void;
+    ratio: (ratio: number[]) => void;
   },
   {
     pane: string;
@@ -97,7 +97,11 @@ export class Navigator extends React.Component<
           <select
             value={this.state.ratio}
             onChange={event => {
-              // this.props.ratio(width, height); // numbers
+              const value = event.target.value;
+              this.setState(() => ({
+                ratio: value
+              }));
+              this.props.ratio(value.split(",").map(v => parseInt(v, 10)));
             }}
           >
             <option value="16:9">WideScreen</option>
