@@ -8,14 +8,17 @@ import { Stack } from "Engine/Stack";
 
 import { Sections } from "./Components/Sections";
 import { PageSettings } from "./Settings/Page";
+import { SettingGroup } from "./Styles";
 
 export class Navigator extends React.Component<
   {
     page: Page;
     edit: (section: Section, stack?: Stack, component?: any) => void;
+    ratio: (width: number, height: number) => void;
   },
   {
     pane: string;
+    ratio: string;
   }
 > {
   private isHovering = false;
@@ -23,7 +26,8 @@ export class Navigator extends React.Component<
   constructor(props: any) {
     super(props);
     this.state = {
-      pane: ""
+      pane: "",
+      ratio: "16,9"
     };
   }
 
@@ -88,6 +92,20 @@ export class Navigator extends React.Component<
           <h1>Page</h1>
         </PaneHeader>
         <PageSettings page={this.props.page} />
+        <SettingGroup>
+          <label className="input">Screen Ratio</label>
+          <select
+            value={this.state.ratio}
+            onChange={event => {
+              // ...
+              // this.props.page.refresh()
+            }}
+          >
+            <option value="16:9">WideScreen</option>
+            <option value="9:16">Apple iPhone 7 Plus</option>
+            <option value="5:9">Samsung Galaxy S8+</option>
+          </select>
+        </SettingGroup>
       </React.Fragment>
     );
   }

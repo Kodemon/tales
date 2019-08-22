@@ -1,15 +1,20 @@
 class Viewport {
+  public element: HTMLDivElement;
+
+  public offset: ClientRect | DOMRect;
   public width: number;
   public height: number;
 
   /**
-   * Sets the viewport data based on the provided container.
+   * Sets the viewport data based on the provided element.
    *
-   * @param container
+   * @param element
    */
-  public setContainer(container: HTMLDivElement) {
-    this.width = container.clientWidth;
-    this.height = container.clientHeight;
+  public setContainer(element: HTMLDivElement) {
+    this.element = element;
+    this.offset = element.getBoundingClientRect();
+    this.width = element.clientWidth;
+    this.height = element.clientHeight;
   }
 }
 

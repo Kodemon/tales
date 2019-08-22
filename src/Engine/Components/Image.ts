@@ -48,6 +48,14 @@ export class Image extends Component {
       this.scroller = undefined;
     }
 
+    // ### Reset Element Style
+
+    setStyle(this.element, {
+      top: null
+    });
+
+    // ### Apply ELement Style
+
     const position = this.getSetting("position");
     switch (position) {
       case "absolute": {
@@ -58,7 +66,8 @@ export class Image extends Component {
           {
             objectFit: "cover",
             width: "100%",
-            height: "100%"
+            height: "100%",
+            top: null
           },
           true
         );
@@ -74,7 +83,8 @@ export class Image extends Component {
             objectFit: "cover",
             objectPosition: "50% 0",
             width: "100%",
-            height: "100%"
+            height: "100%",
+            top: null
           },
           true
         );
@@ -96,8 +106,9 @@ export class Image extends Component {
           {
             objectFit: "cover",
             objectPosition: "50% 0",
+            top: viewport.offset.top,
             width: viewport.width,
-            height: "100%"
+            height: viewport.height
           },
           true
         );
@@ -118,7 +129,8 @@ export class Image extends Component {
           {
             display: "block",
             width: viewport.width,
-            ...(this.data.style || {})
+            ...(this.data.style || {}),
+            top: null
           },
           true
         );

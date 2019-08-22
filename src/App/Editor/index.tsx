@@ -4,27 +4,27 @@ import styled from "styled-components";
 
 import { Page } from "Engine/Page";
 import { Section } from "Engine/Section";
-import { maybe } from "Engine/Utils";
-
-import { Source } from "Engine/Enums";
 import { Stack } from "Engine/Stack";
+
 import { router } from "../../Router";
-import { Sections } from "./Components/Sections";
 import { Navigator } from "./Navigator";
 import { GallerySettings } from "./Settings/Gallery";
 import { ImageSettings } from "./Settings/Image";
 import { OverlaySettings } from "./Settings/Overlay";
-import { PageSettings } from "./Settings/Page";
 import { RevealSettings } from "./Settings/Reveal";
 import { SectionSettings } from "./Settings/Section";
 import { StackSettings } from "./Settings/Stack";
 import { TextSettings } from "./Settings/Text";
-import { Content, Header, SettingSidebar, Wrapper } from "./Styles";
+import { SettingSidebar, Wrapper } from "./Styles";
 
 export class Editor extends React.Component<
   {},
   {
     tab: string;
+    ratio: {
+      width: string;
+      height: string;
+    };
     section?: Section;
     stack?: Stack;
     component?: any;
@@ -46,6 +46,10 @@ export class Editor extends React.Component<
     super(props, state);
     this.state = {
       tab: "",
+      ratio: {
+        width: "50%",
+        height: "80%"
+      },
       section: undefined,
       stack: undefined,
       component: undefined
@@ -128,6 +132,15 @@ export class Editor extends React.Component<
     }));
   };
 
+  private setRatio = (width: number, height: number) => {
+    this.setState(() => ({
+      ratio: {
+        width: `${width}%`,
+        height: `${height}%`
+      }
+    }));
+  };
+
   /*
   |--------------------------------------------------------------------------------
   | Renderers
@@ -137,8 +150,10 @@ export class Editor extends React.Component<
   public render() {
     return (
       <Wrapper>
-        <Navigator page={this.page} edit={this.onEdit} />
-        <Content ref={c => (this.content = c)} />
+        <Navigator page={this.page} edit={this.onEdit} ratio={this.setRatio} />
+        <Content style={{ gridTemplateColumns: `1fr ${this.state.ratio.width} 1fr`, gridTemplateRows: `1fr ${this.state.ratio.height} 1fr` }}>
+          <Viewport ref={c => (this.content = c)} />
+        </Content>
         <SettingSidebar>{this.renderTabs()}</SettingSidebar>
       </Wrapper>
     );
@@ -209,6 +224,117 @@ export class Editor extends React.Component<
     }
   }
 }
+
+const Content = styled.div`
+  display: grid;
+  grid-template-areas: ". . ." ". viewport ." ". . .";
+
+  height: 100vh;
+
+  background: url("https://i.ibb.co/xDg9pw4/grid.png");
+`;
+
+const Viewport = styled.div`
+  position: relative;
+  grid-area: viewport;
+
+  border: 1px solid #57b3e4;
+
+  overflow-y: scroll;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+
+  text-rendering: optimizeLegibility;
+
+  /* Position Classes */
+
+  .position-relative {
+    position: relative;
+  }
+
+  .position-absolute {
+    position: absolute;
+  }
+
+  .position-sticky {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+  }
+  .position-sticky:before,
+  .position-sticky:after {
+    content: "";
+    display: table;
+  }
+
+  /* Fixed Sticky */
+
+  .position-fixed {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+
+  .position-fixed_container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    clip: rect(0, auto, auto, 0);
+    /* clip-path: polygon(0px 0px, 0px 100%, 100% 100%, 100% 0px); */
+  }
+
+  .position-scroll_overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+
+  .position-fixed_component {
+    position: fixed;
+    top: 0;
+  }
+
+  /* Flex */
+
+  .display-flex {
+    display: -webkit-flex; /* Safari */
+    display: flex;
+  }
+
+  /* Quill */
+
+  .ql-container {
+    font-family: "Merriweather", serif;
+    font-size: 1em;
+    height: auto;
+
+    &.ql-snow {
+      border: none;
+    }
+  }
+
+  .ql-editor {
+    line-height: inherit;
+    overflow: visible;
+    height: auto;
+  }
+
+  .ql-toolbar {
+    display: none;
+  }
+
+  .ql-blank::before {
+    left: auto;
+    right: auto;
+  }
+`;
 
 const Tabs = styled.div`
   display: flex;
