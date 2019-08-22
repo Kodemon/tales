@@ -23,13 +23,13 @@ export const YouTubeSettings: React.SFC<{
           />
         </SettingGroup>
         <SettingGroup>
-          <label className="input">Source</label>
+          <label className="input">Video Id</label>
           <input
             type="text"
-            placeholder="http://path.to/youTube"
-            value={component.getSetting("src", "")}
+            placeholder="Video Id"
+            value={component.getSetting("id", "")}
             onChange={event => {
-              component.setSetting("src", event.target.value, Source.User);
+              component.setSetting("id", event.target.value, Source.User);
             }}
           />
         </SettingGroup>

@@ -207,7 +207,7 @@ export class Sidebar extends React.Component<
                   {
                     type: "youTube",
                     settings: {
-                      src: "https://www.youtube.com/embed/05ZHUuQVvJM"
+                      id: "FnO6WjJHrGc"
                     },
                     style: {
                       maxWidth: "100%",

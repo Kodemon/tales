@@ -29,6 +29,12 @@ export class YouTube extends Component {
     this.area.append((this.element = document.createElement("div")));
     this.element.id = data.id;
 
+    setStyle(this.element, {
+      position: "relative",
+      paddingBottom: "56.25%" /* 16:9 */,
+      height: 0
+    });
+
     this.frame = document.createElement("iframe");
     this.frame.setAttribute("frameborder", "0");
     this.frame.setAttribute("allow", "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture");
@@ -41,8 +47,8 @@ export class YouTube extends Component {
 
   public render() {
     super.render();
-
-    this.frame.src = `${this.getSetting("src")}?controls=0&showinfo=0&rel=0&autoplay=1&loop=1&mute=1`;
+    const id = this.getSetting("id", "FnO6WjJHrGc");
+    this.frame.src = `https://www.youtube.com/embed/${id}?controls=0&showinfo=0&rel=0&autoplay=1&loop=1&mute=1&color=white&iv_load_policy=3&playlist=${id}`;
 
     if (this.scroller) {
       this.scroller.remove();
@@ -68,7 +74,10 @@ export class YouTube extends Component {
             objectFit: "cover",
             width: "100%",
             height: "100%",
-            top: null
+            position: "absolute",
+            top: 0,
+            left: 0,
+            pointerEvents: "none"
           },
           true
         );
