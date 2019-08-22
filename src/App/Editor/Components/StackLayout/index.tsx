@@ -38,7 +38,7 @@ export class StackLayout extends React.Component<
   constructor(props: any) {
     super(props);
     this.state = {
-      show: true
+      show: false
     };
   }
 
@@ -128,7 +128,7 @@ export class StackLayout extends React.Component<
             this.setState(() => ({ show: !this.state.show }));
           }}
         >
-          Stack Grid Layout
+          Grid Layout
           <i className={`fa fa-caret-${this.state.show ? "up" : "down"}`} style={{ float: "right", marginTop: 4 }} />
         </label>
         {this.state.show && this.renderSetting()}

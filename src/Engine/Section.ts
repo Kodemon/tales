@@ -135,6 +135,28 @@ export class Section extends DataManager<Data> {
     return stack;
   }
 
+  /**
+   * Get a stack from the stacks.
+   *
+   * @param id
+   *
+   * @returns stack instance
+   */
+  public getStack(id: string) {
+    return this.stacks.find(c => c.id === id);
+  }
+
+  /**
+   * Get the raw stack data from the stacks.
+   *
+   * @param id
+   *
+   * @returns stack data
+   */
+  public getStackData(id: string) {
+    return this.data.stacks.find(c => c.id === id);
+  }
+
   /*
   |--------------------------------------------------------------------------------
   | Calculation Utilities

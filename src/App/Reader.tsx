@@ -3,7 +3,6 @@ import * as React from "react";
 import { Page } from "Engine/Page";
 
 import { router } from "../Router";
-import { Content } from "./Editor/Styles";
 
 export class Reader extends React.Component {
   private content: HTMLDivElement | null;
@@ -25,6 +24,6 @@ export class Reader extends React.Component {
   }
 
   public render() {
-    return <Content ref={c => (this.content = c)} style={{ height: "100%", width: "100%" }} />;
+    return <div ref={c => (this.content = c)} style={{ height: "100vh", width: "100vw" }} />;
   }
 }

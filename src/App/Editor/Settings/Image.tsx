@@ -1,27 +1,17 @@
 import * as React from "react";
 
 import { Source } from "Engine/Enums";
-import { Section } from "Engine/Section";
 
+import { DataSetting } from "../Components/DataSetting";
 import { Header, SettingGroup } from "../Styles";
 
 export const ImageSettings: React.SFC<{
-  section: Section;
   component: any;
-}> = function ImageSettings({ section, component }) {
+}> = function ImageSettings({ component }) {
   return (
     <React.Fragment key={`component-${component.id}`}>
       <div style={{ padding: 10, borderBottom: "1px dashed #ccc" }}>
-        <SettingGroup>
-          <label className="input">Name</label>
-          <input
-            type="text"
-            value={component.get("name", "")}
-            onChange={event => {
-              component.set("name", event.target.value, Source.User);
-            }}
-          />
-        </SettingGroup>
+        <DataSetting entity={component} type="input" label="Name" attr="settings.name" placeholder={component.id} />
         <SettingGroup>
           <label className="input">Title</label>
           <input

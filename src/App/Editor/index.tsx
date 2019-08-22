@@ -9,20 +9,15 @@ import { Stack } from "Engine/Stack";
 import { router } from "../../Router";
 import { fitAspect } from "./Lib/AspectRatio";
 import { Navigator } from "./Navigator";
-import { GallerySettings } from "./Settings/Gallery";
-import { ImageSettings } from "./Settings/Image";
-import { OverlaySettings } from "./Settings/Overlay";
-import { RevealSettings } from "./Settings/Reveal";
-import { SectionSettings } from "./Settings/Section";
-import { StackSettings } from "./Settings/Stack";
-import { TextSettings } from "./Settings/Text";
-import { SettingSidebar, Wrapper } from "./Styles";
+import { Sidebar } from "./Sidebar";
+import { Wrapper } from "./Styles";
 
 export class Editor extends React.Component<
   {},
   {
     tab: string;
     ratio: {
+      name: string;
       width: string;
       height: string;
     };
@@ -54,6 +49,7 @@ export class Editor extends React.Component<
     this.state = {
       tab: "",
       ratio: {
+        name: "",
         width: "100%",
         height: "100%"
       },
@@ -84,6 +80,8 @@ export class Editor extends React.Component<
       .on("loaded", this.onLoaded)
       .on("refresh", this.onRefresh)
       .on("edit", this.onEdit);
+
+    window.addEventListener("resize", this.onResize);
   }
 
   public componentWillUnmount() {
@@ -91,6 +89,8 @@ export class Editor extends React.Component<
     this.page.off("loaded", this.onLoaded);
     this.page.off("refresh", this.onRefresh);
     this.page.off("edit", this.onEdit);
+
+    window.removeEventListener("resize", this.onResize);
   }
 
   /*
@@ -98,6 +98,10 @@ export class Editor extends React.Component<
   | Event Handlers
   |--------------------------------------------------------------------------------
   */
+
+  private onResize = () => {
+    this.setRatio();
+  };
 
   /**
    * Triggers when the page container has successfully rendered.
@@ -125,26 +129,26 @@ export class Editor extends React.Component<
   };
 
   /**
-   * Sets the current editable component.
+   * Sets the current editable section
    *
    * @param section
-   * @param component
    */
-  private onEdit = (section: Section, stack?: Stack, component?: any) => {
-    this.setState(() => ({
-      tab: component ? "component" : stack ? "stack" : section ? "section" : "",
-      section,
-      stack,
-      component
-    }));
+  private onEdit = (section: Section) => {
+    this.setState(() => ({ section }));
   };
 
-  private setRatio = (ratioName: string) => {
+  /**
+   * Sets viewport aspect ratio.
+   *
+   * @param ratioName
+   */
+  private setRatio = (ratioName: string = "") => {
     if (this.content) {
       const ratio = ratioName === "" ? { width: 100, height: 100 } : fitAspect(this.content, ratioName);
       this.setState(
         () => ({
           ratio: {
+            name: ratioName,
             width: `${ratio.width}%`,
             height: `${ratio.height}%`
           }
@@ -174,74 +178,9 @@ export class Editor extends React.Component<
         >
           <Viewport ref={c => (this.viewport = c)} />
         </Content>
-        <SettingSidebar>{this.renderTabs()}</SettingSidebar>
+        <Sidebar section={this.state.section} />
       </Wrapper>
     );
-  }
-
-  private renderTabs() {
-    const { tab, section, stack, component } = this.state;
-    return (
-      <React.Fragment>
-        <Tabs>
-          <span
-            className={tab === "section" ? "active" : !section ? "disabled" : ""}
-            onClick={() => {
-              if (section) {
-                this.setState(() => ({ tab: "section" }));
-              }
-            }}
-          >
-            Section
-          </span>
-          <span
-            className={tab === "stack" ? "active" : !stack ? "disabled" : ""}
-            onClick={() => {
-              this.setState(() => ({ tab: "stack" }));
-            }}
-          >
-            Stack
-          </span>
-          <span
-            className={tab === "component" ? "active" : !component ? "disabled" : ""}
-            onClick={() => {
-              if (component) {
-                this.setState(() => ({ tab: "component" }));
-              }
-            }}
-          >
-            Component
-          </span>
-        </Tabs>
-        {tab === "section" && this.state.section && <SectionSettings section={this.state.section} />}
-        {tab === "stack" && this.state.section && this.state.stack && this.renderStackSettings(this.state.stack)}
-        {tab === "component" && this.state.section && this.state.component && this.renderComponentSettings(this.state.section, this.state.component)}
-      </React.Fragment>
-    );
-  }
-
-  private renderStackSettings(stack: Stack) {
-    return <StackSettings stack={stack} />;
-  }
-
-  private renderComponentSettings(section: Section, component: any) {
-    switch (component.type) {
-      case "image": {
-        return <ImageSettings section={section} component={component} />;
-      }
-      case "text": {
-        return <TextSettings section={section} component={component} />;
-      }
-      case "overlay": {
-        return <OverlaySettings section={section} component={component} />;
-      }
-      case "gallery": {
-        return <GallerySettings section={section} component={component} />;
-      }
-      case "reveal": {
-        return <RevealSettings section={section} component={component} />;
-      }
-    }
   }
 }
 
@@ -353,46 +292,5 @@ const Viewport = styled.div`
   .ql-blank::before {
     left: auto;
     right: auto;
-  }
-`;
-
-const Tabs = styled.div`
-  display: flex;
-
-  border-bottom: 2px solid #ccc;
-  margin-bottom: 10px;
-
-  span {
-    display: block;
-
-    flex-basis: 100%;
-
-    border-right: 1px solid #ccc;
-    padding: 5px;
-
-    color: #767676;
-    font-size: 13px;
-    font-weight: bold;
-    text-align: center;
-
-    &.disabled {
-      color: #ccc;
-    }
-
-    &.active {
-      background: #dbdcde;
-      color: #4362a3;
-    }
-
-    &:hover {
-      cursor: pointer;
-      &.disabled {
-        cursor: default;
-      }
-    }
-
-    &:last-child {
-      border-right: none;
-    }
   }
 `;

@@ -53,6 +53,9 @@ export class Component extends DataManager<Data> {
 
     this.area = document.createElement("div");
     this.area.setAttribute("data-type", "component-area");
+    this.area.onclick = () => {
+      this.page.emit("edit", this.section);
+    };
 
     this.stack.element.append(this.area);
   }

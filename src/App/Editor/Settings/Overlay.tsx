@@ -1,14 +1,11 @@
 import * as React from "react";
 
-import { Section } from "Engine/Section";
-
 import { ColorPicker } from "../Components/ColorPicker";
-import { Header, SettingGroup } from "../Styles";
+import { SettingGroup } from "../Styles";
 
 export const OverlaySettings: React.SFC<{
-  section: Section;
   component: any;
-}> = function OverlaySettings({ section, component }) {
+}> = function OverlaySettings({ component }) {
   return (
     <React.Fragment key={`component-${component.id}`}>
       <div style={{ padding: 10, borderBottom: "1px dashed #ccc" }}>

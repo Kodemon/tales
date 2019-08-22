@@ -1,15 +1,12 @@
 import * as React from "react";
 
-import { Section } from "Engine/Section";
-
 import { Source } from "Engine/Enums";
 import { Toolbar } from "../Components/Toolbar";
 import { Header, SettingGroup } from "../Styles";
 
 export const TextSettings: React.SFC<{
-  section: Section;
   component: any;
-}> = function TextSettings({ section, component }) {
+}> = function TextSettings({ component }) {
   return (
     <React.Fragment key={`component-${component.id}`}>
       <div style={{ padding: 10, borderBottom: "1px dashed #ccc" }}>

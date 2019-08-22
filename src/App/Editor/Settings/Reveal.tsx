@@ -1,13 +1,10 @@
 import * as React from "react";
 
-import { Section } from "Engine/Section";
-
-import { Header, SettingGroup } from "../Styles";
+import { SettingGroup } from "../Styles";
 
 export const RevealSettings: React.SFC<{
-  section: Section;
   component: any;
-}> = function ImageSettings({ section, component }) {
+}> = function ImageSettings({ component }) {
   return (
     <React.Fragment key={`component-${component.id}`}>
       <div style={{ padding: 10, borderBottom: "1px dashed #ccc" }}>

@@ -19,7 +19,7 @@ export class ColorPicker extends React.Component<
   constructor(props: any) {
     super(props);
     this.state = {
-      show: true
+      show: false
     };
   }
 
@@ -38,7 +38,7 @@ export class ColorPicker extends React.Component<
         </label>
         {this.state.show && (
           <SketchPicker
-            width={240}
+            width={null}
             style={{ boxShadow: "none", background: "none" }}
             color={this.props.effected.getSetting("background")}
             onChangeComplete={(color: any) => {
