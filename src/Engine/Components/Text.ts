@@ -135,7 +135,7 @@ export class Text extends Component {
       //   display: "flex"
       // })
     } else {
-      this.element.className = "ql-container ql-snow";
+      this.element.className = "ql-container ql-bubble";
 
       if (!this.content) {
         this.content = document.createElement("div");
@@ -144,48 +144,6 @@ export class Text extends Component {
       }
 
       this.content.innerHTML = this.getSetting("html");
-    }
-  }
-}
-
-/**
- * Retrieve grid layout for the text.
- *
- * @param layout
- */
-function getGridLayout(layout: string = "middle", min: number = 280, max: number = 580): any {
-  switch (layout) {
-    case "left": {
-      return {
-        display: "grid",
-        gridTemplateColumns: `minmax(${min}px, ${max}px) auto`,
-        gridTemplateRows: "auto 1fr",
-        gridTemplateAreas: "'text .'"
-      };
-    }
-    case "middle": {
-      return {
-        display: "grid",
-        gridTemplateColumns: `auto minmax(${min}px, ${max}px) auto`,
-        gridTemplateRows: "auto 1fr",
-        gridTemplateAreas: "'. text .'"
-      };
-    }
-    case "right": {
-      return {
-        display: "grid",
-        gridTemplateColumns: `auto minmax(${min}px, ${max}px)`,
-        gridTemplateRows: "auto 1fr",
-        gridTemplateAreas: "'. text'"
-      };
-    }
-    case "center": {
-      return {
-        display: "grid",
-        gridTemplateColumns: `auto minmax(${min}px, ${max}px) auto`,
-        gridTemplateRows: "1fr auto 1fr",
-        gridTemplateAreas: "'. . .' '. text .' '. . .'"
-      };
     }
   }
 }
