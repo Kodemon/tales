@@ -52,6 +52,20 @@ export class DataSetting extends React.Component<{
           </SettingGroup>
         );
       }
+      case "checkbox": {
+        return (
+          <SettingGroup>
+            <label className="input">{label}</label>
+            <input
+              type="checkbox"
+              value={entity.get(attr, false)}
+              onChange={event => {
+                entity.set(attr, event.target.checked, Source.User);
+              }}
+            />
+          </SettingGroup>
+        );
+      }
       case "select": {
         return (
           <SettingGroup>

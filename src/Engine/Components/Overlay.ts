@@ -19,9 +19,8 @@ export class Overlay extends Component {
   public render() {
     super.render();
 
-    const type = this.getSetting("type");
-    const background = this.getSetting("background");
-    const borderWidth = this.getSetting("borderWidth");
+    const background = this.getStyle("background");
+    const borderWidth = this.getStyle("borderWidth");
 
     this.element.className = this.getSetting("sticky", false) ? "position-sticky" : "position-fixed";
 
@@ -32,6 +31,7 @@ export class Overlay extends Component {
       ...(this.data.style || {})
     };
 
+    const type = this.getSetting("type");
     switch (type) {
       case "topToBottom": {
         style.backgroundImage = `linear-gradient(0deg, ${background} 0%, transparent 100%)`;
