@@ -300,6 +300,9 @@ function getComponentIcon(type: string) {
     case "image": {
       return <i className="fa fa-image" style={{ marginRight: 5 }} />;
     }
+    case "youTube": {
+      return <i className="fa fa-video" style={{ marginRight: 5 }} />;
+    }
     case "text": {
       return <i className="fa fa-text-height" style={{ marginRight: 5 }} />;
     }

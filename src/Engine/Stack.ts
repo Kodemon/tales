@@ -4,6 +4,7 @@ import { Image } from "./Components/Image";
 import { Overlay } from "./Components/Overlay";
 import { Reveal } from "./Components/Reveal";
 import { Text } from "./Components/Text";
+import { YouTube } from "./Components/YouTube";
 import { DataManager } from "./DataManager";
 import { Source } from "./Enums";
 import { Section } from "./Section";
@@ -202,6 +203,9 @@ export class Stack extends DataManager<Data> {
       }
       case "image": {
         return Image;
+      }
+      case "youTube": {
+        return YouTube;
       }
       case "gallery": {
         return Gallery;

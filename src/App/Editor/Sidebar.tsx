@@ -15,6 +15,7 @@ import { ImageSettings } from "./Settings/Image";
 import { OverlaySettings } from "./Settings/Overlay";
 import { RevealSettings } from "./Settings/Reveal";
 import { TextSettings } from "./Settings/Text";
+import { YouTubeSettings } from "./Settings/YouTube";
 
 export class Sidebar extends React.Component<
   {
@@ -204,6 +205,26 @@ export class Sidebar extends React.Component<
               onClick={() => {
                 stack.addComponent(
                   {
+                    type: "youTube",
+                    settings: {
+                      src: "https://www.youtube.com/embed/05ZHUuQVvJM"
+                    },
+                    style: {
+                      maxWidth: "100%",
+                      height: "auto"
+                    }
+                  },
+                  Source.User
+                );
+              }}
+            >
+              <i className="fa fa-video-o" /> <span>YouTube</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                stack.addComponent(
+                  {
                     type: "overlay",
                     settings: {
                       type: "topToBottom",
@@ -310,6 +331,13 @@ export class Sidebar extends React.Component<
         return (
           <ComponentContent>
             <ImageSettings component={component} />
+          </ComponentContent>
+        );
+      }
+      case "youTube": {
+        return (
+          <ComponentContent>
+            <YouTubeSettings component={component} />
           </ComponentContent>
         );
       }
