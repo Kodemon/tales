@@ -14,15 +14,16 @@ import { Wrapper } from "./Styles";
 export class Editor extends React.Component<
   {},
   {
-    tab: string;
     ratio: {
       name: string;
       width: string;
       height: string;
     };
-    section?: Section;
-    stack?: string;
-    component?: string;
+    editing: {
+      section: string;
+      stack: string;
+      component: string;
+    };
   }
 > {
   /**
@@ -46,15 +47,12 @@ export class Editor extends React.Component<
   constructor(props: any, state: any) {
     super(props, state);
     this.state = {
-      tab: "",
-      ratio: {
-        name: "",
-        width: "100%",
-        height: "100%"
-      },
-      section: undefined,
-      stack: "",
-      component: ""
+      ratio: JSON.parse(localStorage.getItem("viewport.ratio") || `{"name": "","width": "100%","height": "100%"}`),
+      editing: {
+        section: "",
+        stack: "",
+        component: ""
+      }
     };
   }
 
@@ -131,9 +129,17 @@ export class Editor extends React.Component<
    * Sets the current editable section
    *
    * @param section
+   * @param stack
+   * @param component
    */
-  private onEdit = (section: Section) => {
-    this.setState(() => ({ section }));
+  private onEdit = (section: string, stack?: string, component?: string) => {
+    this.setState(() => ({
+      editing: {
+        section: section || "",
+        stack: stack || "",
+        component: component || ""
+      }
+    }));
   };
 
   /**
@@ -144,6 +150,14 @@ export class Editor extends React.Component<
   private setRatio = (ratioName: string = "") => {
     if (this.content) {
       const ratio = ratioName === "" ? { width: 100, height: 100 } : fitAspect(this.content, ratioName);
+      localStorage.setItem(
+        "viewport.ratio",
+        JSON.stringify({
+          name: ratioName,
+          width: `${ratio.width}%`,
+          height: `${ratio.height}%`
+        })
+      );
       this.setState(
         () => ({
           ratio: {
@@ -177,7 +191,7 @@ export class Editor extends React.Component<
         >
           <Viewport ref={c => (this.viewport = c)} />
         </Content>
-        <Sidebar page={this.page} section={this.state.section} />
+        <Sidebar page={this.page} editing={this.state.editing} edit={this.onEdit} />
       </Wrapper>
     );
   }

@@ -196,6 +196,31 @@ export class Page extends EventEmitter {
   }
 
   /**
+   * Get a section from the page.
+   *
+   * @param id
+   *
+   * @returns stack instance
+   */
+  public getSection(id: string) {
+    return this.sections.find(c => c.id === id);
+  }
+
+  /**
+   * Get the raw section data from the page.
+   *
+   * @param id
+   *
+   * @returns section data
+   */
+  public getSectionData(id: string) {
+    const section = this.sections.find(c => c.id === id);
+    if (section) {
+      section.data;
+    }
+  }
+
+  /**
    * Moves a section to a new position on the page.
    *
    * @param prevIndex

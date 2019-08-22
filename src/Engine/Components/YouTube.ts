@@ -40,7 +40,7 @@ export class YouTube extends Component {
     this.frame.setAttribute("allow", "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture");
     this.frame.setAttribute("allowfullscreen", "true");
     this.frame.onclick = () => {
-      this.page.emit("edit", this.section, this.stack, this);
+      this.edit();
     };
     this.element.append(this.frame);
   }

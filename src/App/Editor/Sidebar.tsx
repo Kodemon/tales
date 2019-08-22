@@ -17,42 +17,17 @@ import { RevealSettings } from "./Settings/Reveal";
 import { TextSettings } from "./Settings/Text";
 import { YouTubeSettings } from "./Settings/YouTube";
 
-export class Sidebar extends React.Component<
-  {
-    page: Page;
-    section?: Section;
-  },
-  {
+export class Sidebar extends React.Component<{
+  page?: Page;
+  editing: {
+    section: string;
     stack: string;
     component: string;
-  }
-> {
-  private editListenerEnabled = false;
-
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      stack: "",
-      component: ""
-    };
-  }
-
-  public ComponentDidUpdate(prevState: any, prevProps: any) {
-    if (this.props.page && !this.editListenerEnabled) {
-      console.log("Updated");
-      this.editListenerEnabled = true;
-      this.props.page.on("edit", (section: Section, stack: Stack, component: Component) => {
-        console.log(stack, component);
-        this.setState(() => ({
-          stack: stack ? stack.id : "",
-          component: component ? component.id : ""
-        }));
-      });
-    }
-  }
-
+  };
+  edit: (section: string, stack?: string, component?: string) => void;
+}> {
   public render() {
-    const { section } = this.props;
+    const section = this.props.page && this.props.editing.section && this.props.page.getSection(this.props.editing.section);
     if (!section) {
       return (
         <Container>
@@ -103,7 +78,7 @@ export class Sidebar extends React.Component<
           <CategoryHeader>
             <h1>Components</h1>
           </CategoryHeader>
-          {this.state.stack && this.renderComponents(section.getStack(this.state.stack))}
+          {this.props.editing.stack && this.renderComponents(section.getStack(this.props.editing.stack))}
         </Category>
       </Container>
     );
@@ -114,13 +89,17 @@ export class Sidebar extends React.Component<
       <Stacks>
         {section.stacks.map(stack => (
           <StackContainer key={stack.id}>
-            <StackHeader onClick={() => this.setState(() => ({ stack: this.state.stack === stack.id ? "" : stack.id }))}>
+            <StackHeader
+              onClick={() => {
+                this.props.edit(stack.section.id, this.props.editing.stack === stack.id ? "" : stack.id, "");
+              }}
+            >
               <h1>{stack.getSetting("name", stack.id)}</h1>
               <div>
-                <i className={`fa fa-caret-${this.state.stack === stack.id ? "up" : "down"}`} />
+                <i className={`fa fa-caret-${this.props.editing.stack === stack.id ? "up" : "down"}`} />
               </div>
             </StackHeader>
-            {this.state.stack === stack.id && (
+            {this.props.editing.stack === stack.id && (
               <StackContent>
                 <DataSetting entity={stack} type="input" label="Name" attr="settings.name" placeholder={stack.id} />
                 <DataSetting
@@ -150,16 +129,20 @@ export class Sidebar extends React.Component<
         {stack &&
           stack.components.map(component => (
             <ComponentContainer key={component.id}>
-              <ComponentHeader onClick={() => this.setState(() => ({ component: this.state.component === component.id ? "" : component.id }))}>
+              <ComponentHeader
+                onClick={() => {
+                  this.props.edit(stack.section.id, stack.id, this.props.editing.component === component.id ? "" : component.id);
+                }}
+              >
                 <h1>
                   {component.getSetting("name", component.id)}
                   <small>{component.type}</small>
                 </h1>
                 <div>
-                  <i className={`fa fa-caret-${this.state.component === component.id ? "up" : "down"}`} />
+                  <i className={`fa fa-caret-${this.props.editing.component === component.id ? "up" : "down"}`} />
                 </div>
               </ComponentHeader>
-              {this.state.component && this.renderComponent(component)}
+              {this.props.editing.component && this.renderComponent(component)}
             </ComponentContainer>
           ))}
         {stack && (

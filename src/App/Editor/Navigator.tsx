@@ -14,7 +14,7 @@ import { SettingGroup } from "./Styles";
 export class Navigator extends React.Component<
   {
     page: Page;
-    edit: (section: Section, stack?: Stack, component?: any) => void;
+    edit: (section: string, stack?: string, component?: string) => void;
     ratio: (ratio: string) => void;
   },
   {

@@ -12,7 +12,7 @@ export class Overlay extends Component {
     this.area.append((this.element = document.createElement("div")));
     this.element.id = data.id;
     this.element.onclick = () => {
-      this.page.emit("edit", this.section, this.stack, this);
+      this.edit();
     };
   }
 

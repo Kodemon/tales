@@ -75,6 +75,13 @@ export class Section extends DataManager<Data> {
     this.page.send("section:set", this.page.id, this.id, path, value);
   }
 
+  /**
+   * Sends a edit assignment to the editor via page events.
+   */
+  public edit() {
+    this.page.emit("edit", this.id, "", "");
+  }
+
   /*
   |--------------------------------------------------------------------------------
   | Section Utilities
@@ -136,7 +143,7 @@ export class Section extends DataManager<Data> {
   }
 
   /**
-   * Get a stack from the stacks.
+   * Get a stack from the section.
    *
    * @param id
    *
@@ -147,7 +154,7 @@ export class Section extends DataManager<Data> {
   }
 
   /**
-   * Get the raw stack data from the stacks.
+   * Get the raw stack data from the section.
    *
    * @param id
    *

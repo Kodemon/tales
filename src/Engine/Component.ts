@@ -52,9 +52,9 @@ export class Component extends DataManager<Data> {
     this.stack = stack;
 
     this.area = document.createElement("div");
-    this.area.setAttribute("data-type", "component-area");
+    this.area.setAttribute("data-type", `${this.type}-component`);
     this.area.onclick = () => {
-      this.page.emit("edit", this.section);
+      this.edit();
     };
 
     this.stack.element.append(this.area);
@@ -74,6 +74,13 @@ export class Component extends DataManager<Data> {
    */
   public send(path: string, value: any) {
     this.page.send("component:set", this.page.id, this.section.id, this.stack.id, this.id, path, value);
+  }
+
+  /**
+   * Sends a edit assignment to the editor via page events.
+   */
+  public edit() {
+    this.page.emit("edit", this.section.id, this.stack.id, this.id);
   }
 
   /*

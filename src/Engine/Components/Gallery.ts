@@ -32,7 +32,7 @@ export class Gallery extends Component {
     });
 
     this.element.onclick = () => {
-      this.page.emit("edit", this.stack, this);
+      this.edit();
     };
   }
 

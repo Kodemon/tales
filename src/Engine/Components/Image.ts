@@ -31,7 +31,7 @@ export class Image extends Component {
 
     this.image = document.createElement("img");
     this.image.onclick = () => {
-      this.page.emit("edit", this.section, this.stack, this);
+      this.edit();
     };
     this.element.append(this.image);
   }

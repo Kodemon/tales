@@ -15,7 +15,7 @@ export class Sections extends React.Component<
       stack: string;
       component: string;
     };
-    edit: (section: Section, stack?: Stack, component?: any) => void;
+    edit: (section: string, stack?: string, component?: any) => void;
   },
   {
     expanded: Set<string>;
@@ -69,7 +69,7 @@ export class Sections extends React.Component<
                             <span
                               className="anchor"
                               onClick={() => {
-                                this.props.edit(section);
+                                this.props.edit(section.id);
                               }}
                             >
                               {this.props.active.section === section.id ? (
@@ -124,7 +124,7 @@ export class Sections extends React.Component<
                         <span
                           className="anchor"
                           onClick={() => {
-                            this.props.edit(section, stack);
+                            this.props.edit(section.id, stack.id);
                           }}
                         >
                           {this.props.active.stack === stack.id ? <strong style={{ color: "#1B83BA" }}>{stack.name}</strong> : stack.name}
@@ -161,7 +161,7 @@ export class Sections extends React.Component<
                 <span
                   className="anchor"
                   onClick={() => {
-                    this.props.edit(section, stack, component);
+                    this.props.edit(section.id, stack.id, component.id);
                   }}
                 >
                   {this.props.active.component === component.id ? <strong style={{ color: "#1B83BA" }}>{component.name}</strong> : component.name}

@@ -90,6 +90,13 @@ export class Stack extends DataManager<Data> {
     this.page.send("stack:set", this.page.id, this.section.id, this.id, path, value);
   }
 
+  /**
+   * Sends a edit assignment to the editor via page events.
+   */
+  public edit() {
+    this.page.emit("edit", this.section.id, this.id, "");
+  }
+
   /*
   |--------------------------------------------------------------------------------
   | Stack Utilities
