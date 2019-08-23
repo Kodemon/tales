@@ -90,7 +90,7 @@ export class Sidebar extends React.Component<
                   attr="settings.height"
                   fallback={1}
                   placeholder="100"
-                  onValue={value => value * 100}
+                  onValue={value => Math.floor(value * 100)}
                   onChange={value => (value === "" ? 0 : parseFloat(value) / 100)}
                 />
                 <DataSetting
@@ -122,6 +122,15 @@ export class Sidebar extends React.Component<
             </CategoryHeader>
           </Category>
           {this.renderStacks(section)}
+          <div style={{ padding: 20, textAlign: "center" }}>
+            <button
+              onClick={() => {
+                console.log(JSON.stringify(section.toJSON(), null, 2));
+              }}
+            >
+              Save as template
+            </button>
+          </div>
         </Categories>
       </Container>
     );
@@ -212,8 +221,8 @@ export class Sidebar extends React.Component<
               <i
                 className="fa fa-trash"
                 onClick={() => {
-                  // stack.remove(Source.User);
-                  // this.props.edit(section.id);
+                  component.remove(Source.User);
+                  this.props.edit(component.section.id, component.stack.id);
                 }}
               />
             </div>

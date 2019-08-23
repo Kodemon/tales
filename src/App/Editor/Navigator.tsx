@@ -13,6 +13,7 @@ import { aspectRatios } from "./Lib/AspectRatio/Aspects";
 import { getCaretPosition, getComponentIcon } from "./Lib/Utils";
 import { PageSettings } from "./Settings/Page";
 import { Categories, Category, CategoryContent, CategoryHeader, Divider, SettingGroup } from "./Styles";
+import { templates } from "./Templates";
 
 export class Navigator extends React.Component<
   {
@@ -203,6 +204,16 @@ export class Navigator extends React.Component<
           )}
         </Droppable>
         <PaneButtons>
+          {templates.map(template => (
+            <button
+              onClick={() => {
+                const section = this.props.page.addSection(template.layout(), Source.User);
+                this.props.edit(section.id);
+              }}
+            >
+              Add {template.name} Section
+            </button>
+          ))}
           <button
             onClick={() => {
               const section = this.props.page.addSection({}, Source.User);

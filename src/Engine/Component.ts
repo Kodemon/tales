@@ -91,38 +91,27 @@ export class Component extends DataManager<Data> {
    */
 
   /**
-   * Removes the component from the page.
+   * Removes the component from the stack.
    *
    * @param source
    */
   public remove(source: Source = Source.Silent) {
-    /*
-    const element = this.section.elements.get(this.id);
-    if (element) {
-      this.section.elements.delete(this.id);
-      element.remove();
-    }
-
-    this.section.components = this.section.components.reduce((components: any[], component: any) => {
+    this.stack.components = this.stack.components.reduce((components: Component[], component: Component) => {
       if (component.id !== this.id) {
         components.push(component);
+      } else {
+        component.area.remove();
       }
       return components;
     }, []);
 
-    const section = deepCopy(this.section.data);
-    section.components = section.components.reduce((components: any[], component: any) => {
-      if (component.id !== this.id) {
-        components.push(component);
-      }
-      return components;
-    }, []);
-    this.section.commit(section);
+    this.page.cache();
+    this.page.emit("refresh");
+    this.page.emit("edit");
 
-    if (isSource) {
-      this.page.send("component:removed", section.id, this.id);
+    if (source === Source.User) {
+      this.page.emit("component:remove", this.page.id, this.section.id, this.stack.id, this.id);
     }
-    */
   }
 
   /*
