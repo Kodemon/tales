@@ -11,8 +11,8 @@ export const Handle = ({
   domain: number[];
   handle: { id: any; value: any; percent: any };
   getHandleProps: any;
-  onFocus: any;
-  onBlur: any;
+  onFocus?: any;
+  onBlur?: any;
 }) => <HandleButton role="slider" aria-valuemin={min} aria-valuemax={max} aria-valuenow={value} percent={percent} {...restProps} {...getHandleProps(id)} />;
 
 const HandleButton = styled.button<{ percent: any }>`

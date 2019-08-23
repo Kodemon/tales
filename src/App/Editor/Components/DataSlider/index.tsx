@@ -49,9 +49,9 @@ export class DataSlider extends React.Component<
     return (
       <Container>
         <Slider mode={1} step={step} domain={[min, max]} onUpdate={this.onUpdate} values={[value]}>
-          <SliderRail>{({ getRailProps }) => <Rail {...getRailProps()} />}</SliderRail>
+          <SliderRail>{({ getRailProps }: { getRailProps: any }) => <Rail {...getRailProps()} />}</SliderRail>
           <Handles>
-            {({ handles, getHandleProps }) => (
+            {({ handles, getHandleProps }: { handles: any; getHandleProps: any }) => (
               <div className="slider-handles">
                 {handles.map((handle: any) => (
                   <Handle key={handle.id} handle={handle} domain={[this.props.min, this.props.max]} getHandleProps={getHandleProps} />
@@ -60,9 +60,9 @@ export class DataSlider extends React.Component<
             )}
           </Handles>
           <Tracks right={false}>
-            {({ tracks, getTrackProps }) => (
+            {({ tracks, getTrackProps }: { tracks: any; getTrackProps: any }) => (
               <div>
-                {tracks.map(({ id, source, target }) => (
+                {tracks.map(({ id, source, target }: { id: string; source: any; target: any }) => (
                   <Track key={id} source={source} target={target} getTrackProps={getTrackProps} />
                 ))}
               </div>
