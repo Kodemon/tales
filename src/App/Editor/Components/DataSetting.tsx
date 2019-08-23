@@ -75,7 +75,7 @@ export class DataSetting extends React.Component<{
           <SettingGroup>
             <label className="input">{label}</label>
             <select
-              value={onValue ? onValue(entity.get(attr, fallbackValue)) : entity.get(fallbackValue)}
+              value={onValue ? onValue(entity.get(attr, fallbackValue)) : entity.get(attr, fallbackValue)}
               onChange={event => {
                 entity.set(attr, onChange ? onChange(event.target.value) : event.target.value, Source.User);
               }}
