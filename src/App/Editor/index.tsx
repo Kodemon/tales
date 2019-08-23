@@ -6,8 +6,8 @@ import { Page } from "Engine/Page";
 
 import { router } from "../../Router";
 import { Viewport } from "../Style";
-import { Color, Font } from "../Variables";
 import { fitAspect } from "./Lib/AspectRatio";
+import { Navbar } from "./Navbar";
 import { Navigator } from "./Navigator";
 import { Sidebar } from "./Sidebar";
 import { Wrapper } from "./Styles";
@@ -194,69 +194,7 @@ export class Editor extends React.Component<
   public render() {
     return (
       <Wrapper>
-        <Navbar style={{ gridArea: "navbar" }}>
-          <div className="left">
-            {this.page && (
-              <div>
-                {this.page.conduit ? (
-                  <div className="button">
-                    <span>
-                      <i className="fa fa-link" /> Peer ID | {this.page.conduit.id}
-                    </span>
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => {
-                      this.page.share();
-                    }}
-                  >
-                    <i className="fa fa-link" /> Share
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
-          <div className="center">
-            <div className={this.state.ratio.name === "" ? "active" : ""}>
-              <button
-                onClick={() => {
-                  this.setRatio("");
-                }}
-              >
-                <i className="fa fa-desktop" style={{ fontSize: 15, marginRight: 0 }} />
-              </button>
-            </div>
-            <div className={this.state.ratio.name === "iPad Pro" ? "active" : ""}>
-              <button
-                onClick={() => {
-                  this.setRatio("iPad Pro");
-                }}
-              >
-                <i className="fa fa-tablet" style={{ fontSize: 19, marginRight: 0 }} />
-              </button>
-            </div>
-            <div className={this.state.ratio.name === "iPhone XR" ? "active" : ""}>
-              <button
-                onClick={() => {
-                  this.setRatio("iPhone XR");
-                }}
-              >
-                <i className="fa fa-mobile" style={{ fontSize: 20, marginRight: 0 }} />
-              </button>
-            </div>
-          </div>
-          <div className="right">
-            <div>
-              <button
-                onClick={() => {
-                  window.open(`/read/${this.page.id}`, "_blank");
-                }}
-              >
-                <i className="fa fa-eye" /> Preview
-              </button>
-            </div>
-          </div>
-        </Navbar>
+        <Navbar page={this.page} ratio={this.state.ratio} edit={this.onEdit} setRatio={this.setRatio} />
         <Navigator page={this.page} edit={this.onEdit} ratio={this.setRatio} />
         <Content
           ref={c => (this.content = c)}
@@ -275,95 +213,6 @@ export class Editor extends React.Component<
     );
   }
 }
-
-const Navbar = styled.div`
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-
-  background: ${Color.Background};
-  border-bottom: 1px solid ${Color.Border};
-  color: ${Color.Font};
-  height: 35px;
-
-  font-family: ${Font.Family};
-  font-size: ${Font.Size};
-
-  .left,
-  .center,
-  .right {
-    > div {
-      height: 100%;
-      padding: 0 15px;
-
-      &:hover {
-        color: ${Color.FontLight};
-      }
-
-      &.active {
-        background: ${Color.BackgroundLight};
-        color: ${Color.FontLight};
-      }
-    }
-
-    .button,
-    button {
-      background: none;
-      border: none;
-      color: inherit;
-      height: 100%;
-      font-size: ${Font.Size};
-
-      &:active,
-      &:visited,
-      &:focus {
-        outline: none;
-      }
-
-      > span {
-        display: block;
-        padding-top: 11px;
-      }
-    }
-
-    i {
-      color: inherit;
-      margin-right: 5px;
-    }
-  }
-
-  .left {
-    display: flex;
-    align-content: center;
-    justify-content: flex-start;
-
-    > div {
-      border-right: 1px solid ${Color.BorderLight};
-    }
-  }
-
-  .center {
-    display: flex;
-    align-content: center;
-    justify-content: center;
-
-    > div {
-      border-left: 1px solid ${Color.BorderLight};
-      &:last-child {
-        border-right: 1px solid ${Color.BorderLight};
-      }
-    }
-  }
-
-  .right {
-    display: flex;
-    align-content: center;
-    justify-content: flex-end;
-
-    > div {
-      border-left: 1px solid ${Color.BorderLight};
-    }
-  }
-`;
 
 const Content = styled.div`
   display: grid;
