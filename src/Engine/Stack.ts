@@ -250,8 +250,8 @@ export class Stack extends DataManager<Data> {
     const gridStyle: any = {};
     if (grid) {
       gridStyle.display = "grid";
-      gridStyle.gridTemplateColumns = "1fr ".repeat(grid.width).trim();
-      gridStyle.gridTemplateRows = "1fr ".repeat(grid.height).trim();
+      gridStyle.gridTemplateColumns = "auto ".repeat(grid.width).trim();
+      gridStyle.gridTemplateRows = "auto ".repeat(grid.height).trim();
       gridStyle.gridTemplateAreas = template(grid);
     }
 

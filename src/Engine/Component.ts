@@ -1,4 +1,5 @@
 import { DataManager } from "./DataManager";
+import { Source } from "./Enums";
 import { Stack } from "./Stack";
 import { setStyle } from "./Utils";
 
@@ -92,9 +93,9 @@ export class Component extends DataManager<Data> {
   /**
    * Removes the component from the page.
    *
-   * @param isSource
+   * @param source
    */
-  public remove(isSource = false) {
+  public remove(source: Source = Source.Silent) {
     /*
     const element = this.section.elements.get(this.id);
     if (element) {
@@ -159,8 +160,7 @@ export class Component extends DataManager<Data> {
         this.area.className = "position-relaive";
         setStyle(this.area, {
           gridArea: this.id,
-          minWidth: "100%",
-          minHeight: this.section.getHeight()
+          minWidth: "100%"
         });
       }
     }

@@ -122,6 +122,9 @@ export class Page extends EventEmitter {
   public share() {
     if (!this.conduit) {
       this.conduit = new Conduit(this);
+      this.once("conduit:open", () => {
+        this.emit("refresh");
+      });
     }
   }
 
@@ -165,22 +168,22 @@ export class Page extends EventEmitter {
    * Add a new section to the page.
    *
    * @param data
-   * @param index
    * @param source
    */
-  public addSection(data: any, index: number, source: Source = Source.Silent) {
+  public addSection(data: any, source: Source = Source.Silent) {
     const section = new Section(this, {
       id: data.id || rndm.base62(10),
       settings: data.settings || {},
       stacks: data.stacks || []
     });
 
-    const target = this.sections[index - 1];
-    if (target) {
-      insertElementAfter(section.element, target.element);
-    }
+    // const target = this.sections[index - 1];
+    // if (target) {
+    //   insertElementAfter(section.element, target.element);
+    // }
+    // this.sections.splice(index, 0, section);
 
-    this.sections.splice(index, 0, section);
+    this.sections.push(section);
 
     section.render();
 

@@ -12,13 +12,14 @@ import { ColorPicker } from "./Components/ColorPicker";
 import { Components } from "./Components/Components";
 import { DataSetting } from "./Components/DataSetting";
 import { StackLayout } from "./Components/StackLayout";
+import { getCaretPosition, getComponentIcon } from "./Lib/Utils";
 import { GallerySettings } from "./Settings/Gallery";
 import { ImageSettings } from "./Settings/Image";
 import { OverlaySettings } from "./Settings/Overlay";
 import { RevealSettings } from "./Settings/Reveal";
 import { TextSettings } from "./Settings/Text";
 import { YouTubeSettings } from "./Settings/YouTube";
-import { Divider } from "./Styles";
+import { Categories, Category, CategoryContent, CategoryHeader, Divider } from "./Styles";
 
 export class Sidebar extends React.Component<
   {
@@ -28,7 +29,7 @@ export class Sidebar extends React.Component<
       stack: string;
       component: string;
     };
-    edit: (section: string, stack?: string, component?: string) => void;
+    edit: (section?: string, stack?: string, component?: string) => void;
   },
   {
     stack?: Stack;
@@ -65,7 +66,7 @@ export class Sidebar extends React.Component<
     const section = this.props.page && this.props.editing.section && this.props.page.getSection(this.props.editing.section);
     if (!section) {
       return (
-        <Container>
+        <Container style={{ gridArea: "sidebar" }}>
           <NoSection>
             <div>Select a section to start editing</div>
           </NoSection>
@@ -73,7 +74,7 @@ export class Sidebar extends React.Component<
       );
     }
     return (
-      <Container key={`section-${section.id}`}>
+      <Container key={`section-${section.id}`} style={{ gridArea: "sidebar" }}>
         <Components stack={this.state.stack} close={this.onClose} />
         <Categories>
           <Category>
@@ -127,8 +128,8 @@ export class Sidebar extends React.Component<
   private renderStacks(section: Section) {
     return section.stacks.map(stack => {
       return (
-        <React.Fragment>
-          <Category key={stack.id}>
+        <React.Fragment key={stack.id}>
+          <Category>
             <CategoryHeader>
               <div
                 className="caret"
@@ -201,7 +202,7 @@ export class Sidebar extends React.Component<
                 this.editComponent(component);
               }}
             >
-              {this.getComponentIcon(component.type)} <span style={{ textTransform: "capitalize" }}>{component.type}</span> - {component.getSetting("name", component.id)}
+              {getComponentIcon(component.type)} <span style={{ textTransform: "capitalize" }}>{component.type}</span> - {component.getSetting("name", component.id)}
             </div>
             <div className="actions">
               <i
@@ -265,24 +266,6 @@ export class Sidebar extends React.Component<
       }
     }
   }
-
-  private getComponentIcon(type: string) {
-    switch (type) {
-      case "image": {
-        return <i className="fa fa-image" style={{ marginRight: 5 }} />;
-      }
-      case "text": {
-        return <i className="fa fa-font" style={{ marginRight: 5 }} />;
-      }
-    }
-  }
-}
-
-function getCaretPosition(isActive: boolean) {
-  if (isActive) {
-    return <i className="fa fa-caret-down" />;
-  }
-  return <i className="fa fa-caret-right" />;
 }
 
 /*
@@ -323,78 +306,6 @@ const Container = styled.div`
       background: ${Color.BackgroundLightHover};
     }
   }
-`;
-
-/*
- |--------------------------------------------------------------------------------
- | Category
- |--------------------------------------------------------------------------------
- */
-
-const Categories = styled.div`
-  height: 100vh;
-  overflow-x: hidden;
-  overflow-y: scroll;
-`;
-
-const Category = styled.div``;
-
-const CategoryHeader = styled.div`
-  display: grid;
-  grid-template-columns: 15px auto auto;
-  align-content: center;
-
-  background: ${Color.BackgroundDark};
-  border-top: 1px solid ${Color.Border};
-  color: ${Color.Font};
-
-  &.blue {
-    background: ${Color.BackgroundBlue};
-    border-top: 1px solid ${Color.BorderLightBlue};
-    border-bottom: 1px solid ${Color.BorderDarkBlue};
-    color: ${Color.FontLight};
-    i {
-      color: ${Color.FontLight};
-    }
-  }
-
-  div {
-    padding: 8px;
-  }
-
-  .caret {
-    font-size: 12px;
-  }
-
-  .header {
-    font-family: -apple-system, BlinkMacSystemFont, proxima-nova, Roboto, Arial, sans-serif, Georgia, serif;
-    font-size: 12px;
-    font-weight: bold;
-
-    cursor: default;
-  }
-
-  .actions {
-    text-align: right;
-    i {
-      display: inline-block;
-      font-size: 12px;
-      margin-right: 12px;
-
-      &:last-child {
-        margin-right: 4px;
-      }
-
-      &:hover {
-        color: ${Color.FontLight};
-        cursor: pointer;
-      }
-    }
-  }
-`;
-
-const CategoryContent = styled.div`
-  padding: 10px;
 `;
 
 /*

@@ -5,7 +5,8 @@ import { Color, Font } from "../Variables";
 export const Wrapper = styled.div`
   display: grid;
   grid-template-columns: auto 1fr auto;
-  grid-template-rows: 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas: "navbar navbar sidebar" "navigation content sidebar";
 
   background: #f2f2f2;
   width: 100%;
@@ -105,6 +106,85 @@ export const SettingGroupStacked = styled.div`
       display: block;
     }
   }
+`;
+
+/*
+ |--------------------------------------------------------------------------------
+ | Categories
+ |--------------------------------------------------------------------------------
+ */
+
+export const Categories = styled.div`
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: scroll;
+`;
+
+export const Category = styled.div``;
+
+export const CategoryHeader = styled.div`
+  display: grid;
+  grid-template-columns: 15px auto auto;
+  align-content: center;
+
+  background: ${Color.BackgroundDark};
+  border-top: 1px solid ${Color.Border};
+  color: ${Color.Font};
+
+  &.blue {
+    background: ${Color.BackgroundBlue};
+    border-top: 1px solid ${Color.BorderLightBlue};
+    border-bottom: 1px solid ${Color.BorderDarkBlue};
+    color: ${Color.FontLight};
+    i {
+      color: ${Color.FontLight};
+    }
+  }
+
+  div {
+    padding: 8px;
+  }
+
+  .caret {
+    font-size: 12px;
+  }
+
+  .header {
+    font-family: -apple-system, BlinkMacSystemFont, proxima-nova, Roboto, Arial, sans-serif, Georgia, serif;
+    font-size: 12px;
+    font-weight: bold;
+
+    cursor: default;
+  }
+
+  .actions {
+    text-align: right;
+    i {
+      display: inline-block;
+      font-size: 12px;
+      margin-right: 12px;
+
+      &:last-child {
+        margin-right: 4px;
+      }
+
+      &:hover {
+        color: ${Color.FontLight};
+        cursor: pointer;
+      }
+
+      &.grab {
+        cursor: grab;
+        &:active {
+          cursor: grabbing;
+        }
+      }
+    }
+  }
+`;
+
+export const CategoryContent = styled.div`
+  padding: 10px;
 `;
 
 /*

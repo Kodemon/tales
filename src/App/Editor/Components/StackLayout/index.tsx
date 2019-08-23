@@ -1,14 +1,12 @@
 import * as React from "react";
 
-import { Component } from "Engine/Component";
-import { Source } from "Engine/Enums";
 import { Stack } from "Engine/Stack";
 
 import { SettingGroupStacked } from "../../Styles";
 
 import { GridPreview } from "./GridPreview";
 import { grid, template } from "./Parser";
-import { clamp, Grid, integer } from "./Parser/Types";
+import { integer } from "./Parser/Types";
 import { Preview } from "./Preview";
 import { Text } from "./Text";
 
