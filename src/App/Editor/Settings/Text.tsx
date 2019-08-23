@@ -42,14 +42,7 @@ export const TextSettings: React.SFC<{
       <DataSetting entity={component} type="input" label="Shadow" attr="style.textShadow" placeholder="1px 1px 2px #262626" />
 
       <ComponentDivider label="Columns" icon="columns" />
-      <DataSetting
-        entity={component}
-        type="select"
-        label="Columns"
-        attr="style.columns"
-        fallback="1"
-        options={[{ label: "One", value: "1" }, { label: "Two", value: "2" }, { label: "Three", value: "3" }, { label: "Four", value: "4" }]}
-      />
+      <DataSetting entity={component} type="slider" label="Columns" attr="style.columns" fallback="1" options={{ min: 1, max: 4 }} />
       <DataSetting entity={component} type="input" label="Gap" attr="style.columnGap" placeholder="30px" />
       <DataSetting entity={component} type="input" label="Rule" attr="style.columnRule" placeholder="2px outset #444" />
     </React.Fragment>

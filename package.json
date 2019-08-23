@@ -25,6 +25,7 @@
     "react": "16.9.0",
     "react-beautiful-dnd": "^11.0.5",
     "react-color": "2.17.3",
+    "react-compound-slider": "^2.2.0",
     "react-dom": "16.9.0",
     "rndm": "1.2.0",
     "scrollama": "2.0.1",

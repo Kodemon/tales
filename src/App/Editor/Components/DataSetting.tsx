@@ -1,17 +1,17 @@
 import * as React from "react";
 
 import { Source } from "Engine/Enums";
-
 import { SettingGroup } from "../Styles";
+import { DataSlider } from "./DataSlider/index";
 
 export class DataSetting extends React.Component<{
   entity: any;
 
   // ### Form Settings
 
-  type: "input" | "checkbox" | "select";
+  type: "input" | "checkbox" | "select" | "slider";
   label: string;
-  options?: SelectOption[];
+  options?: SelectOption[] | MinMax;
   placeholder?: string;
 
   // Data Settings
@@ -80,12 +80,36 @@ export class DataSetting extends React.Component<{
                 entity.set(attr, onChange ? onChange(event.target.value) : event.target.value, Source.User);
               }}
             >
-              {(options || []).map(option => (
+              {((options as SelectOption[]) || []).map(option => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
               ))}
             </select>
+          </SettingGroup>
+        );
+      }
+      case "slider": {
+        return (
+          <SettingGroup>
+            <label className="input">{label}</label>
+            <DataSlider
+              defaultValue={onValue ? onValue(entity.get(attr, fallbackValue)) : entity.get(attr, fallbackValue)}
+              min={(options as MinMax).min}
+              max={(options as MinMax).max}
+              step={1}
+              onUpdate={(value: number) => {
+                // entity.set(attr, onChange ? onChange(value) : value, Source.User);
+              }}
+            />
+            <input
+              type="text"
+              value={onValue ? onValue(entity.get(attr, fallbackValue)) : entity.get(attr, fallbackValue)}
+              placeholder={placeholder || ""}
+              onChange={event => {
+                entity.set(attr, onChange ? onChange(event.target.value) : event.target.value, Source.User);
+              }}
+            />
           </SettingGroup>
         );
       }
@@ -102,4 +126,9 @@ export class DataSetting extends React.Component<{
 interface SelectOption {
   label: string;
   value: any;
+}
+
+interface MinMax {
+  min: number;
+  max: number;
 }
