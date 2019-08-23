@@ -74,6 +74,9 @@ export const SettingGroup = styled.div<{ columns?: string }>`
     font-size: ${Font.Size};
     padding: 4px;
 
+    width: 100%;
+    height: 24px;
+
     &:focus {
       outline: 1px solid ${Color.BackgroundBlue};
     }

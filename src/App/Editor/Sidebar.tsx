@@ -10,7 +10,7 @@ import { Stack } from "Engine/Stack";
 import { Color, Font } from "../Variables";
 import { ColorPicker } from "./Components/ColorPicker";
 import { Components } from "./Components/Components";
-import { DataSetting } from "./Components/DataSetting";
+import { DataGroup, DataSetting } from "./Components/DataSetting";
 import { StackLayout } from "./Components/StackLayout";
 import { getCaretPosition, getComponentIcon } from "./Lib/Utils";
 import { GallerySettings } from "./Settings/Gallery";
@@ -82,23 +82,25 @@ export class Sidebar extends React.Component<
               <i className="fa fa-television" /> Section - {section.getSetting("name", section.id)}
               <Divider />
               <DataSetting entity={section} type="input" label="Name" attr="settings.name" placeholder="Enter a section name" />
-              <DataSetting
-                entity={section}
-                type="select"
-                label="Position"
-                attr="settings.position"
-                options={[{ label: "Relative", value: "relative" }, { label: "Absolute", value: "absolute" }, { label: "Sticky", value: "sticky" }]}
-              />
-              <DataSetting
-                entity={section}
-                type="input"
-                label="Height"
-                attr="settings.height"
-                fallback={1}
-                placeholder="100"
-                onValue={value => value * 100}
-                onChange={value => (value === "" ? 0 : parseFloat(value) / 100)}
-              />
+              <DataGroup>
+                <DataSetting
+                  entity={section}
+                  type="input"
+                  label="Height"
+                  attr="settings.height"
+                  fallback={1}
+                  placeholder="100"
+                  onValue={value => value * 100}
+                  onChange={value => (value === "" ? 0 : parseFloat(value) / 100)}
+                />
+                <DataSetting
+                  entity={section}
+                  type="select"
+                  label="Position"
+                  attr="settings.position"
+                  options={[{ label: "Relative", value: "relative" }, { label: "Absolute", value: "absolute" }, { label: "Sticky", value: "sticky" }]}
+                />
+              </DataGroup>
               <ColorPicker label="Background Color" effected={section} />
             </CategoryContent>
           </Category>
@@ -165,14 +167,16 @@ export class Sidebar extends React.Component<
             </CategoryHeader>
             {this.props.editing.stack === stack.id && (
               <CategoryContent>
-                <DataSetting entity={stack} type="input" label="Name" attr="settings.name" placeholder="Enter a stack name" />
-                <DataSetting
-                  entity={stack}
-                  type="select"
-                  label="Position"
-                  attr="settings.position"
-                  options={[{ label: "Relative", value: "relative" }, { label: "Absolute", value: "absolute" }, { label: "Sticky", value: "sticky" }]}
-                />
+                <DataGroup>
+                  <DataSetting entity={stack} type="input" label="Name" attr="settings.name" placeholder="Enter a stack name" />
+                  <DataSetting
+                    entity={stack}
+                    type="select"
+                    label="Position"
+                    attr="settings.position"
+                    options={[{ label: "Relative", value: "relative" }, { label: "Absolute", value: "absolute" }, { label: "Sticky", value: "sticky" }]}
+                  />
+                </DataGroup>
                 <StackLayout stack={stack} />
               </CategoryContent>
             )}

@@ -1,8 +1,19 @@
 import * as React from "react";
+import styled from "styled-components";
 
 import { Source } from "Engine/Enums";
+
 import { SettingGroup } from "../Styles";
 import { DataSlider } from "./DataSlider/index";
+
+export const DataGroup = styled.div`
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+
+  width: 326px;
+`;
 
 export class DataSetting extends React.Component<{
   entity: any;
