@@ -96,6 +96,9 @@ export class Navbar extends React.Component<
       <React.Fragment>
         <Container style={{ gridArea: "navbar" }}>
           <div className="left">
+            <div style={{ textAlign: "center", width: 40, padding: "3px 0 0" }}>
+              <img src="https://i.ibb.co/kxt8txt/tails-white-transparent-35x35.png" width="30" height="30" />
+            </div>
             <div>
               {this.props.page.conduit ? (
                 <div className="button">
@@ -208,7 +211,7 @@ const Container = styled.div`
   .center,
   .right {
     > div {
-      height: 100%;
+      height: 35px;
       padding: 0 15px;
 
       &:hover {
