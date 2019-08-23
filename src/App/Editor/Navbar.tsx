@@ -71,11 +71,21 @@ export class Navbar extends React.Component<
   }
 
   private livePreview = () => {
-    this.setState(() => ({ qrcode: true }));
+    this.setState(
+      () => ({ qrcode: true }),
+      () => {
+        document.getElementById("app")!.className = "blur";
+      }
+    );
   };
 
   private onClose = () => {
-    this.setState(() => ({ qrcode: false }));
+    this.setState(
+      () => ({ qrcode: false }),
+      () => {
+        document.getElementById("app")!.className = "";
+      }
+    );
   };
 
   public render() {
