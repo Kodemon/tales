@@ -7,6 +7,7 @@ declare module "TweenMax";
 declare module "scrollama";
 declare module "enter-view";
 declare module "qrcode";
+declare module "react-compound-slider";
 
 declare const PIXI: any;
 

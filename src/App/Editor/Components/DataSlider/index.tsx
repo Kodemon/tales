@@ -10,72 +10,51 @@ export class DataSlider extends React.Component<
     min: number;
     max: number;
     step: number;
-    onFocus?: any;
-    onBlur?: any;
-    onUpdate?: any;
+    value: number;
     onChange?: any;
-    onSlideStart?: any;
-    defaultValue: any;
   },
-  { values: any; update: any }
+  {
+    value: number;
+  }
 > {
+  private current: number;
+
   constructor(props: any) {
     super(props);
     this.state = {
-      values: [this.props.defaultValue],
-      update: [this.props.defaultValue]
+      value: this.props.value
     };
   }
 
-  public onUpdate = (update: any) => {
-    this.setState({ update });
-    // Use the first value from the array because this only supports one handle
-    console.log(update[0]);
-    console.log("ou");
-    if (this.state.values[0] !== update[0]) {
-      this.props.onUpdate && this.props.onUpdate(update[0]);
+  public onUpdate = ([value]: number[]) => {
+    if (typeof value === "number" && value !== this.current) {
+      this.current = value;
+      this.setState({ value });
+      this.props.onChange(value);
     }
-  };
-
-  public onChange = (values: any) => {
-    this.setState({ values });
-    // Use the first value from the array because this only supports one handle
-    // console.log(values[0]);
-    // console.log("oc");
-    // this.props.onChange && this.props.onChange(values[0]);
-  };
-
-  public onStart = (values: any) => {
-    this.setState({ values });
-    // Use the first value from the array because this only supports one handle
-    console.log(values[0]);
-    console.log("os");
-    this.props.onSlideStart && this.props.onSlideStart(values[0]);
   };
 
   public static getDerivedStateFromProps(props: any, state: any) {
-    // Need this to dynamically update state from props
-    if (props.defaultValue !== state.values[0]) {
+    if (props.value !== state.value) {
       return {
-        values: [props.defaultValue]
+        value: props.value
       };
     }
-    // Return null if the state hasn't changed
     return null;
   }
 
   public render() {
-    const { values } = this.state;
-    const { min, max, step, onFocus, onBlur, ...restProps } = this.props;
+    const value = this.state.value;
+    const { min, max, step } = this.props;
     return (
       <Container>
-        <Slider mode={1} step={step} domain={[min, max]} onUpdate={this.onUpdate} onChange={this.onChange} onSlideStart={this.props.onSlideStart} values={values} {...restProps}>
+        <Slider mode={1} step={step} domain={[min, max]} onUpdate={this.onUpdate} values={[value]}>
           <SliderRail>{({ getRailProps }) => <Rail {...getRailProps()} />}</SliderRail>
           <Handles>
             {({ handles, getHandleProps }) => (
               <div className="slider-handles">
-                {handles.map(handle => (
-                  <Handle key={handle.id} handle={handle} domain={[this.props.min, this.props.max]} getHandleProps={getHandleProps} onFocus={onFocus} onBlur={onBlur} />
+                {handles.map((handle: any) => (
+                  <Handle key={handle.id} handle={handle} domain={[this.props.min, this.props.max]} getHandleProps={getHandleProps} />
                 ))}
               </div>
             )}

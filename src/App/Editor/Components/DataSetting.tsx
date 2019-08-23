@@ -94,12 +94,12 @@ export class DataSetting extends React.Component<{
           <SettingGroup>
             <label className="input">{label}</label>
             <DataSlider
-              defaultValue={onValue ? onValue(entity.get(attr, fallbackValue)) : entity.get(attr, fallbackValue)}
               min={(options as MinMax).min}
               max={(options as MinMax).max}
               step={1}
-              onUpdate={(value: number) => {
-                // entity.set(attr, onChange ? onChange(value) : value, Source.User);
+              value={entity.get(attr, fallbackValue)}
+              onChange={(value: number) => {
+                entity.set(attr, String(value), Source.User);
               }}
             />
             <input
@@ -107,7 +107,7 @@ export class DataSetting extends React.Component<{
               value={onValue ? onValue(entity.get(attr, fallbackValue)) : entity.get(attr, fallbackValue)}
               placeholder={placeholder || ""}
               onChange={event => {
-                entity.set(attr, onChange ? onChange(event.target.value) : event.target.value, Source.User);
+                entity.set(attr, event.target.value, Source.User);
               }}
             />
           </SettingGroup>
