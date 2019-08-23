@@ -57,9 +57,9 @@ export const Header = styled.header`
  |--------------------------------------------------------------------------------
  */
 
-export const SettingGroup = styled.div`
+export const SettingGroup = styled.div<{ columns?: string }>`
   display: grid;
-  grid-template-columns: 44px auto;
+  grid-template-columns: ${props => props.columns || "44px auto"};
   gap: 8px 8px;
   align-items: center;
 

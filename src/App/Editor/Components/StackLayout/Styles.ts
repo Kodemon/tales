@@ -9,7 +9,7 @@ export const colors = {
 export const Container = styled.div`
   width: 100%;
   height: auto;
-  padding: 12px;
+  padding: 0 12px 7px;
 `;
 
 export const StyledSidebar = styled.div`

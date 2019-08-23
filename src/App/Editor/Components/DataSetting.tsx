@@ -91,7 +91,7 @@ export class DataSetting extends React.Component<{
       }
       case "slider": {
         return (
-          <SettingGroup>
+          <SettingGroup columns="44px auto 44px">
             <label className="input">{label}</label>
             <DataSlider
               min={(options as MinMax).min}
