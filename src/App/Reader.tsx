@@ -14,12 +14,14 @@ export class Reader extends React.Component {
       id: router.params.get("page"),
       editing: false
     }).on("ready", () => {
-      const cache = localStorage.getItem(`page.${router.params.get("page")}`);
-      if (cache) {
-        this.page.load(JSON.parse(cache));
-      }
       if (router.query.has("peer")) {
+        localStorage.removeItem(`page.${router.params.get("page")}`);
         this.page.connect(router.query.get("peer"));
+      } else {
+        const cache = localStorage.getItem(`page.${router.params.get("page")}`);
+        if (cache) {
+          this.page.load(JSON.parse(cache));
+        }
       }
     });
   }
