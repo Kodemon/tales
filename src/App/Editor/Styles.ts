@@ -1,8 +1,10 @@
 import styled from "styled-components";
 
+import { Color, Font } from "../Variables";
+
 export const Wrapper = styled.div`
   display: grid;
-  grid-template-columns: 40px auto 364px;
+  grid-template-columns: auto 1fr auto;
   grid-template-rows: 1fr;
 
   background: #f2f2f2;
@@ -56,36 +58,66 @@ export const Header = styled.header`
 
 export const SettingGroup = styled.div`
   display: grid;
-  grid-template-columns: 30% auto;
-  grid-template-rows: 1fr;
+  grid-template-columns: 44px auto;
+  gap: 8px 8px;
+  align-items: center;
 
-  margin-bottom: 5px;
+  font-size: ${Font.Size};
+  padding: 4px 0;
 
-  > label {
-    font-size: 13px;
-    &.input {
-      padding-top: 2px;
+  > input,
+  select {
+    background: ${Color.BackgroundDark};
+    border: 1px solid ${Color.Border};
+    color: ${Color.Font};
+    font-size: ${Font.Size};
+    padding: 4px;
+
+    &:focus {
+      outline: 1px solid ${Color.BackgroundBlue};
     }
   }
 
   > input {
-    &[type="checkbox"] {
-      margin-top: 3px;
-    }
+    background: ${Color.BackgroundDark};
   }
 
-  .read {
-    font-size: 13px;
+  > select {
+    background: ${Color.BackgroundLight};
   }
 `;
 
 export const SettingGroupStacked = styled.div`
-  > label {
-    display: block;
-    font-size: 13px;
-    margin-bottom: 10px;
-    &.input {
-      padding-top: 2px;
+  display: grid;
+  grid-template-rows: 20px auto;
+  gap: 8px 8px;
+  align-items: center;
+
+  font-size: ${Font.Size};
+  padding: 4px 0;
+
+  .header {
+    display: grid;
+    grid-template-columns: 10px auto;
+    align-content: center;
+
+    > i {
+      display: block;
     }
   }
+`;
+
+/*
+ |--------------------------------------------------------------------------------
+ | Utils
+ |--------------------------------------------------------------------------------
+ */
+
+export const Divider = styled.div`
+  clear: both;
+  height: 1px;
+  line-height: 0;
+  font-size: 0;
+  border-top: 1px solid ${Color.BorderLight};
+  margin: 8px 0;
 `;

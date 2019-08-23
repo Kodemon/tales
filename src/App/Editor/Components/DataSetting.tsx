@@ -1,5 +1,7 @@
-import { Source } from "Engine/Enums";
 import * as React from "react";
+
+import { Source } from "Engine/Enums";
+
 import { SettingGroup } from "../Styles";
 
 export class DataSetting extends React.Component<{

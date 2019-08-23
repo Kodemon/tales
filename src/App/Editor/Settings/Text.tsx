@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import { ComponentDivider } from "../Components/ComponentDivider";
 import { DataSetting } from "../Components/DataSetting";
 
 export const TextSettings: React.SFC<{
@@ -9,7 +10,7 @@ export const TextSettings: React.SFC<{
     <React.Fragment key={`component-${component.id}`}>
       <DataSetting entity={component} type="input" label="Name" attr="settings.name" placeholder={component.id} />
 
-      <h1>Settings</h1>
+      <ComponentDivider label="Settings" icon="cogs" />
       <DataSetting
         entity={component}
         type="select"
@@ -28,17 +29,19 @@ export const TextSettings: React.SFC<{
           { value: "flex-end,flex-end", label: "Bottom Right" }
         ]}
       />
-      <DataSetting entity={component} type="input" label="Min Width" attr="settings.min" placeholder="280px" />
-      <DataSetting entity={component} type="input" label="Max Width" attr="settings.max" placeholder="762px" />
       <DataSetting entity={component} type="input" label="Padding" attr="style.padding" placeholder="40px 20px" />
 
-      <h1>Font</h1>
+      <ComponentDivider label="Text Width" icon="text-width" />
+      <DataSetting entity={component} type="input" label="Min" attr="settings.min" placeholder="280px" />
+      <DataSetting entity={component} type="input" label="Max" attr="settings.max" placeholder="762px" />
+
+      <ComponentDivider label="Font" icon="font" />
       <DataSetting entity={component} type="input" label="Size" attr="style.fontSize" placeholder="1em" />
       <DataSetting entity={component} type="input" label="Line Height" attr="style.lineHeight" placeholder="1.77" />
       <DataSetting entity={component} type="input" label="Color" attr="style.color" placeholder="#262626" />
       <DataSetting entity={component} type="input" label="Shadow" attr="style.textShadow" placeholder="1px 1px 2px #262626" />
 
-      <h1>Columns</h1>
+      <ComponentDivider label="Columns" icon="columns" />
       <DataSetting
         entity={component}
         type="select"
@@ -47,8 +50,8 @@ export const TextSettings: React.SFC<{
         fallback="1"
         options={[{ label: "One", value: "1" }, { label: "Two", value: "2" }, { label: "Three", value: "3" }, { label: "Four", value: "4" }]}
       />
-      <DataSetting entity={component} type="input" label="Column Gap" attr="style.columnGap" placeholder="30px" />
-      <DataSetting entity={component} type="input" label="Column Rule" attr="style.columnRule" placeholder="2px outset #444" />
+      <DataSetting entity={component} type="input" label="Gap" attr="style.columnGap" placeholder="30px" />
+      <DataSetting entity={component} type="input" label="Rule" attr="style.columnRule" placeholder="2px outset #444" />
     </React.Fragment>
   );
 };

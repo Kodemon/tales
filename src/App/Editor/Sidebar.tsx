@@ -7,7 +7,9 @@ import { Page } from "Engine/Page";
 import { Section } from "Engine/Section";
 import { Stack } from "Engine/Stack";
 
+import { Color, Font } from "../Variables";
 import { ColorPicker } from "./Components/ColorPicker";
+import { Components } from "./Components/Components";
 import { DataSetting } from "./Components/DataSetting";
 import { StackLayout } from "./Components/StackLayout";
 import { GallerySettings } from "./Settings/Gallery";
@@ -16,16 +18,49 @@ import { OverlaySettings } from "./Settings/Overlay";
 import { RevealSettings } from "./Settings/Reveal";
 import { TextSettings } from "./Settings/Text";
 import { YouTubeSettings } from "./Settings/YouTube";
+import { Divider } from "./Styles";
 
-export class Sidebar extends React.Component<{
-  page?: Page;
-  editing: {
-    section: string;
-    stack: string;
-    component: string;
+export class Sidebar extends React.Component<
+  {
+    page?: Page;
+    editing: {
+      section: string;
+      stack: string;
+      component: string;
+    };
+    edit: (section: string, stack?: string, component?: string) => void;
+  },
+  {
+    stack?: Stack;
+  }
+> {
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      stack: undefined
+    };
+  }
+
+  private onClose = () => {
+    this.setState(() => ({ stack: undefined }));
   };
-  edit: (section: string, stack?: string, component?: string) => void;
-}> {
+
+  private editStack = (stack: Stack) => {
+    if (this.props.editing.stack === stack.id) {
+      this.props.edit(stack.section.id);
+    } else {
+      this.props.edit(stack.section.id, stack.id);
+    }
+  };
+
+  private editComponent = (component: Component) => {
+    if (this.props.editing.component === component.id) {
+      this.props.edit(component.section.id, component.stack.id);
+    } else {
+      this.props.edit(component.section.id, component.stack.id, component.id);
+    }
+  };
+
   public render() {
     const section = this.props.page && this.props.editing.section && this.props.page.getSection(this.props.editing.section);
     if (!section) {
@@ -39,76 +74,97 @@ export class Sidebar extends React.Component<{
     }
     return (
       <Container key={`section-${section.id}`}>
-        <Category>
-          <CategoryHeader>
-            <h1>
-              Section
-              <small>{section.getSetting("name", section.id)}</small>
-            </h1>
-          </CategoryHeader>
-          <CategoryContent>
-            <DataSetting entity={section} type="input" label="Name" attr="settings.name" placeholder={section.id} />
-            <DataSetting
-              entity={section}
-              type="select"
-              label="Position"
-              attr="settings.position"
-              options={[{ label: "Relative", value: "relative" }, { label: "Absolute", value: "absolute" }, { label: "Sticky", value: "sticky" }]}
-            />
-            <DataSetting
-              entity={section}
-              type="input"
-              label="Height"
-              attr="settings.height"
-              fallback={1}
-              placeholder="100"
-              onValue={value => value * 100}
-              onChange={value => (value === "" ? 0 : parseFloat(value) / 100)}
-            />
-            <ColorPicker label="Background Color" effected={section} />
-          </CategoryContent>
-        </Category>
-        <Category>
-          <CategoryHeader>
-            <h1>Stacks</h1>
-          </CategoryHeader>
+        <Components stack={this.state.stack} close={this.onClose} />
+        <Categories>
+          <Category>
+            <CategoryContent>
+              <i className="fa fa-television" /> Section - {section.getSetting("name", section.id)}
+              <Divider />
+              <DataSetting entity={section} type="input" label="Name" attr="settings.name" placeholder="Enter a section name" />
+              <DataSetting
+                entity={section}
+                type="select"
+                label="Position"
+                attr="settings.position"
+                options={[{ label: "Relative", value: "relative" }, { label: "Absolute", value: "absolute" }, { label: "Sticky", value: "sticky" }]}
+              />
+              <DataSetting
+                entity={section}
+                type="input"
+                label="Height"
+                attr="settings.height"
+                fallback={1}
+                placeholder="100"
+                onValue={value => value * 100}
+                onChange={value => (value === "" ? 0 : parseFloat(value) / 100)}
+              />
+              <ColorPicker label="Background Color" effected={section} />
+            </CategoryContent>
+          </Category>
+          <Category>
+            <CategoryHeader>
+              <div className="caret">
+                <i className="fa fa-database" style={{ fontSize: 10 }} />
+              </div>
+              <div className="header">Stacks</div>
+              <div className="actions">
+                <i
+                  className="fa fa-plus"
+                  onClick={() => {
+                    const stack = section.addStack({}, Source.User);
+                    this.props.edit(section.id, stack.id);
+                  }}
+                />
+              </div>
+            </CategoryHeader>
+          </Category>
           {this.renderStacks(section)}
-        </Category>
-        {/* <Category>
-          <CategoryHeader>
-            <h1>Components</h1>
-          </CategoryHeader>
-          {this.props.editing.stack && this.renderComponents(section.getStack(this.props.editing.stack))}
-        </Category> */}
+        </Categories>
       </Container>
     );
   }
 
   private renderStacks(section: Section) {
-    return (
-      <Stacks>
-        {section.stacks.map(stack => (
-          <StackContainer key={stack.id}>
-            <StackHeader
-              onClick={() => {
-                this.props.edit(stack.section.id, this.props.editing.stack === stack.id ? "" : stack.id, "");
-              }}
-            >
-              <h1>{stack.getSetting("name", stack.id)}</h1>
-              <div>
-                <RemoveStack
-                  onClick={() => {
-                    stack.remove();
-                  }}
-                >
-                  <i className="fa fa-trash" />
-                </RemoveStack>
-                <i className={`fa fa-caret-${this.props.editing.stack === stack.id ? "up" : "down"}`} />
+    return section.stacks.map(stack => {
+      return (
+        <React.Fragment>
+          <Category key={stack.id}>
+            <CategoryHeader>
+              <div
+                className="caret"
+                onClick={() => {
+                  this.editStack(stack);
+                }}
+              >
+                {getCaretPosition(this.props.editing.stack === stack.id)}
               </div>
-            </StackHeader>
+              <div
+                className="header"
+                onClick={() => {
+                  this.editStack(stack);
+                }}
+              >
+                Stack - {stack.getSetting("name", stack.id)}
+              </div>
+              <div className="actions">
+                <i
+                  className="fa fa-trash"
+                  onClick={() => {
+                    stack.remove(Source.User);
+                    this.props.edit(section.id);
+                  }}
+                />
+                <i
+                  className="fa fa-plus"
+                  onClick={() => {
+                    this.setState(() => ({ stack }));
+                  }}
+                />
+              </div>
+            </CategoryHeader>
             {this.props.editing.stack === stack.id && (
-              <StackContent>
-                <DataSetting entity={stack} type="input" label="Name" attr="settings.name" placeholder={stack.id} />
+              <CategoryContent>
+                <DataSetting entity={stack} type="input" label="Name" attr="settings.name" placeholder="Enter a stack name" />
                 <DataSetting
                   entity={stack}
                   type="select"
@@ -117,257 +173,116 @@ export class Sidebar extends React.Component<{
                   options={[{ label: "Relative", value: "relative" }, { label: "Absolute", value: "absolute" }, { label: "Sticky", value: "sticky" }]}
                 />
                 <StackLayout stack={stack} />
-                {this.renderComponents(stack)}
-              </StackContent>
+              </CategoryContent>
             )}
-          </StackContainer>
-        ))}
-        <StackContainer key="stack:add">
-          <StackHeader
-            style={{ textAlign: "center", cursor: "pointer" }}
-            onClick={() => {
-              const stack = section.addStack({}, Source.User);
-              this.props.edit(section.id, stack.id);
-            }}
-          >
-            <h1>Add Stack</h1>
-          </StackHeader>
-        </StackContainer>
-      </Stacks>
-    );
+          </Category>
+          {this.props.editing.stack === stack.id && this.renderComponents(stack)}
+        </React.Fragment>
+      );
+    });
   }
 
-  private renderComponents(stack?: Stack) {
-    return (
-      <Components>
-        {stack &&
-          stack.components.map(component => (
-            <ComponentContainer key={component.id}>
-              <ComponentHeader
+  private renderComponents(stack: Stack) {
+    return stack.components.map(component => {
+      return (
+        <Category key={component.id}>
+          <CategoryHeader className="blue">
+            <div
+              className="caret"
+              onClick={() => {
+                this.editComponent(component);
+              }}
+            >
+              {getCaretPosition(this.props.editing.component === component.id)}
+            </div>
+            <div
+              className="header"
+              onClick={() => {
+                this.editComponent(component);
+              }}
+            >
+              {this.getComponentIcon(component.type)} <span style={{ textTransform: "capitalize" }}>{component.type}</span> - {component.getSetting("name", component.id)}
+            </div>
+            <div className="actions">
+              <i
+                className="fa fa-trash"
                 onClick={() => {
-                  this.props.edit(stack.section.id, stack.id, this.props.editing.component === component.id ? "" : component.id);
+                  // stack.remove(Source.User);
+                  // this.props.edit(section.id);
                 }}
-              >
-                <h1>
-                  {component.getSetting("name", component.id)}
-                  <small>{component.type}</small>
-                </h1>
-                <div>
-                  <i className={`fa fa-caret-${this.props.editing.component === component.id ? "up" : "down"}`} />
-                </div>
-              </ComponentHeader>
-              {this.props.editing.component && this.renderComponent(component)}
-            </ComponentContainer>
-          ))}
-        {stack && (
-          <ComponentList>
-            <button
-              type="button"
-              onClick={() => {
-                stack.addComponent(
-                  {
-                    type: "text",
-                    style: {
-                      padding: "40px 20px"
-                    }
-                  },
-                  Source.User
-                );
-              }}
-            >
-              <i className="fa fa-font" /> <span>Text</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                stack.addComponent(
-                  {
-                    type: "image",
-                    settings: {
-                      src: "https://jdrf.org.uk/wp-content/uploads/2017/06/placeholder-image.jpg"
-                    },
-                    style: {
-                      maxWidth: "100%",
-                      height: "auto"
-                    }
-                  },
-                  Source.User
-                );
-              }}
-            >
-              <i className="fa fa-picture-o" /> <span>Image</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                stack.addComponent(
-                  {
-                    type: "youTube",
-                    settings: {
-                      id: "FnO6WjJHrGc"
-                    },
-                    style: {
-                      maxWidth: "100%",
-                      height: "auto"
-                    }
-                  },
-                  Source.User
-                );
-              }}
-            >
-              <i className="fa fa-youtube-play" /> <span>YouTube</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                stack.addComponent(
-                  {
-                    type: "overlay",
-                    settings: {
-                      type: "topToBottom",
-                      background: "rgba(0,0,0,.5)"
-                    }
-                  },
-                  Source.User
-                );
-              }}
-            >
-              <i className="fa fa-adjust" /> <span>Overlay</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                stack.addComponent(
-                  {
-                    type: "gallery",
-                    settings: {
-                      items: [
-                        {
-                          src: "https://images.unsplash.com/photo-1497431187953-886f6a75d2a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-                          transition: "none"
-                        },
-                        {
-                          src: "https://images.unsplash.com/photo-1547782793-e1444139967a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
-                          transition: "up"
-                        },
-                        {
-                          src: "https://images.unsplash.com/photo-1495887633121-f1156ca7f6a0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
-                          transition: "right"
-                        },
-                        {
-                          src: "https://images.unsplash.com/photo-1497048679117-1a29644559e3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
-                          transition: "down"
-                        },
-                        {
-                          src: "https://images.unsplash.com/photo-1517697471339-4aa32003c11a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1355&q=80",
-                          transition: "left"
-                        },
-                        {
-                          src: "https://images.unsplash.com/photo-1554726425-ac299472ae80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1329&q=80",
-                          transition: "fade"
-                        }
-                      ]
-                    }
-                  },
-                  Source.User
-                );
-              }}
-            >
-              <i className="fa fa-picture-o" /> <span>Gallery</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                stack.addComponent(
-                  {
-                    type: "reveal",
-                    settings: {
-                      items: [
-                        {
-                          src: "https://images.unsplash.com/photo-1497431187953-886f6a75d2a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-                          transition: "none"
-                        },
-                        {
-                          src: "https://images.unsplash.com/photo-1547782793-e1444139967a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
-                          transition: "up"
-                        },
-                        {
-                          src: "https://images.unsplash.com/photo-1495887633121-f1156ca7f6a0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
-                          transition: "right"
-                        },
-                        {
-                          src: "https://images.unsplash.com/photo-1497048679117-1a29644559e3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
-                          transition: "down"
-                        },
-                        {
-                          src: "https://images.unsplash.com/photo-1517697471339-4aa32003c11a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1355&q=80",
-                          transition: "left"
-                        },
-                        {
-                          src: "https://images.unsplash.com/photo-1554726425-ac299472ae80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1329&q=80",
-                          transition: "fade"
-                        }
-                      ]
-                    }
-                  },
-                  Source.User
-                );
-              }}
-            >
-              <i className="fa fa-eye" /> <span>Reveal</span>
-            </button>
-          </ComponentList>
-        )}
-      </Components>
-    );
+              />
+            </div>
+          </CategoryHeader>
+          {this.props.editing.component === component.id && <CategoryContent>{this.renderComponent(component)}</CategoryContent>}
+        </Category>
+      );
+    });
   }
 
   private renderComponent(component: Component) {
     switch (component.type) {
       case "image": {
         return (
-          <ComponentContent>
+          <ComponentSettings key={`settings-${component.id}`}>
             <ImageSettings component={component} />
-          </ComponentContent>
+          </ComponentSettings>
         );
       }
       case "youTube": {
         return (
-          <ComponentContent>
+          <ComponentSettings>
             <YouTubeSettings component={component} />
-          </ComponentContent>
+          </ComponentSettings>
         );
       }
       case "text": {
         return (
-          <ComponentContent>
+          <ComponentSettings>
             <TextSettings component={component} />
-          </ComponentContent>
+          </ComponentSettings>
         );
       }
       case "overlay": {
         return (
-          <ComponentContent>
+          <ComponentSettings>
             <OverlaySettings component={component} />
-          </ComponentContent>
+          </ComponentSettings>
         );
       }
       case "gallery": {
         return (
-          <ComponentContent>
+          <ComponentSettings>
             <GallerySettings component={component} />
-          </ComponentContent>
+          </ComponentSettings>
         );
       }
       case "reveal": {
         return (
-          <ComponentContent>
+          <ComponentSettings>
             <RevealSettings component={component} />
-          </ComponentContent>
+          </ComponentSettings>
         );
       }
     }
   }
+
+  private getComponentIcon(type: string) {
+    switch (type) {
+      case "image": {
+        return <i className="fa fa-image" style={{ marginRight: 5 }} />;
+      }
+      case "text": {
+        return <i className="fa fa-font" style={{ marginRight: 5 }} />;
+      }
+    }
+  }
+}
+
+function getCaretPosition(isActive: boolean) {
+  if (isActive) {
+    return <i className="fa fa-caret-down" />;
+  }
+  return <i className="fa fa-caret-right" />;
 }
 
 /*
@@ -378,14 +293,36 @@ export class Sidebar extends React.Component<{
 
 const Container = styled.div`
   position: relative;
-  background: #f6f6f6;
-  color: #262626;
-  border-left: 1px solid #ccc;
-  font-family: "Roboto", sans-serif;
+  background: ${Color.Background};
+  color: ${Color.Font};
+  border-left: 1px solid ${Color.Border};
+  font-size: ${Font.Size};
+  font-family: ${Font.Family};
+  width: 364px;
   height: 100vh;
 
-  overflow-y: scroll;
-  overflow-x: hidden;
+  i {
+    color: ${Color.Font};
+  }
+
+  button {
+    background: ${Color.BackgroundLight};
+    border: 1px solid ${Color.BorderLight};
+    color: ${Color.FontLight};
+    font-size: ${Font.Size};
+    padding: 10px;
+
+    cursor: pointer;
+
+    > i {
+      display: block;
+      font-size: 12px;
+    }
+
+    &:hover {
+      background: ${Color.BackgroundLightHover};
+    }
+  }
 `;
 
 /*
@@ -394,154 +331,70 @@ const Container = styled.div`
  |--------------------------------------------------------------------------------
  */
 
+const Categories = styled.div`
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: scroll;
+`;
+
 const Category = styled.div``;
 
 const CategoryHeader = styled.div`
-  position: relative;
+  display: grid;
+  grid-template-columns: 15px auto auto;
+  align-content: center;
 
-  background: #fafafa;
-  border-bottom: 1px solid #ccc;
-  padding: 6px 10px;
+  background: ${Color.BackgroundDark};
+  border-top: 1px solid ${Color.Border};
+  color: ${Color.Font};
 
-  > h1 {
-    display: inline;
-    font-size: 1.2em;
-    font-weight: 300;
+  &.blue {
+    background: ${Color.BackgroundBlue};
+    border-top: 1px solid ${Color.BorderLightBlue};
+    border-bottom: 1px solid ${Color.BorderDarkBlue};
+    color: ${Color.FontLight};
+    i {
+      color: ${Color.FontLight};
+    }
+  }
 
-    > small {
-      margin-left: 3px;
-      font-size: 68%;
-      font-weight: 400;
+  div {
+    padding: 8px;
+  }
+
+  .caret {
+    font-size: 12px;
+  }
+
+  .header {
+    font-family: -apple-system, BlinkMacSystemFont, proxima-nova, Roboto, Arial, sans-serif, Georgia, serif;
+    font-size: 12px;
+    font-weight: bold;
+
+    cursor: default;
+  }
+
+  .actions {
+    text-align: right;
+    i {
+      display: inline-block;
+      font-size: 12px;
+      margin-right: 12px;
+
+      &:last-child {
+        margin-right: 4px;
+      }
+
+      &:hover {
+        color: ${Color.FontLight};
+        cursor: pointer;
+      }
     }
   }
 `;
 
 const CategoryContent = styled.div`
-  border-bottom: 1px solid #ccc;
   padding: 10px;
-`;
-
-/*
- |--------------------------------------------------------------------------------
- | Stacks
- |--------------------------------------------------------------------------------
- */
-
-const Stacks = styled.div``;
-
-const StackContainer = styled.div``;
-
-const StackHeader = styled.div`
-  position: relative;
-
-  background: #f3f3f3;
-  border-bottom: 1px solid #ccc;
-  padding: 5px 10px;
-
-  > h1 {
-    display: inline;
-    font-size: 0.788em;
-    font-weight: 300;
-
-    > small {
-      margin-left: 3px;
-      font-size: 68%;
-      font-weight: 400;
-    }
-  }
-
-  > div {
-    float: right;
-  }
-`;
-
-const RemoveStack = styled.button`
-  background: none;
-  border: none;
-
-  margin-right: 10px;
-
-  cursor: pointer;
-  padding: 3px 6px;
-
-  i {
-    color: #e15a5a !important;
-    font-size: 0.73rem;
-  }
-
-  &:hover {
-    background: #e15a5a;
-    i {
-      color: #fff !important;
-    }
-  }
-`;
-
-const StackContent = styled.div`
-  border-bottom: 1px solid #ccc;
-  padding: 10px;
-`;
-
-/*
- |--------------------------------------------------------------------------------
- | Comopnents
- |--------------------------------------------------------------------------------
- */
-
-const Components = styled.div``;
-
-const ComponentContainer = styled.div``;
-
-const ComponentHeader = styled.div`
-  position: relative;
-
-  background: #f3f3f3;
-  border-bottom: 1px solid #ccc;
-  padding: 5px 10px;
-
-  > h1 {
-    display: inline;
-    font-size: 0.788em;
-    font-weight: 300;
-
-    > small {
-      margin-left: 3px;
-      font-size: 79%;
-      font-weight: 400;
-      text-transform: capitalize;
-    }
-  }
-
-  > div {
-    float: right;
-  }
-`;
-
-const ComponentContent = styled.div`
-  border-bottom: 1px solid #ccc;
-  padding: 10px;
-
-  > h1 {
-    border-bottom: 1px solid #ccc;
-    font-size: 0.77em;
-    font-weight: 300;
-    margin-top: 15px;
-    margin-bottom: 10px;
-  }
-`;
-
-const ComponentList = styled.div`
-  padding: 10px;
-
-  button {
-    padding: 10px;
-    margin: 5px;
-    width: calc(50% - 10px);
-
-    > span {
-      display: block;
-    }
-  }
 `;
 
 /*
@@ -549,6 +402,8 @@ const ComponentList = styled.div`
  | Misc
  |--------------------------------------------------------------------------------
  */
+
+const ComponentSettings = styled.div``;
 
 const NoSection = styled.div`
   display: flex;

@@ -46,14 +46,23 @@ export class Editor extends React.Component<
 
   constructor(props: any, state: any) {
     super(props, state);
-    this.state = {
-      ratio: JSON.parse(localStorage.getItem("viewport.ratio") || `{"name": "","width": "100%","height": "100%"}`),
-      editing: {
-        section: "",
-        stack: "",
-        component: ""
-      }
-    };
+
+    const page = router.params.get("page");
+
+    const cachedRatio = localStorage.getItem(`viewport.ratio.${page}`);
+    const cachedEditing = localStorage.getItem(`editing.${page}`);
+
+    let ratio = { name: "", width: "100%", height: "100%" };
+    if (cachedRatio) {
+      ratio = JSON.parse(cachedRatio);
+    }
+
+    let editing = { section: "", stack: "", component: "" };
+    if (cachedEditing) {
+      editing = JSON.parse(cachedEditing);
+    }
+
+    this.state = { ratio, editing };
   }
 
   /*
@@ -133,13 +142,13 @@ export class Editor extends React.Component<
    * @param component
    */
   private onEdit = (section: string, stack?: string, component?: string) => {
-    this.setState(() => ({
-      editing: {
-        section: section || "",
-        stack: stack || "",
-        component: component || ""
-      }
-    }));
+    const editing = {
+      section: section || "",
+      stack: stack || "",
+      component: component || ""
+    };
+    localStorage.setItem(`editing.${router.params.get("page")}`, JSON.stringify(editing));
+    this.setState(() => ({ editing }));
   };
 
   /**
@@ -151,7 +160,7 @@ export class Editor extends React.Component<
     if (this.content) {
       const ratio = ratioName === "" ? { width: 100, height: 100 } : fitAspect(this.content, ratioName);
       localStorage.setItem(
-        "viewport.ratio",
+        `viewport.ratio.${router.params.get("page")}`,
         JSON.stringify({
           name: ratioName,
           width: `${ratio.width}%`,

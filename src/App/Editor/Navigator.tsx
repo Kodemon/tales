@@ -122,6 +122,7 @@ const Sidebar = styled.div`
   background: #f6f6f6;
   border-right: 1px solid #ccc;
   font-family: "Roboto", sans-serif;
+  width: 40px;
 `;
 
 const Icons = styled.div``;

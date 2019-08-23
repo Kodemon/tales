@@ -121,17 +121,19 @@ export class StackLayout extends React.Component<
   public render() {
     return (
       <SettingGroupStacked>
-        <label
-          style={{ cursor: "pointer" }}
-          className="input"
-          onClick={() => {
-            this.setState(() => ({ show: !this.state.show }));
-          }}
-        >
-          Grid Layout
-          <i className={`fa fa-caret-${this.state.show ? "up" : "down"}`} style={{ float: "right", marginTop: 4 }} />
-        </label>
-        {this.state.show && this.renderSetting()}
+        <div className="header">
+          <i className={`fa fa-caret-${this.state.show ? "down" : "right"}`} />
+          <label
+            style={{ cursor: "pointer" }}
+            className="input"
+            onClick={() => {
+              this.setState(() => ({ show: !this.state.show }));
+            }}
+          >
+            Grid Layout
+          </label>
+        </div>
+        <div className="content">{this.state.show && this.renderSetting()}</div>
       </SettingGroupStacked>
     );
   }
