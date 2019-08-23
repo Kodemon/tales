@@ -25,6 +25,11 @@ export const aspectRatios = [
     name: "iPad Pro",
     ratio: [4, 3],
     decimal: 1.3333333333
+  },
+  {
+    name: "iPad Pro Landscape",
+    ratio: [3, 4],
+    decimal: 0.75
   }
 ];
 

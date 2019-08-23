@@ -141,6 +141,15 @@ export class Navbar extends React.Component<
                   this.props.setRatio("iPad Pro");
                 }}
               >
+                <i className="fa fa-tablet fa-rotate-270" style={{ fontSize: 19, marginRight: 0 }} />
+              </button>
+            </div>
+            <div className={this.props.ratio.name === "iPad Pro Landscape" ? "active" : ""}>
+              <button
+                onClick={() => {
+                  this.props.setRatio("iPad Pro Landscape");
+                }}
+              >
                 <i className="fa fa-tablet" style={{ fontSize: 19, marginRight: 0 }} />
               </button>
             </div>
