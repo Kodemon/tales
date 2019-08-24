@@ -15,7 +15,7 @@ class QRCode extends React.Component<{
 
   public componentDidMount() {
     if (this.props.page.conduit) {
-      qrcode.toCanvas(this.canvas, `https://distracted-yonath-9306b5.netlify.com/read/${this.props.page.id}?peer=${this.props.page.conduit.id}`, function(err: Error) {
+      qrcode.toCanvas(this.canvas, `https://tales.netlify.com/read/${this.props.page.id}?peer=${this.props.page.conduit.id}`, function(err: Error) {
         if (err) {
           console.error(err);
         }
