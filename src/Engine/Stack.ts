@@ -4,6 +4,7 @@ import { Image } from "./Components/Image";
 import { Overlay } from "./Components/Overlay";
 import { Reveal } from "./Components/Reveal";
 import { Text } from "./Components/Text";
+import { Vimeo } from "./Components/Vimeo";
 import { YouTube } from "./Components/YouTube";
 import { DataManager } from "./DataManager";
 import { Source } from "./Enums";
@@ -213,6 +214,9 @@ export class Stack extends DataManager<Data> {
       }
       case "youTube": {
         return YouTube;
+      }
+      case "vimeo": {
+        return Vimeo;
       }
       case "gallery": {
         return Gallery;

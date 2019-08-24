@@ -14,6 +14,7 @@ export async function handler(event: APIGatewayEvent, context: Context) {
     }
     await db.collection("pages").createIndex({ id: 1 }, { unique: true });
     await sendMessage("testing slack", config.slack.channels.info);
+    //  const page = await db.collection("pages").insertOne({ id: 1, title: "frank", timestamp: new Date() });
     return {
       statusCode: 200,
       body: config.app.name

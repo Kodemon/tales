@@ -18,6 +18,7 @@ import { ImageSettings } from "./Settings/Image";
 import { OverlaySettings } from "./Settings/Overlay";
 import { RevealSettings } from "./Settings/Reveal";
 import { TextSettings } from "./Settings/Text";
+import { VimeoSettings } from "./Settings/Vimeo";
 import { YouTubeSettings } from "./Settings/YouTube";
 import { Categories, Category, CategoryContent, CategoryHeader, Divider } from "./Styles";
 
@@ -246,6 +247,13 @@ export class Sidebar extends React.Component<
         return (
           <ComponentSettings>
             <YouTubeSettings component={component} />
+          </ComponentSettings>
+        );
+      }
+      case "vimeo": {
+        return (
+          <ComponentSettings>
+            <VimeoSettings component={component} />
           </ComponentSettings>
         );
       }

@@ -76,6 +76,27 @@ export const Components: React.SFC<{ stack?: Stack; close: () => void }> = funct
         onClick={() => {
           stack.addComponent(
             {
+              type: "vimeo",
+              settings: {
+                id: "352206373"
+              },
+              style: {
+                maxWidth: "100%",
+                height: "auto"
+              }
+            },
+            Source.User
+          );
+          close();
+        }}
+      >
+        <i className="fa fa-vimeo" /> <span>Vimeo</span>
+      </button>
+      <button
+        type="button"
+        onClick={() => {
+          stack.addComponent(
+            {
               type: "overlay",
               settings: {
                 type: "topToBottom",
