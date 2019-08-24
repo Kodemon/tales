@@ -1,5 +1,6 @@
 import * as React from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import * as ReactDOM from "react-dom";
 import styled from "styled-components";
 
 import { Source } from "Engine/Enums";
@@ -12,8 +13,8 @@ import { Color, Font } from "../Variables";
 import { aspectRatios } from "./Lib/AspectRatio/Aspects";
 import { getCaretPosition, getComponentIcon } from "./Lib/Utils";
 import { PageSettings } from "./Settings/Page";
-import { Categories, Category, CategoryContent, CategoryHeader, Divider, SettingGroup } from "./Styles";
-import { templates } from "./Templates";
+import { Category, CategoryHeader, SettingGroup } from "./Styles";
+import { TemplatePortal } from './Templates/Portal';
 
 export class Navigator extends React.Component<
   {
@@ -24,23 +25,29 @@ export class Navigator extends React.Component<
   {
     pane: string;
     ratio: string;
+    templates: boolean;
     expanded: {
       sections: Set<string>;
-      stacks: Set<string>;
     };
   }
-> {
+  > {
   constructor(props: any) {
     super(props);
     this.state = {
       pane: localStorage.getItem(`pane.${router.params.get("page")}`) || "",
       ratio: "",
+      templates: false,
       expanded: {
-        sections: new Set(),
-        stacks: new Set()
+        sections: new Set()
       }
     };
   }
+
+  /*
+   |--------------------------------------------------------------------------------
+   | Navigator States
+   |--------------------------------------------------------------------------------
+   */
 
   private setPane = (pane: string) => {
     if (this.state.pane === pane) {
@@ -62,15 +69,11 @@ export class Navigator extends React.Component<
     this.setState(() => ({ expanded: { ...this.state.expanded, sections } }));
   };
 
-  private expandStack = (id: string) => {
-    const stacks = this.state.expanded.stacks;
-    if (stacks.has(id)) {
-      stacks.delete(id);
-    } else {
-      stacks.add(id);
-    }
-    this.setState(() => ({ expanded: { ...this.state.expanded, stacks } }));
-  };
+  /*
+   |--------------------------------------------------------------------------------
+   | Drag n Drop Events
+   |--------------------------------------------------------------------------------
+   */
 
   private onDragEnd = ({ type, source, destination }: any) => {
     if (type === "SECTION") {
@@ -78,36 +81,59 @@ export class Navigator extends React.Component<
     }
   };
 
+  /*
+   |--------------------------------------------------------------------------------
+   | Template Portal
+   |--------------------------------------------------------------------------------
+   */
+
+  private showTemplates = () => {
+    this.setState(() => ({ pane: "", templates: true }));
+  }
+
+  private hideTemplates = () => {
+    this.setState(() => ({ templates: false }));
+  }
+
+  /*
+   |--------------------------------------------------------------------------------
+   | Renderer
+   |--------------------------------------------------------------------------------
+   */
+
   public render() {
     if (!this.props.page) {
       return <Sidebar style={{ gridArea: "navigation" }} />;
     }
     return (
-      <Sidebar style={{ gridArea: "navigation" }}>
-        <Icons>
-          <Icon
-            className={`fa fa-file-o${this.state.pane === "page" ? " active" : ""}`}
-            onClick={() => {
-              this.setPane("page");
-            }}
-          />
-          <Icon
-            className={`fa fa-align-left${this.state.pane === "sections" ? " active" : ""}`}
-            onClick={() => {
-              this.setPane("sections");
-            }}
-          />
-        </Icons>
-        {this.state.pane !== "" && (
-          <Pane>
-            <PaneBar />
-            <PaneContent>
-              {this.state.pane === "page" && this.renderPage()}
-              {this.state.pane === "sections" && this.renderSections(this.props.page.sections)}
-            </PaneContent>
-          </Pane>
-        )}
-      </Sidebar>
+      <React.Fragment>
+        <Sidebar style={{ gridArea: "navigation" }}>
+          <Icons>
+            <Icon
+              className={`fa fa-file-o${this.state.pane === "page" ? " active" : ""}`}
+              onClick={() => {
+                this.setPane("page");
+              }}
+            />
+            <Icon
+              className={`fa fa-align-left${this.state.pane === "sections" ? " active" : ""}`}
+              onClick={() => {
+                this.setPane("sections");
+              }}
+            />
+          </Icons>
+          {this.state.pane !== "" && (
+            <Pane>
+              <PaneBar />
+              <PaneContent>
+                {this.state.pane === "page" && this.renderPage()}
+                {this.state.pane === "sections" && this.renderSections(this.props.page.sections)}
+              </PaneContent>
+            </Pane>
+          )}
+        </Sidebar>
+        {this.state.templates && ReactDOM.createPortal(<TemplatePortal page={this.props.page} close={this.hideTemplates} />, document.getElementById("portal") as Element)}
+      </React.Fragment>
     );
   }
 
@@ -204,26 +230,11 @@ export class Navigator extends React.Component<
           )}
         </Droppable>
         <PaneButtons>
-          {templates.map(template => (
-            <button
-              onClick={() => {
-                const section = this.props.page.addSection(template.layout(), Source.User);
-                this.props.edit(section.id);
-              }}
-            >
-              Add {template.name} Section
-            </button>
-          ))}
-          <button
-            onClick={() => {
-              const section = this.props.page.addSection({}, Source.User);
-              this.props.edit(section.id);
-            }}
-          >
+          <button onClick={this.showTemplates}>
             Add Section
           </button>
         </PaneButtons>
-      </DragDropContext>
+      </DragDropContext >
     );
   }
 

@@ -188,7 +188,7 @@ export class Page extends EventEmitter {
     section.render();
 
     this.cache();
-    this.emit("refresh");
+    this.emit("edit", section.id);
 
     if (source === Source.User) {
       this.emit("edit", section);
