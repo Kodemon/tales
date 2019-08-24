@@ -19,6 +19,8 @@ export class Reveal extends Component {
 
   public offset: number;
 
+  public sprites: any[] = [];
+
   constructor(stack: Stack, data: any) {
     super(stack, data);
 
@@ -39,23 +41,24 @@ export class Reveal extends Component {
     this.scroller.className = "position-scroll_overlay";
     this.container.append(this.scroller);
 
-    this.page.on("loaded", () => {
-      enterView({
-        selector: [this.stack.element],
-        offset: 0,
-        progress: (el: any, progress: any) => {
-          events.emit("progress", this.id, progress);
-        }
-      });
+    enterView({
+      selector: [this.stack.element],
+      offset: 0,
+      progress: (el: any, progress: any) => {
+        events.emit("progress", this.id, progress);
+      }
     });
   }
 
-  private loadItems() {
+  private async loadItems() {
     const items = this.getSetting("items");
     const offset = (this.offset = items ? 1 / items.length : 1);
 
-    items.forEach((item: any, index: number) => {
-      const sprite = this.app.stage.addChild(PIXI.Sprite.from(item.src));
+    let index = 0;
+    for (const item of items) {
+      const sprite = this.app.stage.addChild(PIXI.Sprite.from(await getImage(item.src)));
+
+      this.sprites.push(sprite);
 
       setPixiBackground(
         {
@@ -76,6 +79,9 @@ export class Reveal extends Component {
             mask = new PIXI.Graphics();
             sprite.mask = mask;
             break;
+          }
+          case "fade": {
+            sprite.alpha = 0;
           }
         }
       }
@@ -126,7 +132,11 @@ export class Reveal extends Component {
           }
         }
       });
-    });
+
+      index += 1;
+    }
+
+    this.render();
   }
 
   public render() {
@@ -137,4 +147,45 @@ export class Reveal extends Component {
     this.app.view.width = viewport.width;
     this.app.view.height = viewport.height;
   }
+}
+
+/**
+ * Get image from url src.
+ *
+ * @param src
+ *
+ * @returns loaded image
+ */
+async function getImage(src: string) {
+  return new Promise(resolve => {
+    toDataURL(src, (data: any) => {
+      const image = new Image();
+      image.onload = function() {
+        resolve(image);
+      };
+      image.src = data;
+    });
+  });
+}
+
+/**
+ * Convert a url to a base64 string.
+ *
+ * @param url
+ * @param callback
+ *
+ * @returns base64 image
+ */
+function toDataURL(url: any, callback: any) {
+  const xhr = new XMLHttpRequest();
+  xhr.onload = function() {
+    const reader = new FileReader();
+    reader.onloadend = function() {
+      callback(reader.result);
+    };
+    reader.readAsDataURL(xhr.response);
+  };
+  xhr.open("GET", url);
+  xhr.responseType = "blob";
+  xhr.send();
 }

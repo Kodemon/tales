@@ -14,7 +14,7 @@ import { aspectRatios } from "./Lib/AspectRatio/Aspects";
 import { getCaretPosition, getComponentIcon } from "./Lib/Utils";
 import { PageSettings } from "./Settings/Page";
 import { Category, CategoryHeader, SettingGroup } from "./Styles";
-import { TemplatePortal } from './Templates/Portal';
+import { TemplatePortal } from "./Templates/Portal";
 
 export class Navigator extends React.Component<
   {
@@ -30,7 +30,7 @@ export class Navigator extends React.Component<
       sections: Set<string>;
     };
   }
-  > {
+> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -89,11 +89,11 @@ export class Navigator extends React.Component<
 
   private showTemplates = () => {
     this.setState(() => ({ pane: "", templates: true }));
-  }
+  };
 
   private hideTemplates = () => {
     this.setState(() => ({ templates: false }));
-  }
+  };
 
   /*
    |--------------------------------------------------------------------------------
@@ -121,6 +121,7 @@ export class Navigator extends React.Component<
                 this.setPane("sections");
               }}
             />
+            <Icon className="fa fa-plus" onClick={this.showTemplates} />
           </Icons>
           {this.state.pane !== "" && (
             <Pane>
@@ -230,11 +231,9 @@ export class Navigator extends React.Component<
           )}
         </Droppable>
         <PaneButtons>
-          <button onClick={this.showTemplates}>
-            Add Section
-          </button>
+          <button onClick={this.showTemplates}>Add Section</button>
         </PaneButtons>
-      </DragDropContext >
+      </DragDropContext>
     );
   }
 
