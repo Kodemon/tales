@@ -48,7 +48,7 @@ export class Vimeo extends Component {
   public render() {
     super.render();
     const id = this.getSetting("id", "352206373");
-    this.frame.src = `"https://player.vimeo.com/video/${id}`;
+    this.frame.src = `https://player.vimeo.com/video/${id}`;
 
     if (this.scroller) {
       this.scroller.remove();
