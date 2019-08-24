@@ -15,4 +15,9 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "same-origin"
     Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
-    
+
+# routing internally.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
