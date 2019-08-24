@@ -13,6 +13,7 @@ export async function handler(event: APIGatewayEvent, context: Context) {
       db = await mongodb();
     }
     await db.collection("pages").createIndex({ id: 1 }, { unique: true });
+    await sendMessage("testing slack", config.slack.channels.info);
     return {
       statusCode: 200,
       body: config.app.name
