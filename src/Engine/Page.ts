@@ -1,10 +1,9 @@
 import { EventEmitter } from "eventemitter3";
-import * as rndm from "rndm";
 
 import { Conduit } from "./Conduit";
 import { Source } from "./Enums";
 import { Section } from "./Section";
-import { insertElementAfter, moveArrayIndex } from "./Utils";
+import { generateId, insertElementAfter, moveArrayIndex } from "./Utils";
 import { viewport } from "./Viewport";
 
 export class Page extends EventEmitter {
@@ -172,7 +171,7 @@ export class Page extends EventEmitter {
    */
   public addSection(data: any, source: Source = Source.Silent) {
     const section = new Section(this, {
-      id: data.id || rndm.base62(10),
+      id: data.id || generateId(5, "s"),
       settings: data.settings || {},
       stacks: data.stacks || []
     });
@@ -188,11 +187,12 @@ export class Page extends EventEmitter {
     section.render();
 
     this.cache();
-    this.emit("edit", section.id);
 
     if (source === Source.User) {
-      this.emit("edit", section);
+      this.emit("edit", section.id);
       this.send("section:added", this.id, section.data);
+    } else {
+      this.emit("refresh");
     }
 
     return section;

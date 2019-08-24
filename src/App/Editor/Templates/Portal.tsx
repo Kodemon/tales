@@ -1,10 +1,10 @@
 import * as React from "react";
 import styled from "styled-components";
 
-import { Source } from 'Engine/Enums';
-import { Page } from 'Engine/Page';
+import { Source } from "Engine/Enums";
+import { Page } from "Engine/Page";
 
-import { Color, Font } from '../../Variables';
+import { Color, Font } from "../../Variables";
 import { templates } from "./";
 
 export class TemplatePortal extends React.Component<{
@@ -22,26 +22,30 @@ export class TemplatePortal extends React.Component<{
         </PortalMenu>
         <PortalContent>
           <Templates>
-            <TemplateCard key="blank" onClick={() => {
-              this.props.page.addSection({}, Source.User);
-              this.props.close();
-            }}>
+            <TemplateCard
+              key="blank"
+              onClick={() => {
+                this.props.page.addSection({}, Source.User);
+                this.props.close();
+              }}
+            >
               Blank Section
-                </TemplateCard>
-            {
-              templates.map(template => (
-                <TemplateCard key={template.name} onClick={() => {
+            </TemplateCard>
+            {templates.map(template => (
+              <TemplateCard
+                key={template.name}
+                onClick={() => {
                   this.props.page.addSection(template.layout(), Source.User);
                   this.props.close();
-                }}>
-                  {template.name}
-                </TemplateCard>
-              ))
-            }
+                }}
+              >
+                {template.name}
+              </TemplateCard>
+            ))}
           </Templates>
         </PortalContent>
       </Portal>
-    )
+    );
   }
 }
 
@@ -73,7 +77,7 @@ const Portal = styled.div`
  */
 
 const PortalMenu = styled.div`
-  display:grid;
+  display: grid;
   grid-template-columns: auto 200px;
   grid-template-areas: ". content";
 
