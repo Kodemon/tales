@@ -45,9 +45,9 @@ export class ColorPicker extends React.Component<
             <SketchPicker
               width={null}
               style={{ boxShadow: "none", background: "none" }}
-              color={this.props.effected.getStyle("background")}
+              color={this.props.effected.getSetting("background")}
               onChangeComplete={(color: any) => {
-                this.props.effected.setStyle("background", `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`, Source.User);
+                this.props.effected.setSetting("background", `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`, Source.User);
               }}
             />
           )}

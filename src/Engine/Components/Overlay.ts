@@ -19,7 +19,7 @@ export class Overlay extends Component {
   public render() {
     super.render();
 
-    const background = this.getStyle("background");
+    const background = this.getSetting("background");
     const borderWidth = this.getStyle("borderWidth");
 
     this.element.className = this.getSetting("sticky", false) ? "position-sticky" : "position-fixed";
@@ -34,22 +34,27 @@ export class Overlay extends Component {
     const type = this.getSetting("type");
     switch (type) {
       case "topToBottom": {
+        style.boxShadow = `none`;
         style.backgroundImage = `linear-gradient(0deg, ${background} 0%, transparent 100%)`;
         break;
       }
       case "bottomToTop": {
+        style.boxShadow = `none`;
         style.backgroundImage = `linear-gradient(180deg, ${background} 0%, transparent 100%)`;
         break;
       }
       case "rightToLeft": {
+        style.boxShadow = `none`;
         style.backgroundImage = `linear-gradient(90deg, ${background} 0%, transparent 100%)`;
         break;
       }
       case "leftToRight": {
+        style.boxShadow = `none`;
         style.backgroundImage = `linear-gradient(270deg, ${background} 0%, transparent 100%)`;
         break;
       }
       case "vignette": {
+        style.backgroundImage = `none`;
         style.boxShadow = `inset 0 0 25vmin 10vmin ${background}`;
         break;
       }
