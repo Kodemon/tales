@@ -30,6 +30,8 @@ export class Navigator extends React.Component<
     };
   }
 > {
+  private hovered = false;
+
   constructor(props: any) {
     super(props);
     this.state = {
@@ -41,6 +43,26 @@ export class Navigator extends React.Component<
       }
     };
   }
+
+  public componentDidMount() {
+    window.addEventListener("mouseup", this.checkHoverState);
+  }
+
+  public componentWillUnmount() {
+    window.removeEventListener("mouseup", this.checkHoverState);
+  }
+
+  /*
+   |--------------------------------------------------------------------------------
+   | Event Handlers
+   |--------------------------------------------------------------------------------
+   */
+
+  private checkHoverState = () => {
+    if (!this.hovered) {
+      this.setPane("");
+    }
+  };
 
   /*
    |--------------------------------------------------------------------------------
@@ -106,7 +128,7 @@ export class Navigator extends React.Component<
     }
     return (
       <React.Fragment>
-        <Sidebar style={{ gridArea: "navigation" }}>
+        <Sidebar style={{ gridArea: "navigation" }} onMouseEnter={() => (this.hovered = true)} onMouseLeave={() => (this.hovered = false)}>
           <Icons>
             <Icon
               className={`fa fa-file-o${this.state.pane === "page" ? " active" : ""}`}
