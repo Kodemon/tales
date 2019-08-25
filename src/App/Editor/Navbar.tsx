@@ -148,11 +148,13 @@ export class Navbar extends React.Component<
                 <i className="fa fa-eye" /> Preview
               </button>
             </div>
-            <div>
-              <button onClick={this.livePreview}>
-                <i className="fa fa-tablet" /> Live Preview
-              </button>
-            </div>
+            {this.props.page.conduit && (
+              <div>
+                <button onClick={this.livePreview}>
+                  <i className="fa fa-tablet" /> Live Preview
+                </button>
+              </div>
+            )}
           </div>
         </Container>
         {this.state.qrcode && ReactDOM.createPortal(<QRCode page={this.props.page} close={this.onClose} />, document.getElementById("modal") as Element)}
@@ -187,9 +189,11 @@ class QRCode extends React.Component<{
   public render() {
     return (
       <Modal>
-        <ModalContainer>
-          <canvas ref={c => (this.canvas = c)} />
-          <button onClick={this.props.close}>Close</button>
+        <ModalContainer style={{ width: 164, height: 215 }}>
+          <canvas style={{ marginTop: 3 }} ref={c => (this.canvas = c)} />
+          <button style={{ display: "block", margin: "0 auto", padding: "7px 16px" }} onClick={this.props.close}>
+            Close
+          </button>
         </ModalContainer>
       </Modal>
     );
@@ -198,8 +202,8 @@ class QRCode extends React.Component<{
 
 const Modal = styled.div`
   display: grid;
-  grid-template-columns: "1fr auto 1fr";
-  grid-template-rows: "1fr auto 1fr";
+  grid-template-columns: 1fr auto 1fr;
+  grid-template-rows: 1fr auto 1fr;
   grid-template-areas: ". . ." ". modal ." ". . .";
 
   height: 100vh;
@@ -208,6 +212,7 @@ const Modal = styled.div`
 const ModalContainer = styled.div`
   grid-area: modal;
   background: #fcfcfc;
+  border-radius: 3px;
 `;
 
 /*
