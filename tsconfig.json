@@ -4,7 +4,7 @@
     "strictPropertyInitialization": false,
     "module": "CommonJS",
     "target": "es5",
-    "lib": ["dom", "es2017", "esnext.asynciterable"],
+    "lib": ["webworker", "dom", "es2017", "esnext.asynciterable"],
     "sourceMap": true,
     "inlineSources": true,
     "jsx": "react",

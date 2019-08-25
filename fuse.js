@@ -51,6 +51,20 @@ context(
       }
       return app;
     }
+
+    async runWorker() {
+      const worker = FuseBox.init({
+        homeDir: "src/Worker",
+        output: "public/$name.js",
+        sourceMaps: !this.isProduction,
+        plugins: [this.isProduction && QuantumPlugin({ bakeApiIntoBundle: "worker", containedAPI: true })]
+      });
+      const workerBundle = worker.bundle("worker").instructions("> index.ts");
+      if (!this.isProduction) {
+        workerBundle.watch();
+      }
+      await worker.run();
+    }
   }
 );
 
@@ -76,8 +90,8 @@ task("clean", async () => {
  */
 
 task("default", ["clean"], async context => {
+  context.runWorker();
   const fuse = context.getConfig();
-  context.isProduction = false;
   fuse.dev({ port: process.env.PORT || 3000, fallback: "index.html" });
   context.createBundle(fuse);
   await fuse.run();
@@ -91,6 +105,7 @@ task("default", ["clean"], async context => {
 
 task("dist", ["clean"], async context => {
   context.isProduction = true;
+  context.runWorker();
   const fuse = context.getConfig();
   context.createBundle(fuse);
   await fuse.run();

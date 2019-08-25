@@ -5,6 +5,7 @@ import { Source } from "./Enums";
 import { Section } from "./Section";
 import { generateId, insertElementAfter, moveArrayIndex } from "./Utils";
 import { viewport } from "./Viewport";
+import { worker } from "./Worker";
 
 export class Page extends EventEmitter {
   /**
@@ -75,6 +76,10 @@ export class Page extends EventEmitter {
         this.emit("ready");
       }
     }, 100);
+
+    // worker.addEventListener("message", e => {
+    //   console.log(e.data);
+    // });
   }
 
   /*
