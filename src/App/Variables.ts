@@ -43,10 +43,14 @@ export enum Color {
 
   Font = "#d9d9d9",
   FontDark = "#979797",
-  FontLight = "#fdfdfd"
+  FontLight = "#fdfdfd",
+  FontBlue = "#3b79c3",
+  FontBlueHover = "#4786D1"
 }
 
 export enum Font {
   Family = "Arial, sans-serif, Georgia, serif",
+  FamilyRoboto = "'Roboto', sans-serif",
+  FamilyRobotoCondensed = "'Roboto Condensed', sans-serif",
   Size = "11px"
 }

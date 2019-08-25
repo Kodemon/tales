@@ -7,49 +7,6 @@ import { Page } from "Engine/Page";
 
 import { Color, Font } from "../Variables";
 
-class QRCode extends React.Component<{
-  page: Page;
-  close: () => void;
-}> {
-  private canvas: any;
-
-  public componentDidMount() {
-    if (this.props.page.conduit) {
-      qrcode.toCanvas(this.canvas, `https://tales.netlify.com/read/${this.props.page.id}?peer=${this.props.page.conduit.id}`, function(err: Error) {
-        if (err) {
-          console.error(err);
-        }
-        console.log("success!");
-      });
-    }
-  }
-
-  public render() {
-    return (
-      <Modal>
-        <ModalContainer>
-          <canvas ref={c => (this.canvas = c)} />
-          <button onClick={this.props.close}>Close</button>
-        </ModalContainer>
-      </Modal>
-    );
-  }
-}
-
-const Modal = styled.div`
-  display: grid;
-  grid-template-columns: "1fr auto 1fr";
-  grid-template-rows: "1fr auto 1fr";
-  grid-template-areas: ". . ." ". modal ." ". . .";
-
-  height: 100vh;
-`;
-
-const ModalContainer = styled.div`
-  grid-area: modal;
-  background: #fcfcfc;
-`;
-
 export class Navbar extends React.Component<
   {
     page: Page;
@@ -103,7 +60,22 @@ export class Navbar extends React.Component<
               {this.props.page.conduit ? (
                 <div className="button">
                   <span>
-                    <i className="fa fa-link" /> Peer ID | {this.props.page.conduit.id}
+                    <i className="fa fa-link" /> Peer ID | <span id="peer-id">{this.props.page.conduit.id}</span> |{" "}
+                    <a
+                      href="javascript:;"
+                      onClick={() => {
+                        const link = `/read/${this.props.page.id}?peer=${this.props.page.conduit!.id}`;
+                        const copy = document.createElement("textarea");
+                        copy.value = link;
+                        document.body.append(copy);
+                        copy.select();
+                        document.execCommand("copy");
+                        copy.remove();
+                        alert(`Copied '${link}' to your clipboard.`);
+                      }}
+                    >
+                      Copy
+                    </a>
                   </span>
                 </div>
               ) : this.state.connecting ? (
@@ -191,6 +163,55 @@ export class Navbar extends React.Component<
 
 /*
  |--------------------------------------------------------------------------------
+ | QR Code Modal
+ |--------------------------------------------------------------------------------
+ */
+
+class QRCode extends React.Component<{
+  page: Page;
+  close: () => void;
+}> {
+  private canvas: any;
+
+  public componentDidMount() {
+    if (this.props.page.conduit) {
+      qrcode.toCanvas(this.canvas, `https://tales.netlify.com/read/${this.props.page.id}?peer=${this.props.page.conduit.id}`, function(err: Error) {
+        if (err) {
+          console.error(err);
+        }
+        console.log("success!");
+      });
+    }
+  }
+
+  public render() {
+    return (
+      <Modal>
+        <ModalContainer>
+          <canvas ref={c => (this.canvas = c)} />
+          <button onClick={this.props.close}>Close</button>
+        </ModalContainer>
+      </Modal>
+    );
+  }
+}
+
+const Modal = styled.div`
+  display: grid;
+  grid-template-columns: "1fr auto 1fr";
+  grid-template-rows: "1fr auto 1fr";
+  grid-template-areas: ". . ." ". modal ." ". . .";
+
+  height: 100vh;
+`;
+
+const ModalContainer = styled.div`
+  grid-area: modal;
+  background: #fcfcfc;
+`;
+
+/*
+ |--------------------------------------------------------------------------------
  | Styled
  |--------------------------------------------------------------------------------
  */
@@ -206,6 +227,14 @@ const Container = styled.div`
 
   font-family: ${Font.Family};
   font-size: ${Font.Size};
+
+  a {
+    color: ${Color.FontLight};
+    text-decoration: none;
+    &:hover {
+      text-decoration: none;
+    }
+  }
 
   .left,
   .center,

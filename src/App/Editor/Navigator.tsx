@@ -10,10 +10,9 @@ import { Stack } from "Engine/Stack";
 
 import { router } from "../../Router";
 import { Color, Font } from "../Variables";
-import { aspectRatios } from "./Lib/AspectRatio/Aspects";
 import { getCaretPosition, getComponentIcon } from "./Lib/Utils";
 import { PageSettings } from "./Settings/Page";
-import { Category, CategoryHeader, SettingGroup } from "./Styles";
+import { Category, CategoryHeader } from "./Styles";
 import { TemplatePortal } from "./Templates/Portal";
 
 export class Navigator extends React.Component<
@@ -145,26 +144,6 @@ export class Navigator extends React.Component<
           <h1>Page</h1>
         </PaneHeader>
         <PageSettings page={this.props.page} />
-        <SettingGroup>
-          <label className="input">Screen Ratio</label>
-          <select
-            value={this.state.ratio}
-            onChange={event => {
-              const value = event.target.value;
-              this.setState(() => ({
-                ratio: value
-              }));
-              this.props.ratio(value);
-            }}
-          >
-            <option value="">All available</option>
-            {aspectRatios.map(a => (
-              <option key={a.name} value={a.name}>
-                {a.name}
-              </option>
-            ))}
-          </select>
-        </SettingGroup>
       </React.Fragment>
     );
   }
@@ -377,7 +356,7 @@ const PaneHeader = styled.div`
   }
 `;
 
-const PaneButtons = styled.div`
+export const PaneButtons = styled.div`
   padding: 10px;
   text-align: center;
 

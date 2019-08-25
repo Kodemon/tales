@@ -1,6 +1,7 @@
 import * as debug from "debug";
 import { EventEmitter } from "eventemitter3";
 import { Page } from "./Page";
+import { generateId } from "./Utils";
 
 const TIMEOUT = 5;
 
@@ -29,7 +30,7 @@ export class Conduit extends EventEmitter {
     super();
 
     this.page = page;
-    this.peer = new Peer();
+    this.peer = new Peer(generateId(5, "tlz"));
 
     this.load();
   }

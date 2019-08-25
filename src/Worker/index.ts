@@ -1,3 +1,4 @@
+/*
 let i = 0;
 
 function timedCount() {
@@ -7,3 +8,4 @@ function timedCount() {
 }
 
 timedCount();
+*/

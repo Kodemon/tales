@@ -2,6 +2,8 @@ import * as React from "react";
 
 import { Page } from "Engine/Page";
 
+import { Color, Font } from "../../Variables";
+import { PaneButtons } from "../Navigator";
 import { SettingGroup } from "../Styles";
 
 export const PageSettings: React.SFC<{
@@ -40,17 +42,17 @@ class ConduitSettings extends React.Component<{ page: Page }, { isConnecting: bo
   public render() {
     const page = this.props.page;
     if (this.state.isConnecting) {
-      return <div>Setting up page sharing, please hold...</div>;
+      return <div style={{ color: Color.Font, fontSize: Font.Size }}>Connecting...</div>;
     }
     if (page.conduit) {
       return (
         <React.Fragment>
           <SettingGroup>
-            <label className="input">Share ID</label>
-            <div className="read">{page.conduit.id}</div>
+            <label>Peer ID</label>
+            <div>{page.conduit.id}</div>
           </SettingGroup>
           <SettingGroup>
-            <label className="input">Connect</label>
+            <label>Connect</label>
             <input
               type="text"
               placeholder="Enter a share id"
@@ -61,8 +63,8 @@ class ConduitSettings extends React.Component<{ page: Page }, { isConnecting: bo
             />
           </SettingGroup>
           <SettingGroup>
-            <label className="input">Peers</label>
-            <div className="read">
+            <label>Peers</label>
+            <div>
               {Array.from(page.conduit.list).map((conn: any) => {
                 return <div key={conn.peer}>{conn.peer}</div>;
               })}
@@ -72,19 +74,21 @@ class ConduitSettings extends React.Component<{ page: Page }, { isConnecting: bo
       );
     }
     return (
-      <button
-        type="button"
-        onClick={() => {
-          this.setState(
-            () => ({ isConnecting: true }),
-            () => {
-              page.share();
-            }
-          );
-        }}
-      >
-        Share Page
-      </button>
+      <PaneButtons>
+        <button
+          type="button"
+          onClick={() => {
+            this.setState(
+              () => ({ isConnecting: true }),
+              () => {
+                page.share();
+              }
+            );
+          }}
+        >
+          Share Page
+        </button>
+      </PaneButtons>
     );
   }
 }

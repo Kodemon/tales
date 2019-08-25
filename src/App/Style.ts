@@ -4,6 +4,7 @@ export const Viewport = styled.div`
   position: relative;
   grid-area: viewport;
 
+  background: #f6f6f6;
   border: 1px solid #57b3e4;
 
   overflow-y: scroll;

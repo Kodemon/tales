@@ -4,7 +4,8 @@ import styled from "styled-components";
 import { Source } from "Engine/Enums";
 import { Page } from "Engine/Page";
 
-import { Color, Font } from "../../Variables";
+import { Color } from "../../Variables";
+import { Portal, PortalContent, PortalMenu, PortalMenuContent, PortalMenuDivider, PortalMenuHeader, PortalMenuItem } from "../Styles/Portal";
 import { templates } from "./";
 
 export class TemplatePortal extends React.Component<{
@@ -18,6 +19,10 @@ export class TemplatePortal extends React.Component<{
           <PortalMenuContent>
             <PortalMenuHeader>Section Templates</PortalMenuHeader>
             <PortalMenuItem active={true}>General</PortalMenuItem>
+            <PortalMenuDivider />
+            <PortalMenuItem blue={true} noHover={true} onClick={this.props.close}>
+              Close
+            </PortalMenuItem>
           </PortalMenuContent>
         </PortalMenu>
         <PortalContent>
@@ -48,80 +53,6 @@ export class TemplatePortal extends React.Component<{
     );
   }
 }
-
-/*
- |--------------------------------------------------------------------------------
- | Portal Styled
- |--------------------------------------------------------------------------------
- */
-
-const Portal = styled.div`
-  display: grid;
-  grid-template-columns: 2fr 4fr;
-
-  position: fixed;
-  top: 0;
-  left: 0;
-
-  background: ${Color.BackgroundDark};
-  width: 100vw;
-  height: 100vh;
-
-  font-family: ${Font.Family};
-`;
-
-/*
- |--------------------------------------------------------------------------------
- | Portal Menu Styled
- |--------------------------------------------------------------------------------
- */
-
-const PortalMenu = styled.div`
-  display: grid;
-  grid-template-columns: auto 200px;
-  grid-template-areas: ". content";
-
-  background: ${Color.Background};
-`;
-
-const PortalMenuContent = styled.div`
-  grid-area: content;
-
-  padding: 40px 20px;
-  min-height: 100vh;
-  width: 100%;
-`;
-
-const PortalMenuHeader = styled.div`
-  color: ${Color.FontDark};
-  font-weight: bold;
-  font-size: 11px;
-  text-transform: uppercase;
-  margin-bottom: 6px;
-  padding: 6px 10px;
-`;
-
-const PortalMenuItem = styled.div<{ active?: boolean }>`
-  background: ${Color.BackgroundLight};
-  border-radius: 3px;
-  color: ${Color.FontLight};
-  padding: 6px 10px;
-
-  &:hover {
-    background: ${Color.BackgroundLightHover};
-    cursor: pointer;
-  }
-`;
-
-/*
- |--------------------------------------------------------------------------------
- | Portal Content Styled
- |--------------------------------------------------------------------------------
- */
-
-const PortalContent = styled.div`
-  padding: 40px;
-`;
 
 /*
  |--------------------------------------------------------------------------------

@@ -66,6 +66,11 @@ export const SettingGroup = styled.div<{ columns?: string }>`
   font-size: ${Font.Size};
   padding: 4px 0;
 
+  > label,
+  > div {
+    color: ${Color.Font};
+  }
+
   > input,
   select {
     background: ${Color.BackgroundDark};
