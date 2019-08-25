@@ -52,6 +52,8 @@ export class Stack extends DataManager<Data> {
     this.element.id = data.id;
     this.element.setAttribute("data-type", "stack");
 
+    setStyle(this.element, { pointerEvents: "none" });
+
     for (const data of this.data.components) {
       const Component = this.getComponentClass(data.type);
       if (Component) {
@@ -246,6 +248,9 @@ export class Stack extends DataManager<Data> {
       }
       case "absolute": {
         this.element.className = "position-absolute";
+        setStyle(this.element, {
+          top: "0px"
+        });
         break;
       }
     }

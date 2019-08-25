@@ -30,6 +30,8 @@ export class Text extends Component {
     this.area.append((this.element = document.createElement("article")));
     this.element.id = data.id;
 
+    setStyle(this.element, { pointerEvents: "auto" });
+
     if (this.editing) {
       this.loadQuill();
     }

@@ -34,6 +34,8 @@ export class Gallery extends Component {
     this.element.onclick = () => {
       this.edit();
     };
+
+    setStyle(this.element, { pointerEvents: "auto" });
   }
 
   public render() {

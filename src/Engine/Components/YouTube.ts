@@ -30,6 +30,7 @@ export class YouTube extends Component {
     this.element.id = data.id;
 
     setStyle(this.element, {
+      pointerEvents: "auto",
       position: "relative",
       paddingBottom: "56.25%" /* 16:9 */,
       height: 0

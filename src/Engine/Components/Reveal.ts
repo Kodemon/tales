@@ -48,6 +48,8 @@ export class Reveal extends Component {
         events.emit("progress", this.id, progress);
       }
     });
+
+    setStyle(this.element, { pointerEvents: "auto" });
   }
 
   private async loadItems() {

@@ -58,6 +58,8 @@ export class Component extends DataManager<Data> {
       this.edit();
     };
 
+    setStyle(this.area, { pointerEvents: "none" });
+
     this.stack.element.append(this.area);
   }
 

@@ -34,6 +34,8 @@ export class Image extends Component {
       this.edit();
     };
     this.element.append(this.image);
+
+    setStyle(this.element, { pointerEvents: "auto" });
   }
 
   public render() {

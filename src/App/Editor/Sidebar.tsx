@@ -33,18 +33,19 @@ export class Sidebar extends React.Component<
     edit: (section?: string, stack?: string, component?: string) => void;
   },
   {
+    showComponents: boolean;
     stack?: Stack;
   }
 > {
   constructor(props: any) {
     super(props);
     this.state = {
-      stack: undefined
+      showComponents: false
     };
   }
 
-  private onClose = () => {
-    this.setState(() => ({ stack: undefined }));
+  private toggleComponents = (stack?: Stack) => {
+    this.setState(() => ({ showComponents: !this.state.showComponents, stack }));
   };
 
   private editStack = (stack: Stack) => {
@@ -76,7 +77,7 @@ export class Sidebar extends React.Component<
     }
     return (
       <Container key={`section-${section.id}`} style={{ gridArea: "sidebar" }}>
-        <Components stack={this.state.stack} close={this.onClose} />
+        {this.state.showComponents && <Components section={section} stack={this.state.stack} edit={this.props.edit} close={this.toggleComponents} />}
         <Categories>
           <Category>
             <CategoryContent>
@@ -112,13 +113,7 @@ export class Sidebar extends React.Component<
               </div>
               <div className="header">Stacks</div>
               <div className="actions">
-                <i
-                  className="fa fa-plus"
-                  onClick={() => {
-                    const stack = section.addStack({}, Source.User);
-                    this.props.edit(section.id, stack.id);
-                  }}
-                />
+                <i className="fa fa-plus" onClick={() => this.toggleComponents()} />
               </div>
             </CategoryHeader>
           </Category>
@@ -167,12 +162,7 @@ export class Sidebar extends React.Component<
                     this.props.edit(section.id);
                   }}
                 />
-                <i
-                  className="fa fa-plus"
-                  onClick={() => {
-                    this.setState(() => ({ stack }));
-                  }}
-                />
+                <i className="fa fa-plus" onClick={() => this.toggleComponents(stack)} />
               </div>
             </CategoryHeader>
             {this.props.editing.stack === stack.id && (

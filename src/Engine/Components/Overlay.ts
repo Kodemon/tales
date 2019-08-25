@@ -14,6 +14,7 @@ export class Overlay extends Component {
     this.element.onclick = () => {
       this.edit();
     };
+    setStyle(this.element, { pointerEvents: "none" });
   }
 
   public render() {
