@@ -7,6 +7,8 @@ import { Page } from "Engine/Page";
 import { router } from "../../Router";
 import { Viewport } from "../Style";
 import { Color, Font } from "../Variables";
+import { modal } from "./Components/Modal";
+import { portal } from "./Components/Portal";
 import { fitAspect } from "./Lib/AspectRatio";
 import { Navbar } from "./Navbar";
 import { Navigator } from "./Navigator";
@@ -194,24 +196,28 @@ export class Editor extends React.Component<
 
   public render() {
     return (
-      <Wrapper>
-        <Navbar page={this.page} ratio={this.state.ratio} edit={this.onEdit} setRatio={this.setRatio} />
-        <Navigator page={this.page} edit={this.onEdit} ratio={this.setRatio} />
-        <Content
-          ref={c => (this.content = c)}
-          style={{
-            gridArea: "content",
-            gridTemplateColumns: `auto ${this.state.ratio.width} auto`,
-            gridTemplateRows: `auto ${this.state.ratio.height} auto`,
-            padding: "26px",
-            height: `calc(100vh - 35px)`
-          }}
-        >
-          <Toolbar id="toolbar" />
-          <Viewport ref={c => (this.viewport = c)} />
-        </Content>
-        <Sidebar page={this.page} editing={this.state.editing} edit={this.onEdit} />
-      </Wrapper>
+      <React.Fragment>
+        <Wrapper>
+          <Navbar page={this.page} ratio={this.state.ratio} edit={this.onEdit} setRatio={this.setRatio} />
+          <Navigator page={this.page} edit={this.onEdit} ratio={this.setRatio} />
+          <Content
+            ref={c => (this.content = c)}
+            style={{
+              gridArea: "content",
+              gridTemplateColumns: `auto ${this.state.ratio.width} auto`,
+              gridTemplateRows: `auto ${this.state.ratio.height} auto`,
+              padding: "26px",
+              height: `calc(100vh - 35px)`
+            }}
+          >
+            <Toolbar id="toolbar" />
+            <Viewport ref={c => (this.viewport = c)} />
+          </Content>
+          <Sidebar page={this.page} editing={this.state.editing} edit={this.onEdit} />
+        </Wrapper>
+        {portal.render()}
+        {modal.render()}
+      </React.Fragment>
     );
   }
 }

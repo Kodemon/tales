@@ -89,6 +89,7 @@ export const Viewport = styled.div`
     line-height: inherit;
     overflow: visible;
     height: auto;
+    padding: 0;
   }
 
   .ql-tooltip {

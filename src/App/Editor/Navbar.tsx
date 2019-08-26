@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { Page } from "Engine/Page";
 
 import { Color, Font } from "../Variables";
+import { modal } from "./Components/Modal";
 
 export class Navbar extends React.Component<
   {
@@ -16,33 +17,17 @@ export class Navbar extends React.Component<
   },
   {
     connecting: boolean;
-    qrcode: boolean;
   }
 > {
   constructor(props: any) {
     super(props);
     this.state = {
-      connecting: false,
-      qrcode: false
+      connecting: false
     };
   }
 
   private livePreview = () => {
-    this.setState(
-      () => ({ qrcode: true }),
-      () => {
-        document.getElementById("app")!.className = "blur";
-      }
-    );
-  };
-
-  private onClose = () => {
-    this.setState(
-      () => ({ qrcode: false }),
-      () => {
-        document.getElementById("app")!.className = "";
-      }
-    );
+    modal.open(<QRCode page={this.props.page} />);
   };
 
   public render() {
@@ -157,7 +142,6 @@ export class Navbar extends React.Component<
             )}
           </div>
         </Container>
-        {this.state.qrcode && ReactDOM.createPortal(<QRCode page={this.props.page} close={this.onClose} />, document.getElementById("modal") as Element)}
       </React.Fragment>
     );
   }
@@ -171,7 +155,6 @@ export class Navbar extends React.Component<
 
 class QRCode extends React.Component<{
   page: Page;
-  close: () => void;
 }> {
   private canvas: any;
 
@@ -188,32 +171,15 @@ class QRCode extends React.Component<{
 
   public render() {
     return (
-      <Modal>
-        <ModalContainer style={{ width: 164, height: 215 }}>
-          <canvas style={{ marginTop: 3 }} ref={c => (this.canvas = c)} />
-          <button style={{ display: "block", margin: "0 auto", padding: "7px 16px" }} onClick={this.props.close}>
-            Close
-          </button>
-        </ModalContainer>
-      </Modal>
+      <React.Fragment>
+        <canvas style={{ marginTop: 3 }} ref={c => (this.canvas = c)} />
+        <button style={{ display: "block", margin: "0 auto", padding: "7px 16px" }} onClick={modal.close}>
+          Close
+        </button>
+      </React.Fragment>
     );
   }
 }
-
-const Modal = styled.div`
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  grid-template-rows: 1fr auto 1fr;
-  grid-template-areas: ". . ." ". modal ." ". . .";
-
-  height: 100vh;
-`;
-
-const ModalContainer = styled.div`
-  grid-area: modal;
-  background: #fcfcfc;
-  border-radius: 3px;
-`;
 
 /*
  |--------------------------------------------------------------------------------

@@ -5,22 +5,21 @@ import { Source } from "Engine/Enums";
 import { Page } from "Engine/Page";
 
 import { Color } from "../../Variables";
-import { Portal, PortalContent, PortalMenu, PortalMenuContent, PortalMenuDivider, PortalMenuHeader, PortalMenuItem } from "../Styles/Portal";
+import { portal, PortalContent, PortalMenu, PortalMenuContent, PortalMenuDivider, PortalMenuHeader, PortalMenuItem } from "../Components/Portal";
 import { templates } from "./";
 
 export class TemplatePortal extends React.Component<{
   page: Page;
-  close: () => void;
 }> {
   public render() {
     return (
-      <Portal>
+      <React.Fragment>
         <PortalMenu>
           <PortalMenuContent>
             <PortalMenuHeader>Section Templates</PortalMenuHeader>
             <PortalMenuItem active={true}>General</PortalMenuItem>
             <PortalMenuDivider />
-            <PortalMenuItem blue={true} noHover={true} onClick={this.props.close}>
+            <PortalMenuItem blue={true} noHover={true} onClick={portal.close}>
               Close
             </PortalMenuItem>
           </PortalMenuContent>
@@ -31,7 +30,7 @@ export class TemplatePortal extends React.Component<{
               key="blank"
               onClick={() => {
                 this.props.page.addSection({}, Source.User);
-                this.props.close();
+                portal.close();
               }}
             >
               Blank Section
@@ -41,7 +40,7 @@ export class TemplatePortal extends React.Component<{
                 key={template.name}
                 onClick={() => {
                   this.props.page.addSection(template.layout(), Source.User);
-                  this.props.close();
+                  portal.close();
                 }}
               >
                 {template.name}
@@ -49,7 +48,7 @@ export class TemplatePortal extends React.Component<{
             ))}
           </Templates>
         </PortalContent>
-      </Portal>
+      </React.Fragment>
     );
   }
 }

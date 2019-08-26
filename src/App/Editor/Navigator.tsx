@@ -1,6 +1,6 @@
 import * as React from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import * as ReactDOM from "react-dom";
+import * as Dropzone from "react-dropzone";
 import styled from "styled-components";
 
 import { Source } from "Engine/Enums";
@@ -10,6 +10,7 @@ import { Stack } from "Engine/Stack";
 
 import { router } from "../../Router";
 import { Color, Font } from "../Variables";
+import { portal } from "./Components/Portal";
 import { getCaretPosition, getComponentIcon } from "./Lib/Utils";
 import { PageSettings } from "./Settings/Page";
 import { Category, CategoryHeader } from "./Styles";
@@ -24,7 +25,6 @@ export class Navigator extends React.Component<
   {
     pane: string;
     ratio: string;
-    templates: boolean;
     expanded: {
       sections: Set<string>;
     };
@@ -37,7 +37,6 @@ export class Navigator extends React.Component<
     this.state = {
       pane: localStorage.getItem(`pane.${router.params.get("page")}`) || "",
       ratio: "",
-      templates: false,
       expanded: {
         sections: new Set()
       }
@@ -62,6 +61,10 @@ export class Navigator extends React.Component<
     if (!this.hovered) {
       this.setPane("");
     }
+  };
+
+  private openSectionTemplates = () => {
+    portal.open(<TemplatePortal page={this.props.page} />);
   };
 
   /*
@@ -104,20 +107,6 @@ export class Navigator extends React.Component<
 
   /*
    |--------------------------------------------------------------------------------
-   | Template Portal
-   |--------------------------------------------------------------------------------
-   */
-
-  private showTemplates = () => {
-    this.setState(() => ({ pane: "", templates: true }));
-  };
-
-  private hideTemplates = () => {
-    this.setState(() => ({ templates: false }));
-  };
-
-  /*
-   |--------------------------------------------------------------------------------
    | Renderer
    |--------------------------------------------------------------------------------
    */
@@ -142,7 +131,13 @@ export class Navigator extends React.Component<
                 this.setPane("sections");
               }}
             />
-            <Icon className="fa fa-plus" onClick={this.showTemplates} />
+            <Icon
+              className={`fa fa-folder-open-o${this.state.pane === "assets" ? " active" : ""}`}
+              onClick={() => {
+                this.setPane("assets");
+              }}
+            />
+            <Icon className="fa fa-plus" onClick={this.openSectionTemplates} />
           </Icons>
           {this.state.pane !== "" && (
             <Pane>
@@ -150,11 +145,11 @@ export class Navigator extends React.Component<
               <PaneContent>
                 {this.state.pane === "page" && this.renderPage()}
                 {this.state.pane === "sections" && this.renderSections(this.props.page.sections)}
+                {this.state.pane === "assets" && this.renderAssets()}
               </PaneContent>
             </Pane>
           )}
         </Sidebar>
-        {this.state.templates && ReactDOM.createPortal(<TemplatePortal page={this.props.page} close={this.hideTemplates} />, document.getElementById("portal") as Element)}
       </React.Fragment>
     );
   }
@@ -232,7 +227,7 @@ export class Navigator extends React.Component<
           )}
         </Droppable>
         <PaneButtons>
-          <button onClick={this.showTemplates}>Add Section</button>
+          <button onClick={this.openSectionTemplates}>Add Section</button>
         </PaneButtons>
       </DragDropContext>
     );
@@ -268,6 +263,17 @@ export class Navigator extends React.Component<
           </li>
         ))}
       </EntityList>
+    );
+  }
+
+  private renderAssets() {
+    return (
+      <React.Fragment>
+        <PaneHeader>
+          <h1>Assets</h1>
+        </PaneHeader>
+        <PaneContent></PaneContent>
+      </React.Fragment>
     );
   }
 }
@@ -332,8 +338,9 @@ const Pane = styled.div`
   right: -280px;
   bottom: 0;
 
+  border-right: 1px solid ${Color.Border};
   width: 280px;
-  z-index: 99;
+  z-index: 2;
 `;
 
 const PaneBar = styled.div`
@@ -348,7 +355,6 @@ const PaneContent = styled.div`
   grid-area: content;
 
   background: ${Color.Background};
-  border-right: 1px solid ${Color.Border};
 `;
 
 const PaneHeader = styled.div`
