@@ -1,5 +1,6 @@
 import { darken, lighten, transparentize } from "polished";
 import styled from "styled-components";
+import { Color } from "../../../Variables";
 
 export const colors = {
   primary: "#222",
@@ -9,7 +10,7 @@ export const colors = {
 export const Container = styled.div`
   width: 100%;
   height: auto;
-  padding: 0 12px 7px;
+  padding: 12px 0 0;
 `;
 
 export const StyledSidebar = styled.div`
@@ -39,6 +40,7 @@ export const SvgGrid = styled.svg`
   left: 0;
   width: 100%;
   height: 100%;
+  border: 1px solid ${Color.BorderLight};
 `;
 
 export const SvgText = styled.text`
@@ -51,7 +53,7 @@ export const SvgText = styled.text`
 `;
 
 export const SvgLine = styled.line`
-  stroke: ${darken(0.01, "#eee")};
+  stroke: ${Color.BorderLight};
   stroke-width: 1px;
 `;
 
@@ -66,16 +68,21 @@ export const StyledPreview = styled.div<{ width: number; height: number; tpl: st
   height: 100%;
 `;
 
-export const StyledTrack = styled.div<{ area: string; grabbing?: boolean }>`
+export const StyledTrack = styled.div<{ area: string; grabbing?: boolean; isActive: boolean }>`
   position: relative;
   width: 100%;
   height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   grid-area: ${props => props.area};
   cursor: ${props => (props.grabbing ? "grabbing" : "grab")};
-  background: ${transparentize(0.97, colors.secondary)};
+  background: ${({ isActive }) => (isActive ? Color.BackgroundBlue : Color.BackgroundDark)};
+  color: ${({ isActive }) => (isActive ? Color.FontLight : Color.Font)};
 `;
 
-export const StyledHandler = styled.div<{ position: string; size: string }>`
+export const StyledHandler = styled.div<{ position: string; size: string; isActive: boolean }>`
   position: absolute;
   top: ${({ position }) => (position === "bottom" ? "auto" : 0)};
   right: ${({ position }) => (position === "left" ? "auto" : 0)};
@@ -84,7 +91,15 @@ export const StyledHandler = styled.div<{ position: string; size: string }>`
   width: ${({ position, size }) => (position === "left" || position === "right" ? size : "100%")};
   height: ${({ position, size }) => (position === "top" || position === "bottom" ? size : "100%")};
   cursor: ${({ position }) => (position === "left" || position === "right" ? "col-resize" : "row-resize")};
-  background: #fff;
+  background: ${({ isActive }) => (isActive ? "blue" : "grey")};
+  ${({ isActive }) =>
+    isActive
+      ? `
+  background: ${Color.BorderLightBlue};
+  `
+      : `
+  background: ${Color.Border};
+`}
 `;
 
 export const StyledHint = styled.div`
@@ -194,4 +209,21 @@ export const ComponentDetails = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+export const ActionGroup = styled.div`
+  display: flex;
+  height: 32px;
+  padding: 4px;
+  width: 160px;
+  justify-content: space-evenly;
+  align-content: space-between;
+`;
+
+export const ActionButton = styled.button`
+  background: none;
+  border-radius: 24px;
+  width: 50px;
+  height: 24px;
+  padding: 0 !important;
 `;

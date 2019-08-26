@@ -209,3 +209,20 @@ export const Divider = styled.div`
   border-top: 1px solid ${Color.BorderLight};
   margin: 8px 0;
 `;
+
+export const ActionGroup = styled.div`
+  display: flex;
+  height: 32px;
+  padding: 4px;
+  width: 100px;
+  justify-content: space-evenly;
+  align-content: space-between;
+`;
+
+export const ActionButton = styled.button`
+  background: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  padding: 0 !important;
+`;

@@ -137,7 +137,7 @@ export class Sidebar extends React.Component<
       return (
         <React.Fragment key={stack.id}>
           <Category>
-            <CategoryHeader>
+            <CategoryHeader className={this.props.editing.stack === stack.id ? "blue" : ""}>
               <div
                 className="caret"
                 onClick={() => {
@@ -152,7 +152,7 @@ export class Sidebar extends React.Component<
                   this.editStack(stack);
                 }}
               >
-                {stack.getSetting("name", stack.id)}
+                {stack.getSetting("name", stack.id)} Stack
               </div>
               <div className="actions">
                 <i
@@ -168,7 +168,7 @@ export class Sidebar extends React.Component<
             {this.props.editing.stack === stack.id && (
               <CategoryContent>
                 <DataGroup>
-                  <DataSetting entity={stack} type="input" label="Stack" attr="settings.name" placeholder="Enter a stack name" />
+                  <DataSetting entity={stack} type="input" label="Name" attr="settings.name" placeholder="Enter a stack name" />
                   <DataSetting
                     entity={stack}
                     type="select"
@@ -177,7 +177,7 @@ export class Sidebar extends React.Component<
                     options={[{ label: "Relative", value: "relative" }, { label: "Absolute", value: "absolute" }, { label: "Sticky", value: "sticky" }]}
                   />
                 </DataGroup>
-                <StackLayout stack={stack} />
+                <StackLayout stack={stack} editing={this.props.editing} edit={this.props.edit} />
               </CategoryContent>
             )}
           </Category>
@@ -189,38 +189,7 @@ export class Sidebar extends React.Component<
 
   private renderComponents(stack: Stack) {
     return stack.components.map(component => {
-      return (
-        <Category key={component.id}>
-          <CategoryHeader className="blue">
-            <div
-              className="caret"
-              onClick={() => {
-                this.editComponent(component);
-              }}
-            >
-              {getCaretPosition(this.props.editing.component === component.id)}
-            </div>
-            <div
-              className="header"
-              onClick={() => {
-                this.editComponent(component);
-              }}
-            >
-              {getComponentIcon(component.type)} <span style={{ textTransform: "capitalize" }}>{component.type}</span> - {component.getSetting("name", component.id)}
-            </div>
-            <div className="actions">
-              <i
-                className="fa fa-trash"
-                onClick={() => {
-                  component.remove(Source.User);
-                  this.props.edit(component.section.id, component.stack.id);
-                }}
-              />
-            </div>
-          </CategoryHeader>
-          {this.props.editing.component === component.id && <CategoryContent>{this.renderComponent(component)}</CategoryContent>}
-        </Category>
-      );
+      return <Category key={component.id}>{this.props.editing.component === component.id && <CategoryContent>{this.renderComponent(component)}</CategoryContent>}</Category>;
     });
   }
 
@@ -229,7 +198,7 @@ export class Sidebar extends React.Component<
       case "image": {
         return (
           <ComponentSettings key={`settings-${component.id}`}>
-            <ImageSettings component={component} />
+            <ImageSettings component={component} edit={this.props.edit} />
           </ComponentSettings>
         );
       }

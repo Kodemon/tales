@@ -38,8 +38,8 @@ export const rect = ({ column = { start: 1, end: 1, span: 0 }, row = { start: 1,
 
 export const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
 
-export function integer(value: string, previous: number, min: number, max: number) {
-  const int = parseInt(value);
+export function integer(value: string | number, previous: number, min: number, max: number) {
+  const int = typeof value === "string" ? parseInt(value) : value;
   const safe = isNaN(int) ? previous : clamp(int, min, max);
 
   return safe;

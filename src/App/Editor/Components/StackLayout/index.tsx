@@ -6,8 +6,10 @@ import { SettingGroupStacked } from "../../Styles";
 
 import { GridPreview } from "./GridPreview";
 import { grid, template } from "./Parser";
+import { maxColumnEnd, maxColumnStart, maxRowEnd, maxRowStart, minColumnEnd, minColumnStart, minRowEnd, minRowStart } from "./Parser/Bounds";
 import { integer } from "./Parser/Types";
 import { Preview } from "./Preview";
+import { ActionButton, ActionGroup } from "./Styles";
 import { Text } from "./Text";
 
 import {
@@ -28,15 +30,21 @@ import {
 export class StackLayout extends React.Component<
   {
     stack: Stack;
+    editing: {
+      section: string;
+      stack: string;
+      component: string;
+    };
+    edit: (section?: string, stack?: string, component?: string) => void;
   },
   {
-    show: boolean;
+    manualCss: boolean;
   }
 > {
   constructor(props: any) {
     super(props);
     this.state = {
-      show: false
+      manualCss: false
     };
   }
 
@@ -60,6 +68,40 @@ export class StackLayout extends React.Component<
     });
   };
 
+  public addWidth = (evt: any) => {
+    const grid = this.props.stack.getSetting("grid");
+    this.props.stack.setSetting("grid", {
+      ...grid,
+      width: integer(grid.width + 1, grid.width, 1, 100)
+    });
+  };
+
+  public addHeight = (evt: any) => {
+    const grid = this.props.stack.getSetting("grid");
+    this.props.stack.setSetting("grid", {
+      ...grid,
+      height: integer(grid.height + 1, grid.height, 1, 100)
+    });
+  };
+
+  public setWidthAndHeight = (width: number, height: number) => {
+    const grid = this.props.stack.getSetting("grid");
+    this.props.stack.setSetting("grid", {
+      ...grid,
+      width: integer(width, grid.width, 1, 100),
+      height: integer(height, grid.height, 1, 100)
+    });
+  };
+
+  public autoFit = () => {
+    const grid = this.props.stack.getSetting("grid");
+    this.props.stack.setSetting("grid", {
+      ...grid,
+      width: integer(maxColumnEnd(grid) - 1, grid.width, 1, 100),
+      height: integer(maxRowEnd(grid) - 1, grid.height, 1, 100)
+    });
+  };
+
   public setArea = (key: string, value: any) => {
     const grid = this.props.stack.getSetting("grid");
     this.props.stack.setSetting("grid", {
@@ -71,7 +113,8 @@ export class StackLayout extends React.Component<
     });
   };
 
-  public renderSetting() {
+  public render() {
+    const { manualCss } = this.state;
     const grid = this.props.stack.getSetting("grid");
     if (!grid || !grid.width) {
       return (
@@ -86,53 +129,77 @@ export class StackLayout extends React.Component<
 
     return (
       <Container>
-        <StyledSidebar>
-          <Hint>Edit the template string below or drag the areas in the preview.</Hint>
-          <StyledTemplate>
-            <StyledTemplateTitle>Template areas</StyledTemplateTitle>
-            <StyledTemplateControl>
-              <Text value={tpl} onBlur={this.setTracks}>
-                {(props: any) => <TemplateInput {...props} />}
+        {manualCss && (
+          <StyledSidebar>
+            <StyledTemplate>
+              <StyledTemplateControl>
+                <Text value={tpl} onBlur={this.setTracks}>
+                  {(props: any) => <TemplateInput {...props} />}
+                </Text>
+              </StyledTemplateControl>
+            </StyledTemplate>
+            <Settings>
+              <Text value={width} onBlur={this.setWidth}>
+                {(props: any) => <SettingInput {...props} />}
               </Text>
-            </StyledTemplateControl>
-          </StyledTemplate>
-        </StyledSidebar>
-        <StyledMain>
-          <Settings>
-            <Text value={width} onBlur={this.setWidth}>
-              {(props: any) => <SettingInput {...props} />}
-            </Text>
-            <SettingDivider>x</SettingDivider>
-            <Text value={height} onBlur={this.setHeight}>
-              {(props: any) => <SettingInput {...props} />}
-            </Text>
-          </Settings>
-          <MainInner>
-            <GridPreview width={width} height={height} areas={areas} components={this.props.stack.components} />
-            <Preview tpl={tpl} width={width} height={height} areas={areas} setArea={this.setArea} components={this.props.stack.components} />
-          </MainInner>
-        </StyledMain>
+              <SettingDivider>x</SettingDivider>
+              <Text value={height} onBlur={this.setHeight}>
+                {(props: any) => <SettingInput {...props} />}
+              </Text>
+            </Settings>
+          </StyledSidebar>
+        )}
+        <ActionGroup>
+          <ActionButton
+            onClick={() => {
+              this.setWidthAndHeight(1, 1);
+            }}
+          >
+            1x1
+          </ActionButton>
+          <ActionButton
+            onClick={() => {
+              this.setWidthAndHeight(3, 3);
+            }}
+          >
+            3x3
+          </ActionButton>
+          <ActionButton
+            onClick={() => {
+              this.setWidthAndHeight(12, 1);
+            }}
+          >
+            12x1
+          </ActionButton>
+          <ActionButton onClick={this.addWidth}>+ |</ActionButton>
+          <ActionButton onClick={this.addHeight}>+ -</ActionButton>
+          <ActionButton
+            onClick={() => {
+              this.autoFit();
+            }}
+          >
+            <i className="fa fa-compress"></i>
+          </ActionButton>
+          <ActionButton>
+            <i className="fa fa-map"></i>
+          </ActionButton>
+        </ActionGroup>
+        <MainInner>
+          <GridPreview width={width} height={height} areas={areas} components={this.props.stack.components} />
+          <Preview
+            tpl={tpl}
+            width={width}
+            height={height}
+            areas={areas}
+            setArea={this.setArea}
+            components={this.props.stack.components}
+            editing={this.props.editing.component}
+            edit={this.props.edit}
+          />
+        </MainInner>
       </Container>
     );
   }
-
-  public render() {
-    return (
-      <SettingGroupStacked>
-        <div className="header">
-          <i className={`fa fa-caret-${this.state.show ? "down" : "right"}`} />
-          <label
-            style={{ cursor: "pointer" }}
-            className="input"
-            onClick={() => {
-              this.setState(() => ({ show: !this.state.show }));
-            }}
-          >
-            Grid Layout
-          </label>
-        </div>
-        <div className="content">{this.state.show && this.renderSetting()}</div>
-      </SettingGroupStacked>
-    );
-  }
 }
+
+// <GridPreview width={width} height={height} areas={areas} components={this.props.stack.components} />;

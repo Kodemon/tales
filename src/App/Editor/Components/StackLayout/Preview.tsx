@@ -1,5 +1,6 @@
 import { Component } from "Engine/Component";
 import * as React from "react";
+import { getComponentIcon } from "../../Lib/Utils";
 import { clamp } from "./Parser/Types";
 import { ComponentDetails, StyledHandler, StyledPreview, StyledTrack } from "./Styles";
 
@@ -11,6 +12,8 @@ export class Preview extends React.Component<
     areas: any;
     setArea: any;
     components: Component[];
+    editing: string;
+    edit: (section?: string, stack?: string, component?: string) => void;
   },
   {
     isDragging: boolean;
@@ -238,7 +241,7 @@ export class Preview extends React.Component<
   }
 
   public render() {
-    const { tpl, width, height, areas, components } = this.props;
+    const { tpl, width, height, areas, components, editing, edit } = this.props;
     const { activatedComponent, isDragging, draggedArea, draggedPosition } = this.state;
 
     // onClick={this.activateComponent(area)}
@@ -250,11 +253,13 @@ export class Preview extends React.Component<
             key={area}
             area={area}
             component={components.find(f => f.id === area)}
+            editing={editing}
             column={areas[area].column}
             row={areas[area].row}
             grabbing={isDragging && draggedArea === area && typeof draggedPosition !== "string"}
             onMouseDown={this.makeTrackMouseDown(area)}
             onHandlerMouseDown={this.makeHandlerMouseDown(area)}
+            edit={edit}
           />
         ))}
         {activatedComponent && this.renderComponent()}
@@ -268,35 +273,42 @@ function Track({
   column,
   row,
   component,
+  editing,
   grabbing,
   onMouseDown,
   onHandlerMouseDown,
-  onClick
+  edit
 }: {
   area: string;
   column: string;
   row: string;
   component?: Component;
+  editing: string;
   grabbing: boolean;
   onMouseDown: any;
   onHandlerMouseDown: any;
-  onClick?: any;
+  edit: (section?: string, stack?: string, component?: string) => void;
 }) {
+  if (!component) {
+    return <pre>cant find</pre>;
+  }
+  const isActive = component.id === editing;
   return (
-    <StyledTrack area={area} grabbing={grabbing} onMouseDown={onMouseDown} onClick={onClick}>
-      <Handler position="top" onMouseDown={onHandlerMouseDown("top")} />
-      <Handler position="right" onMouseDown={onHandlerMouseDown("right")} />
-      <Handler position="bottom" onMouseDown={onHandlerMouseDown("bottom")} />
-      <Handler position="left" onMouseDown={onHandlerMouseDown("left")} />
+    <StyledTrack isActive={isActive} area={area} grabbing={grabbing} onMouseDown={onMouseDown} onClick={() => edit(component.section.id, component.stack.id, component.id)}>
+      <Handler isActive={isActive} position="top" onMouseDown={onHandlerMouseDown("top")} />
+      <Handler isActive={isActive} position="right" onMouseDown={onHandlerMouseDown("right")} />
+      <Handler isActive={isActive} position="bottom" onMouseDown={onHandlerMouseDown("bottom")} />
+      <Handler isActive={isActive} position="left" onMouseDown={onHandlerMouseDown("left")} />
       {component && (
         <ComponentDetails>
-          {component.name} - {component.id}
+          {getComponentIcon(component.type)}
+          {component.getSetting("name", component.id)}
         </ComponentDetails>
       )}
     </StyledTrack>
   );
 }
 
-function Handler({ position, onMouseDown }: { onMouseDown: any; position: string }) {
-  return <StyledHandler size="6px" position={position} onMouseDown={onMouseDown} />;
+function Handler({ position, onMouseDown, isActive = false }: { onMouseDown: any; position: string; isActive: boolean }) {
+  return <StyledHandler size="3px" isActive={isActive} position={position} onMouseDown={onMouseDown} />;
 }
