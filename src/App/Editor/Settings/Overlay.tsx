@@ -15,6 +15,7 @@ export const OverlaySettings: React.SFC<{
         label="Position"
         attr="settings.type"
         options={[
+          { label: "Solid", value: "solid" },
           { label: "Top to Bottom", value: "topToBottom" },
           { label: "Bottom to Top", value: "bottomToTop" },
           { label: "Horizontal Left to Right", value: "leftToRight" },

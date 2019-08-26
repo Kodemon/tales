@@ -148,7 +148,7 @@ export class Component extends DataManager<Data> {
         break;
       }
       default: {
-        this.area.className = "position-relaive";
+        this.area.className = "position-relative";
         setStyle(this.area, {
           gridArea: this.id,
           minWidth: "100%"

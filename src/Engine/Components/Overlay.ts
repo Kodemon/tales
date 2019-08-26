@@ -26,7 +26,7 @@ export class Overlay extends Component {
     this.element.className = this.getSetting("sticky", false) ? "position-sticky" : "position-fixed";
 
     const style = {
-      width: viewport.width,
+      width: this.area.clientWidth,
       height: this.getStyle("height", viewport.height),
       ...(borderWidth ? { border: `${borderWidth}px solid white` } : {}),
       ...(this.data.style || {})
@@ -59,6 +59,7 @@ export class Overlay extends Component {
         style.boxShadow = `inset 0 0 25vmin 10vmin ${background}`;
         break;
       }
+      case "solid":
       default: {
         style.background = `${background}`;
       }
