@@ -245,7 +245,7 @@ const Container = styled.div`
   .center,
   .right {
     > div {
-      height: 35px;
+      height: 34px;
       padding: 0 15px;
 
       &:hover {

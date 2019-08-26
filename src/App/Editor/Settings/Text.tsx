@@ -1,7 +1,9 @@
 import * as React from "react";
+import * as ReactDOM from "react-dom";
 
 import { ComponentDivider } from "../Components/ComponentDivider";
 import { DataGroup, DataSetting } from "../Components/DataSetting";
+import { Toolbar } from "../Components/Toolbar";
 
 export const TextSettings: React.SFC<{
   component: any;
@@ -9,6 +11,8 @@ export const TextSettings: React.SFC<{
   return (
     <React.Fragment key={`component-${component.id}`}>
       <DataSetting entity={component} type="input" label="Name" attr="settings.name" placeholder={component.id} />
+
+      {ReactDOM.createPortal(<Toolbar quill={component.quill} />, document.getElementById("toolbar") as Element)}
 
       <ComponentDivider label="Settings" icon="cogs" />
       <DataGroup>

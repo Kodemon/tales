@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Font } from "./Variables";
 
 export const Viewport = styled.div`
   position: relative;
@@ -78,6 +79,7 @@ export const Viewport = styled.div`
   /* Quill */
 
   .ql-container {
+    border: none;
     font-family: "Merriweather", serif;
     font-size: 1em;
     height: auto;
@@ -96,5 +98,13 @@ export const Viewport = styled.div`
   .ql-blank::before {
     left: auto;
     right: auto;
+  }
+
+  .ql-font-merriweather {
+    font-family: ${Font.FamilyMerriweather};
+  }
+
+  .ql-font-roboto {
+    font-family: ${Font.FamilyRoboto};
   }
 `;

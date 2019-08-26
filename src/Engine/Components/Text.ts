@@ -44,8 +44,12 @@ export class Text extends Component {
    */
   private loadQuill() {
     this.quill = new this.page.Quill(this.element, {
-      theme: "bubble",
+      theme: "snow",
       placeholder: "Compose an epic...",
+      modules: {
+        toolbar: false
+      }
+      /*
       modules: {
         toolbar: [
           ["bold", "italic", "underline", "strike"], // toggled buttons
@@ -67,6 +71,7 @@ export class Text extends Component {
           ["clean"]
         ]
       }
+      */
     });
 
     // ### Selection Change
@@ -137,7 +142,7 @@ export class Text extends Component {
       //   display: "flex"
       // })
     } else {
-      this.element.className = "ql-container ql-bubble";
+      this.element.className = "ql-container ql-snow";
 
       if (!this.content) {
         this.content = document.createElement("div");

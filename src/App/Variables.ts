@@ -50,6 +50,7 @@ export enum Color {
 
 export enum Font {
   Family = "Arial, sans-serif, Georgia, serif",
+  FamilyMerriweather = "Merriweather, serif",
   FamilyRoboto = "'Roboto', sans-serif",
   FamilyRobotoCondensed = "'Roboto Condensed', sans-serif",
   Size = "11px"

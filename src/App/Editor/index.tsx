@@ -6,6 +6,7 @@ import { Page } from "Engine/Page";
 
 import { router } from "../../Router";
 import { Viewport } from "../Style";
+import { Color, Font } from "../Variables";
 import { fitAspect } from "./Lib/AspectRatio";
 import { Navbar } from "./Navbar";
 import { Navigator } from "./Navigator";
@@ -206,6 +207,7 @@ export class Editor extends React.Component<
             height: `calc(100vh - 35px)`
           }}
         >
+          <Toolbar id="toolbar" />
           <Viewport ref={c => (this.viewport = c)} />
         </Content>
         <Sidebar page={this.page} editing={this.state.editing} edit={this.onEdit} />
@@ -214,10 +216,60 @@ export class Editor extends React.Component<
   }
 }
 
+const Toolbar = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  background: ${Color.Background};
+  border-bottom: 1px solid ${Color.Border};
+  width: 100%;
+
+  z-index: 1;
+
+  .ql-toolbar {
+    border: none !important;
+  }
+
+  .ql-stroke {
+    stroke: ${Color.FontDark};
+  }
+
+  .ql-fill {
+    fill: ${Color.FontDark} !important;
+  }
+
+  .ql-active {
+    color: ${Color.FontLight} !important;
+    .ql-stroke {
+      stroke: ${Color.FontLight} !important;
+    }
+    .ql-fill {
+      fill: ${Color.FontLight} !important;
+    }
+  }
+
+  select {
+    background: ${Color.BackgroundLight};
+    border: 1px solid ${Color.Border};
+    color: ${Color.Font};
+    font-size: ${Font.Size};
+    padding: 4px;
+
+    width: 100%;
+    height: 24px;
+
+    &:focus {
+      outline: 1px solid ${Color.BackgroundBlue};
+    }
+  }
+`;
+
 const Content = styled.div`
   display: grid;
   grid-template-areas: ". . ." ". viewport ." ". . .";
 
+  position: relative;
   height: 100vh;
 
   background: url("https://i.ibb.co/xDg9pw4/grid.png");
