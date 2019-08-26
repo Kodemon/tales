@@ -152,7 +152,7 @@ export class Sidebar extends React.Component<
                   this.editStack(stack);
                 }}
               >
-                Stack - {stack.getSetting("name", stack.id)}
+                {stack.getSetting("name", stack.id)}
               </div>
               <div className="actions">
                 <i
@@ -168,7 +168,7 @@ export class Sidebar extends React.Component<
             {this.props.editing.stack === stack.id && (
               <CategoryContent>
                 <DataGroup>
-                  <DataSetting entity={stack} type="input" label="Name" attr="settings.name" placeholder="Enter a stack name" />
+                  <DataSetting entity={stack} type="input" label="Stack" attr="settings.name" placeholder="Enter a stack name" />
                   <DataSetting
                     entity={stack}
                     type="select"
