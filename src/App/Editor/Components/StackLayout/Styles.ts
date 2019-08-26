@@ -106,7 +106,7 @@ export const StyledTrack = styled.div<{ area: string; grabbing?: boolean; isActi
   text-overflow: ellipsis;
   grid-area: ${props => props.area};
   cursor: ${props => (props.grabbing ? "grabbing" : "grab")};
-  background: ${({ isActive }) => (isActive ? Color.BackgroundBlue : Color.BackgroundDark)};
+  background: ${({ isActive }) => (isActive ? transparentize(0.65, Color.BackgroundBlue) : transparentize(0.65, Color.BackgroundDark))};
   color: ${({ isActive }) => (isActive ? Color.FontLight : Color.Font)};
 `;
 
