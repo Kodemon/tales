@@ -7,6 +7,7 @@ import { Page } from "Engine/Page";
 import { Section } from "Engine/Section";
 import { Stack } from "Engine/Stack";
 
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { Color, Font } from "../Variables";
 import { ColorPicker } from "./Components/ColorPicker";
 import { Components } from "./Components/Components";
@@ -61,6 +62,15 @@ export class Sidebar extends React.Component<
       this.props.edit(component.section.id, component.stack.id);
     } else {
       this.props.edit(component.section.id, component.stack.id, component.id);
+    }
+  };
+
+  private onDragEnd = ({ type, source, destination }: any) => {
+    if (type === "STACK") {
+      const section = this.props.page && this.props.page.sections.find(f => f.id === this.props.editing.section);
+      if (section) {
+        section.moveStack(source.index, destination.index, Source.User);
+      }
     }
   };
 
@@ -133,58 +143,72 @@ export class Sidebar extends React.Component<
   }
 
   private renderStacks(section: Section) {
-    return section.stacks.map(stack => {
-      return (
-        <React.Fragment key={stack.id}>
-          <Category>
-            <CategoryHeader className={this.props.editing.stack === stack.id ? "blue" : ""}>
-              <div
-                className="caret"
-                onClick={() => {
-                  this.editStack(stack);
-                }}
-              >
-                {getCaretPosition(this.props.editing.stack === stack.id)}
-              </div>
-              <div
-                className="header"
-                onClick={() => {
-                  this.editStack(stack);
-                }}
-              >
-                {stack.getSetting("name", stack.id)} Stack
-              </div>
-              <div className="actions">
-                <i
-                  className="fa fa-trash"
-                  onClick={() => {
-                    stack.remove(Source.User);
-                    this.props.edit(section.id);
-                  }}
-                />
-                <i className="fa fa-bars grab" onClick={() => window.alert("not yet")} />
-              </div>
-            </CategoryHeader>
-            {this.props.editing.stack === stack.id && (
-              <CategoryContent>
-                <DataGroup>
-                  <DataSetting entity={stack} type="input" label="Name" attr="settings.name" placeholder="Enter a stack name" />
-                  <DataSetting
-                    entity={stack}
-                    type="select"
-                    label="Position"
-                    attr="settings.position"
-                    options={[{ label: "Relative", value: "relative" }, { label: "Absolute", value: "absolute" }, { label: "Sticky", value: "sticky" }]}
-                  />
-                </DataGroup>
-                <StackLayout stack={stack} editing={this.props.editing} edit={this.props.edit} toggleComponents={this.toggleComponents} />
-              </CategoryContent>
-            )}
-          </Category>
-          {this.props.editing.stack === stack.id && this.renderComponents(stack)}
-        </React.Fragment>
-      );
-    });
+    return (
+      <DragDropContext onDragEnd={this.onDragEnd}>
+        <Droppable droppableId={section.id} type="STACK">
+          {(provided, snapshot) => (
+            <div ref={provided.innerRef} {...provided.droppableProps}>
+              {section.stacks.map((stack, index) => {
+                return (
+                  <Draggable key={stack.id} draggableId={stack.id} index={index}>
+                    {(provided, snapshot) => (
+                      <React.Fragment>
+                        <Category ref={provided.innerRef} {...provided.draggableProps}>
+                          <CategoryHeader className={this.props.editing.stack === stack.id ? "blue" : ""}>
+                            <div
+                              className="caret"
+                              onClick={() => {
+                                this.editStack(stack);
+                              }}
+                            >
+                              {getCaretPosition(this.props.editing.stack === stack.id)}
+                            </div>
+                            <div
+                              className="header"
+                              onClick={() => {
+                                this.editStack(stack);
+                              }}
+                            >
+                              {stack.getSetting("name", stack.id)} Stack
+                            </div>
+                            <div className="actions">
+                              <i
+                                className="fa fa-trash"
+                                onClick={() => {
+                                  stack.remove(Source.User);
+                                  this.props.edit(section.id);
+                                }}
+                              />
+                              <i className="fa fa-bars grab" {...provided.dragHandleProps} />
+                            </div>
+                          </CategoryHeader>
+                          {this.props.editing.stack === stack.id && (
+                            <CategoryContent>
+                              <DataGroup>
+                                <DataSetting entity={stack} type="input" label="Name" attr="settings.name" placeholder="Enter a stack name" />
+                                <DataSetting
+                                  entity={stack}
+                                  type="select"
+                                  label="Position"
+                                  attr="settings.position"
+                                  options={[{ label: "Relative", value: "relative" }, { label: "Absolute", value: "absolute" }, { label: "Sticky", value: "sticky" }]}
+                                />
+                              </DataGroup>
+                              <StackLayout stack={stack} editing={this.props.editing} edit={this.props.edit} toggleComponents={this.toggleComponents} />
+                            </CategoryContent>
+                          )}
+                        </Category>
+                        {this.props.editing.stack === stack.id && this.renderComponents(stack)}
+                      </React.Fragment>
+                    )}
+                  </Draggable>
+                );
+              })}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+    );
   }
 
   private renderComponents(stack: Stack) {

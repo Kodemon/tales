@@ -4,7 +4,7 @@ import { DataManager } from "./DataManager";
 import { Source } from "./Enums";
 import { Page } from "./Page";
 import { Stack } from "./Stack";
-import { setStyle } from "./Utils";
+import { insertElementAfter, moveArrayIndex, setStyle } from "./Utils";
 import { viewport } from "./Viewport";
 
 export class Section extends DataManager<Data> {
@@ -162,6 +162,43 @@ export class Section extends DataManager<Data> {
    */
   public getStackData(id: string) {
     return this.data.stacks.find(c => c.id === id);
+  }
+
+  /**
+   * Moves a stack to a new position on the section.
+   *
+   * @param prevIndex
+   * @param nextIndex
+   */
+  public moveStack(prevIndex: number, nextIndex: number, source: Source = Source.Silent) {
+    if (prevIndex === nextIndex) {
+      return; // no need to update, indexes are the same
+    }
+
+    const stackA = this.stacks[prevIndex];
+    if (!stackA) {
+      return console.error(`Move Stack > Could not find the source stack at index position ${prevIndex}.`);
+    }
+
+    const stackB = this.stacks[nextIndex];
+    if (!stackB) {
+      return console.error(`Move Stack > Could not find the destination stack at index position ${nextIndex}.`);
+    }
+
+    this.stacks = moveArrayIndex(this.stacks, prevIndex, nextIndex);
+    this.page.cache();
+
+    if (prevIndex > nextIndex) {
+      this.element.insertBefore(stackA.element, stackB.element);
+    } else {
+      insertElementAfter(stackA.element, stackB.element);
+    }
+
+    this.page.emit("refresh");
+
+    if (source === Source.User) {
+      this.page.send("stack:move", this.id, prevIndex, nextIndex);
+    }
   }
 
   /*
