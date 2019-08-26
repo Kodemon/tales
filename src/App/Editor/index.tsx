@@ -231,6 +231,10 @@ const Toolbar = styled.div`
     border: none !important;
   }
 
+  .ql-formats {
+    position: relative;
+  }
+
   .ql-stroke {
     stroke: ${Color.FontDark};
   }

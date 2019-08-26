@@ -266,12 +266,6 @@ const Container = styled.div`
       height: 100%;
       font-size: ${Font.Size};
 
-      &:active,
-      &:visited,
-      &:focus {
-        outline: none;
-      }
-
       > span {
         display: block;
         padding-top: 11px;

@@ -1,7 +1,11 @@
 import * as Quill from "quill";
 import * as React from "react";
+import { AlphaPicker, TwitterPicker } from "react-color";
+import styled from "styled-components";
 
 import { maybe } from "Engine/Utils";
+
+import { Color } from "../../Variables";
 
 const QuillFont = Quill.import("formats/font");
 
@@ -15,13 +19,17 @@ export class Toolbar extends React.Component<
   {
     format: any;
     selector: string;
+    color: boolean;
+    background: boolean;
   }
 > {
   constructor(props: any) {
     super(props);
     this.state = {
       format: this.props.quill.getFormat(),
-      selector: ""
+      selector: "",
+      color: false,
+      background: false
     };
   }
 
@@ -357,64 +365,85 @@ export class Toolbar extends React.Component<
   }
 
   private color() {
-    const isActive = maybe(this.state.format, "color", false);
+    const color = maybe(this.state.format, "color");
     return (
-      <button
-        className={`ql-color${isActive && " ql-active"}`}
-        onClick={() => {
-          this.props.quill.format("color", "#ccc", "user");
-        }}
-      >
-        <svg viewBox="0 0 18 18">
-          <line className="ql-color-label ql-stroke ql-transparent" x1="3" x2="15" y1="15" y2="15"></line>
-          <polyline className="ql-stroke" points="5.5 11 9 3 12.5 11"></polyline>
-          <line className="ql-stroke" x1="11.63" x2="6.38" y1="9" y2="9"></line>
-        </svg>
-      </button>
+      <React.Fragment>
+        <button
+          className={`ql-color${color !== undefined ? " ql-active" : ""}`}
+          onClick={() => {
+            this.setState(() => ({ color: !this.state.color, background: false }));
+          }}
+        >
+          <svg viewBox="0 0 18 18">
+            <line className="ql-color-label ql-stroke ql-transparent" x1="3" x2="15" y1="15" y2="15"></line>
+            <polyline className="ql-stroke" points="5.5 11 9 3 12.5 11"></polyline>
+            <line className="ql-stroke" x1="11.63" x2="6.38" y1="9" y2="9"></line>
+          </svg>
+        </button>
+        {this.state.color && (
+          <ColorPicker
+            color={color}
+            change={(rbga: string) => {
+              this.props.quill.format("color", rbga, "user");
+            }}
+          />
+        )}
+      </React.Fragment>
     );
   }
 
   private background() {
-    const isActive = maybe(this.state.format, "background", false);
+    const color = maybe(this.state.format, "background");
     return (
-      <button
-        className={`ql-background${isActive && " ql-active"}`}
-        onClick={() => {
-          this.props.quill.format("background", "#ccc", "user");
-        }}
-      >
-        <svg viewBox="0 0 18 18">
-          <g className="ql-fill ql-color-label">
-            <polygon points="6 6.868 6 6 5 6 5 7 5.942 7 6 6.868"></polygon>
-            <rect height="1" width="1" x="4" y="4"></rect>
-            <polygon points="6.817 5 6 5 6 6 6.38 6 6.817 5"></polygon>
-            <rect height="1" width="1" x="2" y="6"></rect>
-            <rect height="1" width="1" x="3" y="5"></rect>
-            <rect height="1" width="1" x="4" y="7"></rect>
-            <polygon points="4 11.439 4 11 3 11 3 12 3.755 12 4 11.439"></polygon>
-            <rect height="1" width="1" x="2" y="12"></rect> <rect height="1" width="1" x="2" y="9"></rect>
-            <rect height="1" width="1" x="2" y="15"></rect> <polygon points="4.63 10 4 10 4 11 4.192 11 4.63 10"></polygon>
-            <rect height="1" width="1" x="3" y="8"></rect> <path d="M10.832,4.2L11,4.582V4H10.708A1.948,1.948,0,0,1,10.832,4.2Z"></path>
-            <path d="M7,4.582L7.168,4.2A1.929,1.929,0,0,1,7.292,4H7V4.582Z"></path> <path d="M8,13H7.683l-0.351.8a1.933,1.933,0,0,1-.124.2H8V13Z"></path>
-            <rect height="1" width="1" x="12" y="2"></rect> <rect height="1" width="1" x="11" y="3"></rect> <path d="M9,3H8V3.282A1.985,1.985,0,0,1,9,3Z"></path>
-            <rect height="1" width="1" x="2" y="3"></rect> <rect height="1" width="1" x="6" y="2"></rect> <rect height="1" width="1" x="3" y="2"></rect>
-            <rect height="1" width="1" x="5" y="3"></rect> <rect height="1" width="1" x="9" y="2"></rect> <rect height="1" width="1" x="15" y="14"></rect>
-            <polygon points="13.447 10.174 13.469 10.225 13.472 10.232 13.808 11 14 11 14 10 13.37 10 13.447 10.174"></polygon> <rect height="1" width="1" x="13" y="7"></rect>
-            <rect height="1" width="1" x="15" y="5"></rect> <rect height="1" width="1" x="14" y="6"></rect> <rect height="1" width="1" x="15" y="8"></rect>
-            <rect height="1" width="1" x="14" y="9"></rect>
-            <path d="M3.775,14H3v1H4V14.314A1.97,1.97,0,0,1,3.775,14Z"></path> <rect height="1" width="1" x="14" y="3"></rect>
-            <polygon points="12 6.868 12 6 11.62 6 12 6.868"></polygon> <rect height="1" width="1" x="15" y="2"></rect>
-            <rect height="1" width="1" x="12" y="5"></rect> <rect height="1" width="1" x="13" y="4"></rect> <polygon points="12.933 9 13 9 13 8 12.495 8 12.933 9"></polygon>
-            <rect height="1" width="1" x="9" y="14"></rect>
-            <rect height="1" width="1" x="8" y="15"></rect> <path d="M6,14.926V15H7V14.316A1.993,1.993,0,0,1,6,14.926Z"></path> <rect height="1" width="1" x="5" y="15"></rect>
-            <path d="M10.668,13.8L10.317,13H10v1h0.792A1.947,1.947,0,0,1,10.668,13.8Z"></path> <rect height="1" width="1" x="11" y="15"></rect>
-            <path d="M14.332,12.2a1.99,1.99,0,0,1,.166.8H15V12H14.245Z"></path>
-            <rect height="1" width="1" x="14" y="15"></rect> <rect height="1" width="1" x="15" y="11"></rect>
-          </g>
-          <polyline className="ql-stroke" points="5.5 13 9 5 12.5 13"></polyline>
-          <line className="ql-stroke" x1="11.63" x2="6.38" y1="11" y2="11"></line>
-        </svg>
-      </button>
+      <React.Fragment>
+        <button
+          className={`ql-background${color !== undefined ? " ql-active" : ""}`}
+          onClick={() => {
+            this.setState(() => ({ background: !this.state.background, color: false }));
+          }}
+        >
+          <svg viewBox="0 0 18 18">
+            <g className="ql-fill ql-color-label">
+              <polygon points="6 6.868 6 6 5 6 5 7 5.942 7 6 6.868"></polygon>
+              <rect height="1" width="1" x="4" y="4"></rect>
+              <polygon points="6.817 5 6 5 6 6 6.38 6 6.817 5"></polygon>
+              <rect height="1" width="1" x="2" y="6"></rect>
+              <rect height="1" width="1" x="3" y="5"></rect>
+              <rect height="1" width="1" x="4" y="7"></rect>
+              <polygon points="4 11.439 4 11 3 11 3 12 3.755 12 4 11.439"></polygon>
+              <rect height="1" width="1" x="2" y="12"></rect> <rect height="1" width="1" x="2" y="9"></rect>
+              <rect height="1" width="1" x="2" y="15"></rect> <polygon points="4.63 10 4 10 4 11 4.192 11 4.63 10"></polygon>
+              <rect height="1" width="1" x="3" y="8"></rect> <path d="M10.832,4.2L11,4.582V4H10.708A1.948,1.948,0,0,1,10.832,4.2Z"></path>
+              <path d="M7,4.582L7.168,4.2A1.929,1.929,0,0,1,7.292,4H7V4.582Z"></path> <path d="M8,13H7.683l-0.351.8a1.933,1.933,0,0,1-.124.2H8V13Z"></path>
+              <rect height="1" width="1" x="12" y="2"></rect> <rect height="1" width="1" x="11" y="3"></rect> <path d="M9,3H8V3.282A1.985,1.985,0,0,1,9,3Z"></path>
+              <rect height="1" width="1" x="2" y="3"></rect> <rect height="1" width="1" x="6" y="2"></rect> <rect height="1" width="1" x="3" y="2"></rect>
+              <rect height="1" width="1" x="5" y="3"></rect> <rect height="1" width="1" x="9" y="2"></rect> <rect height="1" width="1" x="15" y="14"></rect>
+              <polygon points="13.447 10.174 13.469 10.225 13.472 10.232 13.808 11 14 11 14 10 13.37 10 13.447 10.174"></polygon> <rect height="1" width="1" x="13" y="7"></rect>
+              <rect height="1" width="1" x="15" y="5"></rect> <rect height="1" width="1" x="14" y="6"></rect> <rect height="1" width="1" x="15" y="8"></rect>
+              <rect height="1" width="1" x="14" y="9"></rect>
+              <path d="M3.775,14H3v1H4V14.314A1.97,1.97,0,0,1,3.775,14Z"></path> <rect height="1" width="1" x="14" y="3"></rect>
+              <polygon points="12 6.868 12 6 11.62 6 12 6.868"></polygon> <rect height="1" width="1" x="15" y="2"></rect>
+              <rect height="1" width="1" x="12" y="5"></rect> <rect height="1" width="1" x="13" y="4"></rect> <polygon points="12.933 9 13 9 13 8 12.495 8 12.933 9"></polygon>
+              <rect height="1" width="1" x="9" y="14"></rect>
+              <rect height="1" width="1" x="8" y="15"></rect> <path d="M6,14.926V15H7V14.316A1.993,1.993,0,0,1,6,14.926Z"></path> <rect height="1" width="1" x="5" y="15"></rect>
+              <path d="M10.668,13.8L10.317,13H10v1h0.792A1.947,1.947,0,0,1,10.668,13.8Z"></path> <rect height="1" width="1" x="11" y="15"></rect>
+              <path d="M14.332,12.2a1.99,1.99,0,0,1,.166.8H15V12H14.245Z"></path>
+              <rect height="1" width="1" x="14" y="15"></rect> <rect height="1" width="1" x="15" y="11"></rect>
+            </g>
+            <polyline className="ql-stroke" points="5.5 13 9 5 12.5 13"></polyline>
+            <line className="ql-stroke" x1="11.63" x2="6.38" y1="11" y2="11"></line>
+          </svg>
+        </button>
+        {this.state.background && (
+          <ColorPicker
+            color={color}
+            change={(rbga: string) => {
+              console.log("Background");
+              this.props.quill.format("background", rbga, "user");
+            }}
+          />
+        )}
+      </React.Fragment>
     );
   }
 
@@ -437,3 +466,87 @@ export class Toolbar extends React.Component<
     );
   }
 }
+
+class ColorPicker extends React.Component<
+  {
+    color?: string;
+    change: (color: string) => void;
+  },
+  {
+    color?: any;
+  }
+> {
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      color: this.props.color ? getColor(this.props.color) : undefined
+    };
+  }
+
+  public static getDerivedStateFromProps(prevProps: any) {
+    return {
+      color: prevProps.color ? getColor(prevProps.color) : undefined
+    };
+  }
+
+  /*
+   |--------------------------------------------------------------------------------
+   | Event Handlers
+   |--------------------------------------------------------------------------------
+   */
+
+  private onColorChanged = ({ rgb }: any) => {
+    this.setState({ color: rgb }, () => {
+      this.props.change(`rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${rgb.a || 1})`);
+    });
+  };
+
+  /*
+   |--------------------------------------------------------------------------------
+   | Renderer
+   |--------------------------------------------------------------------------------
+   */
+
+  public render() {
+    return (
+      <ColorDropdown>
+        <TwitterPicker color={this.state.color} triangle="hide" onChangeComplete={this.onColorChanged} />
+        <AlphaPicker width="100%" color={this.state.color} onChangeComplete={this.onColorChanged} />
+      </ColorDropdown>
+    );
+  }
+}
+
+function getColor(val: string) {
+  if (!val.match("rgba")) {
+    return val;
+  }
+  const [r, g, b, a] = val
+    .replace("rgba(", "")
+    .replace(")", "")
+    .split(",")
+    .map((v, index) => (index === 3 ? parseFloat(v.trim()) : parseInt(v.trim(), 10)));
+  return { r, g, b, a };
+}
+
+const ColorDropdown = styled.div`
+  position: absolute;
+  top: 35px;
+  left: -7px;
+
+  .twitter-picker {
+    background: ${Color.Background} !important;
+    border-radius: 0 !important;
+    > div {
+      > div {
+        background: ${Color.BackgroundDark} !important;
+        input {
+          background: ${Color.BackgroundDark} !important;
+          border: 1px solid ${Color.Border} !important;
+          box-shadow: none !important;
+          color: ${Color.Font} !important;
+        }
+      }
+    }
+  }
+`;
