@@ -162,7 +162,7 @@ export class Sidebar extends React.Component<
                     this.props.edit(section.id);
                   }}
                 />
-                <i className="fa fa-plus" onClick={() => this.toggleComponents(stack)} />
+                <i className="fa fa-bars grab" onClick={() => window.alert("not yet")} />
               </div>
             </CategoryHeader>
             {this.props.editing.stack === stack.id && (
@@ -177,7 +177,7 @@ export class Sidebar extends React.Component<
                     options={[{ label: "Relative", value: "relative" }, { label: "Absolute", value: "absolute" }, { label: "Sticky", value: "sticky" }]}
                   />
                 </DataGroup>
-                <StackLayout stack={stack} editing={this.props.editing} edit={this.props.edit} />
+                <StackLayout stack={stack} editing={this.props.editing} edit={this.props.edit} toggleComponents={this.toggleComponents} />
               </CategoryContent>
             )}
           </Category>

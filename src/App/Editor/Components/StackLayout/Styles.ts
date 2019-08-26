@@ -20,16 +20,44 @@ export const StyledSidebar = styled.div`
   overflow: hidden;
 `;
 
-export const StyledMain = styled.div`
+export const Main = styled.div`
   display: flex;
   flex-direction: column;
-  grid-area: main;
+`;
+
+export const MainRow = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+export const MainCellButton = styled.button`
+  background: none;
+  padding: 0 !important;
+  &.right {
+    height: 120px;
+    width: 24px;
+  }
+  &.bottom {
+    width: calc(100% - 75px);
+    margin-left: 50px;
+    height: 24px;
+  }
+`;
+
+export const MainButtonGroup = styled.div`
+  display: flex;
+  height: 100%;
+  padding: 0;
+  width: 50px;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-content: space-between;
 `;
 
 export const MainInner = styled.div`
   flex: 1;
   position: relative;
-  height: 160px;
+  height: 120px;
 `;
 
 export const SvgGrid = styled.svg`
