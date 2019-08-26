@@ -1,6 +1,5 @@
 import * as qrcode from "qrcode";
 import * as React from "react";
-import * as ReactDOM from "react-dom";
 import styled from "styled-components";
 
 import { Page } from "Engine/Page";

@@ -20,7 +20,8 @@
       "no-unused-expression": false,
       "only-arrow-functions": false,
       "member-ordering": false,
-      "no-console": false
+      "no-console": false,
+      "no-bitwise": false
   },
   "rulesDirectory": []
 }

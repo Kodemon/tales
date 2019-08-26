@@ -1,6 +1,5 @@
 import * as React from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import * as Dropzone from "react-dropzone";
 import styled from "styled-components";
 
 import { Source } from "Engine/Enums";
@@ -10,6 +9,7 @@ import { Stack } from "Engine/Stack";
 
 import { router } from "../../Router";
 import { Color, Font } from "../Variables";
+import { FileUpload, getAssets, getFolder } from "./Components/Assets";
 import { portal } from "./Components/Portal";
 import { getCaretPosition, getComponentIcon } from "./Lib/Utils";
 import { PageSettings } from "./Settings/Page";
@@ -49,6 +49,19 @@ export class Navigator extends React.Component<
 
   public componentWillUnmount() {
     window.removeEventListener("mouseup", this.checkHoverState);
+  }
+
+  public componentDidUpdate(prevProps: any, prevState: any) {
+    // console.log(prevProps.page && this.props.page);
+    // if (!prevProps.page && this.props.page) {
+    //   getFolder(`page:${this.props.page.id}`)
+    //     .then((res: any) => {
+    //       console.log(res);
+    //     })
+    //     .catch((err: any) => {
+    //       console.log(err);
+    //     });
+    // }
   }
 
   /*
@@ -271,8 +284,17 @@ export class Navigator extends React.Component<
       <React.Fragment>
         <PaneHeader>
           <h1>Assets</h1>
+          <FileUpload page={this.props.page} />
         </PaneHeader>
-        <PaneContent></PaneContent>
+        <PaneContent>
+          {getAssets(this.props.page.id).map(asset => {
+            return (
+              <div key={asset.public_id}>
+                <img src={asset.secure_url} width="50" height="50" style={{ objectFit: "cover" }} />
+              </div>
+            );
+          })}
+        </PaneContent>
       </React.Fragment>
     );
   }

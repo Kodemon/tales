@@ -8,6 +8,7 @@ declare module "scrollama";
 declare module "enter-view";
 declare module "qrcode";
 declare module "react-compound-slider";
+declare module "crypto-js";
 
 declare const PIXI: any;
 
