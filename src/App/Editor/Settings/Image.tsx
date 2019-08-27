@@ -48,7 +48,17 @@ export const ImageSettings: React.SFC<{
         <DataSetting entity={component} type="input" label="Title" attr="settings.title" />
         <DataSetting entity={component} type="input" label="Alt" attr="settings.altText" />
       </DataGroup>
-      <DataSetting entity={component} type="input" label="Src" attr="settings.src" placeholder="//path.to/image" />
+      <DataSetting
+        entity={component}
+        type="input"
+        label="Src"
+        attr="settings.src"
+        placeholder="//path.to/image"
+        onDrop={event => {
+          event.preventDefault();
+          component.setSetting("src", event.dataTransfer.getData("Text"), Source.User);
+        }}
+      />
       <ComponentDivider label="Style" icon="paint-brush" />
       <DataGroup>
         <DataSetting entity={component} type="input" label="Margin" attr="style.margin" placeholder="0px" />

@@ -30,10 +30,13 @@ export class DataSetting extends React.Component<{
   attr: string;
   fallback?: any;
 
+  // ### Options
+
   // ### Event Parsers
 
   onValue?: (value: any) => any;
   onChange?: (value: any) => any;
+  onDrop?: (event: React.DragEvent<HTMLInputElement>) => any;
 }> {
   private current: any;
 
@@ -63,6 +66,7 @@ export class DataSetting extends React.Component<{
               onChange={event => {
                 entity.set(attr, onChange ? onChange(event.target.value) : event.target.value, Source.User);
               }}
+              onDrop={this.props.onDrop}
             />
           </SettingGroup>
         );
