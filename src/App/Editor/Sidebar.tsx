@@ -229,42 +229,42 @@ export class Sidebar extends React.Component<
       case "youTube": {
         return (
           <ComponentSettings>
-            <YouTubeSettings component={component} />
+            <YouTubeSettings component={component} edit={this.props.edit} />
           </ComponentSettings>
         );
       }
       case "vimeo": {
         return (
           <ComponentSettings>
-            <VimeoSettings component={component} />
+            <VimeoSettings component={component} edit={this.props.edit} />
           </ComponentSettings>
         );
       }
       case "text": {
         return (
           <ComponentSettings>
-            <TextSettings component={component} />
+            <TextSettings component={component} edit={this.props.edit} />
           </ComponentSettings>
         );
       }
       case "overlay": {
         return (
           <ComponentSettings>
-            <OverlaySettings component={component} />
+            <OverlaySettings component={component} edit={this.props.edit} />
           </ComponentSettings>
         );
       }
       case "gallery": {
         return (
           <ComponentSettings>
-            <GallerySettings component={component} />
+            <GallerySettings component={component} edit={this.props.edit} />
           </ComponentSettings>
         );
       }
       case "reveal": {
         return (
           <ComponentSettings>
-            <RevealSettings component={component} />
+            <RevealSettings component={component} edit={this.props.edit} />
           </ComponentSettings>
         );
       }

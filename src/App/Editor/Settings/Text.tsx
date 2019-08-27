@@ -1,16 +1,50 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
+import { Source } from "Engine/Enums";
 import { ComponentDivider } from "../Components/ComponentDivider";
 import { DataGroup, DataSetting } from "../Components/DataSetting";
 import { Toolbar } from "../Components/Toolbar";
+import { ActionButton, ActionGroup, SettingGroup } from "../Styles";
 
 export const TextSettings: React.SFC<{
   component: any;
-}> = function TextSettings({ component }) {
+  edit: (section?: string, stack?: string, component?: string) => void;
+}> = function TextSettings({ component, edit }) {
   return (
     <React.Fragment key={`component-${component.id}`}>
-      <DataSetting entity={component} type="input" label="Name" attr="settings.name" placeholder={component.id} />
+      <DataGroup>
+        <DataSetting entity={component} type="input" label="Name" attr="settings.name" placeholder={component.id} />
+        <SettingGroup>
+          <label className="input">Actions</label>
+          <ActionGroup>
+            <ActionButton
+              onClick={() => {
+                component.remove(Source.User);
+                edit(component.section.id, component.stack.id);
+              }}
+            >
+              <i className="fa fa-magic" />
+            </ActionButton>
+            <ActionButton
+              onClick={() => {
+                component.remove(Source.User);
+                edit(component.section.id, component.stack.id);
+              }}
+            >
+              <i className="fa fa-copy" />
+            </ActionButton>
+            <ActionButton
+              onClick={() => {
+                component.remove(Source.User);
+                edit(component.section.id, component.stack.id);
+              }}
+            >
+              <i className="fa fa-trash" />
+            </ActionButton>
+          </ActionGroup>
+        </SettingGroup>
+      </DataGroup>
 
       {ReactDOM.createPortal(<Toolbar quill={component.quill} />, document.getElementById("toolbar") as Element)}
 

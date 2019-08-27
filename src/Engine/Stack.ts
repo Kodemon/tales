@@ -153,12 +153,12 @@ export class Stack extends DataManager<Data> {
       const grid = this.getSetting("grid", DEFAULT_GRID);
       this.setSetting("grid", {
         width: grid.width,
-        height: grid.height + 1,
+        height: grid.height,
         areas: {
           ...grid.areas,
           [id]: {
             column: { start: 1, end: grid.width + 1, span: grid.width },
-            row: { start: grid.height + 1, end: grid.height + 2, span: 1 }
+            row: { start: grid.height, end: grid.height + 1, span: 1 }
           }
         }
       });

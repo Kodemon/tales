@@ -7,11 +7,12 @@ import { SettingGroupStacked } from "../../Styles";
 import { GridPreview } from "./GridPreview";
 import { grid, template } from "./Parser";
 import { maxColumnEnd, maxColumnStart, maxRowEnd, maxRowStart, minColumnEnd, minColumnStart, minRowEnd, minRowStart } from "./Parser/Bounds";
-import { integer } from "./Parser/Types";
+import { Grid, integer } from "./Parser/Types";
 import { Preview } from "./Preview";
 import { ActionButton, ActionGroup, Main, MainButtonGroup, MainCellButton, MainRow } from "./Styles";
 import { Text } from "./Text";
 
+import { Component } from "Engine/Component";
 import { Container, Hint, MainInner, SettingDivider, SettingInput, Settings, StyledSidebar, StyledTemplate, StyledTemplateControl, StyledTemplateTitle, TemplateInput } from "./Styles";
 
 export class StackLayout extends React.Component<
@@ -27,13 +28,34 @@ export class StackLayout extends React.Component<
   },
   {
     manualCss: boolean;
+    grid: Grid;
   }
 > {
   constructor(props: any) {
     super(props);
     this.state = {
-      manualCss: false
+      manualCss: false,
+      grid: props.stack.getSetting("grid")
     };
+  }
+
+  public static getDerivedStateFromProps(props: any, state: any) {
+    const grid: Grid = props.stack.getSetting("grid");
+    const components: string[] = props.stack.components.map((c: Component) => c.id);
+    const existing = Object.keys(grid.areas);
+    existing.forEach((id: string) => {
+      if (components.includes(id)) {
+      } else {
+        delete grid.areas[id];
+      }
+    });
+
+    if (existing !== Object.keys(grid.areas)) {
+      return {
+        grid
+      };
+    }
+    return null;
   }
 
   public setTracks = (evt: any) => {
@@ -41,7 +63,7 @@ export class StackLayout extends React.Component<
   };
 
   public setWidth = (evt: any) => {
-    const grid = this.props.stack.getSetting("grid");
+    const grid = this.state.grid;
     this.props.stack.setSetting("grid", {
       ...grid,
       width: integer(evt.target.value, grid.width, 1, 100)
@@ -49,7 +71,7 @@ export class StackLayout extends React.Component<
   };
 
   public setHeight = (evt: any) => {
-    const grid = this.props.stack.getSetting("grid");
+    const grid = this.state.grid;
     this.props.stack.setSetting("grid", {
       ...grid,
       height: integer(evt.target.value, grid.height, 1, 100)
@@ -57,7 +79,7 @@ export class StackLayout extends React.Component<
   };
 
   public addWidth = (evt: any) => {
-    const grid = this.props.stack.getSetting("grid");
+    const grid = this.state.grid;
     this.props.stack.setSetting("grid", {
       ...grid,
       width: integer(grid.width + 1, grid.width, 1, 100)
@@ -66,7 +88,7 @@ export class StackLayout extends React.Component<
   };
 
   public addHeight = (evt: any) => {
-    const grid = this.props.stack.getSetting("grid");
+    const grid = this.state.grid;
     this.props.stack.setSetting("grid", {
       ...grid,
       height: integer(grid.height + 1, grid.height, 1, 100)
@@ -75,7 +97,7 @@ export class StackLayout extends React.Component<
   };
 
   public setWidthAndHeight = (width: number, height: number) => {
-    const grid = this.props.stack.getSetting("grid");
+    const grid = this.state.grid;
     this.props.stack.setSetting("grid", {
       ...grid,
       width: integer(width, grid.width, 1, 100),
@@ -84,7 +106,7 @@ export class StackLayout extends React.Component<
   };
 
   public autoFit = () => {
-    const grid = this.props.stack.getSetting("grid");
+    const grid = this.state.grid;
     this.props.stack.setSetting("grid", {
       ...grid,
       width: integer(maxColumnEnd(grid) - 1, grid.width, 1, 100),
@@ -93,7 +115,7 @@ export class StackLayout extends React.Component<
   };
 
   public setArea = (key: string, value: any) => {
-    const grid = this.props.stack.getSetting("grid");
+    const grid = this.state.grid;
     this.props.stack.setSetting("grid", {
       ...grid,
       areas: {
@@ -104,8 +126,8 @@ export class StackLayout extends React.Component<
   };
 
   public render() {
-    const { manualCss } = this.state;
-    const grid = this.props.stack.getSetting("grid");
+    const { manualCss, grid } = this.state;
+    console.log(this.props.stack);
     if (!grid || !grid.width) {
       return (
         <Container>
@@ -202,4 +224,4 @@ export class StackLayout extends React.Component<
   }
 }
 
-// <GridPreview width={width} height={height} areas={areas} components={this.props.stack.components} />;
+// <GridPreview width={width} height={height} areas={areas} components={this.state.stack.components} />;
