@@ -101,7 +101,6 @@ export const textOverMedia = {
                 name: "Shadow"
               },
               style: {
-                background: "rgba(37, 37, 39, 0.29)",
                 height: "100%"
               }
             }

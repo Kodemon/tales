@@ -17,7 +17,7 @@ export const reveal = {
             name: "Reveal",
             grid: {
               width: 1,
-              height: 2,
+              height: 1,
               areas: {
                 [revealComponentId]: {
                   column: {
@@ -28,18 +28,6 @@ export const reveal = {
                   row: {
                     start: 1,
                     end: 2,
-                    span: 1
-                  }
-                },
-                cpzEFj: {
-                  column: {
-                    start: 1,
-                    end: 2,
-                    span: 1
-                  },
-                  row: {
-                    start: 2,
-                    end: 3,
                     span: 1
                   }
                 }
@@ -53,6 +41,7 @@ export const reveal = {
               type: "reveal",
               area: "",
               settings: {
+                name: "Reveal Component",
                 items: [
                   {
                     src: "https://images.unsplash.com/photo-1545906785-38f53f99e380?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",

@@ -36,26 +36,26 @@ export class Overlay extends Component {
     switch (type) {
       case "topToBottom": {
         style.boxShadow = `none`;
-        style.backgroundImage = `linear-gradient(0deg, ${background} 0%, transparent 100%)`;
+        style.background = `linear-gradient(0deg, ${background} 0%, transparent 100%)`;
         break;
       }
       case "bottomToTop": {
         style.boxShadow = `none`;
-        style.backgroundImage = `linear-gradient(180deg, ${background} 0%, transparent 100%)`;
+        style.background = `linear-gradient(180deg, ${background} 0%, transparent 100%)`;
         break;
       }
       case "rightToLeft": {
         style.boxShadow = `none`;
-        style.backgroundImage = `linear-gradient(90deg, ${background} 0%, transparent 100%)`;
+        style.background = `linear-gradient(90deg, ${background} 0%, transparent 100%)`;
         break;
       }
       case "leftToRight": {
         style.boxShadow = `none`;
-        style.backgroundImage = `linear-gradient(270deg, ${background} 0%, transparent 100%)`;
+        style.background = `linear-gradient(270deg, ${background} 0%, transparent 100%)`;
         break;
       }
       case "vignette": {
-        style.backgroundImage = `none`;
+        style.background = `none`;
         style.boxShadow = `inset 0 0 25vmin 10vmin ${background}`;
         break;
       }
