@@ -90,7 +90,7 @@ export class Image extends Component {
           this.image,
           {
             objectFit: "cover",
-            objectPosition: "50% 0",
+            objectPosition,
             width: "100%",
             height: "100%",
             top: null
@@ -114,7 +114,7 @@ export class Image extends Component {
           this.image,
           {
             objectFit: "cover",
-            objectPosition: "50% 0",
+            objectPosition,
             top: viewport.offset.top,
             width: viewport.width,
             height: viewport.height

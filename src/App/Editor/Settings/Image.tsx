@@ -67,8 +67,8 @@ export const ImageSettings: React.SFC<{
         attr="settings.position"
         options={[{ label: "Relative", value: "relative" }, { label: "Absolute", value: "absolute" }, { label: "Sticky", value: "sticky" }, { label: "Fixed", value: "fixed" }]}
       />
-      {component.getSetting("position") === "absolute" && <DataSetting entity={component} type="position" attr="style.objectPosition" />}
-      {component.getSetting("position") === "absolute" && (
+      {component.getSetting("position") !== "relative" && <DataSetting entity={component} type="position" attr="style.objectPosition" />}
+      {component.getSetting("position") !== "relative" && (
         <FocalEditor
           src={component.getSetting("src")}
           focal={component.getSetting("focal", { x: 0.5, y: 0.5 })}
