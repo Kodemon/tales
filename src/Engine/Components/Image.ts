@@ -58,6 +58,12 @@ export class Image extends Component {
 
     // ### Apply ELement Style
 
+    let objectPosition: string = this.getSetting("objetPosition", "center center");
+    const focal = this.getSetting("focal");
+    if (focal) {
+      objectPosition = `${focal.x * 100}% ${focal.y * 100}%`;
+    }
+
     const position = this.getSetting("position");
     switch (position) {
       case "absolute": {
@@ -67,7 +73,7 @@ export class Image extends Component {
           this.image,
           {
             objectFit: "cover",
-            objectPosition: this.getStyle("objectPosition", "center center"),
+            objectPosition,
             width: "100%",
             height: "100%",
             top: null

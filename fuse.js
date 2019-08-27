@@ -75,9 +75,9 @@ context(
  */
 
 task("clean", async () => {
-  await src("public")
-    .clean("public")
-    .exec();
+  // await src("public")
+  //   .clean("public")
+  //   .exec();
   await src(".fusebox")
     .clean(".fusebox")
     .exec();

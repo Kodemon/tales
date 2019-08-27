@@ -11,6 +11,7 @@ declare module "react-compound-slider";
 declare module "crypto-js";
 
 declare const PIXI: any;
+declare const Focuspoint: any;
 
 /*
  |--------------------------------------------------------------------------------

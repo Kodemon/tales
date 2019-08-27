@@ -4,6 +4,7 @@ import { Source } from "Engine/Enums";
 
 import { ComponentDivider } from "../Components/ComponentDivider";
 import { DataGroup, DataSetting } from "../Components/DataSetting";
+import { FocalEditor } from "../Components/FocalEditor";
 import { ActionButton, ActionGroup, SettingGroup } from "../Styles";
 
 export const ImageSettings: React.SFC<{
@@ -67,6 +68,15 @@ export const ImageSettings: React.SFC<{
         options={[{ label: "Relative", value: "relative" }, { label: "Absolute", value: "absolute" }, { label: "Sticky", value: "sticky" }, { label: "Fixed", value: "fixed" }]}
       />
       {component.getSetting("position") === "absolute" && <DataSetting entity={component} type="position" attr="style.objectPosition" />}
+      {component.getSetting("position") === "absolute" && (
+        <FocalEditor
+          src={component.getSetting("src")}
+          focal={component.getSetting("focal", { x: 0.5, y: 0.5 })}
+          onChange={(x, y) => {
+            component.setSetting("focal", { x, y });
+          }}
+        />
+      )}
 
       <ComponentDivider label="Spacing" />
       <DataGroup>
