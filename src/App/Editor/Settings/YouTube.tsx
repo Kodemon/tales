@@ -8,8 +8,7 @@ import { ActionButton, ActionGroup, Header, SettingGroup } from "../Styles";
 
 export const YouTubeSettings: React.SFC<{
   component: any;
-  edit: (section?: string, stack?: string, component?: string) => void;
-}> = function YouTubeSettings({ component, edit }) {
+}> = function YouTubeSettings({ component }) {
   return (
     <React.Fragment key={`component-${component.id}`}>
       <DataGroup>
@@ -20,7 +19,6 @@ export const YouTubeSettings: React.SFC<{
             <ActionButton
               onClick={() => {
                 component.remove(Source.User);
-                edit(component.section.id, component.stack.id);
               }}
             >
               <i className="fa fa-magic" />
@@ -28,7 +26,6 @@ export const YouTubeSettings: React.SFC<{
             <ActionButton
               onClick={() => {
                 component.remove(Source.User);
-                edit(component.section.id, component.stack.id);
               }}
             >
               <i className="fa fa-copy" />
@@ -36,7 +33,6 @@ export const YouTubeSettings: React.SFC<{
             <ActionButton
               onClick={() => {
                 component.remove(Source.User);
-                edit(component.section.id, component.stack.id);
               }}
             >
               <i className="fa fa-trash" />

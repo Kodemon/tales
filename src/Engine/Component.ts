@@ -110,10 +110,10 @@ export class Component extends DataManager<Data> {
 
     this.page.cache();
     this.page.emit(PageEvent.Refresh);
-    this.page.emit(PageEvent.Edit);
 
     if (source === Source.User) {
       this.page.send(PageConduitEvent.ComponentRemoved, this.page.id, this.section.id, this.stack.id, this.id);
+      this.page.emit(PageEvent.Edit, this.section.id, this.stack.id);
     }
   }
 

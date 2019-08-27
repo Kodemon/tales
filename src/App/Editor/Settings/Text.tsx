@@ -9,8 +9,7 @@ import { ActionButton, ActionGroup, SettingGroup } from "../Styles";
 
 export const TextSettings: React.SFC<{
   component: any;
-  edit: (section?: string, stack?: string, component?: string) => void;
-}> = function TextSettings({ component, edit }) {
+}> = function TextSettings({ component }) {
   return (
     <React.Fragment key={`component-${component.id}`}>
       <DataGroup>
@@ -21,7 +20,6 @@ export const TextSettings: React.SFC<{
             <ActionButton
               onClick={() => {
                 component.remove(Source.User);
-                edit(component.section.id, component.stack.id);
               }}
             >
               <i className="fa fa-magic" />
@@ -29,7 +27,6 @@ export const TextSettings: React.SFC<{
             <ActionButton
               onClick={() => {
                 component.remove(Source.User);
-                edit(component.section.id, component.stack.id);
               }}
             >
               <i className="fa fa-copy" />
@@ -37,7 +34,6 @@ export const TextSettings: React.SFC<{
             <ActionButton
               onClick={() => {
                 component.remove(Source.User);
-                edit(component.section.id, component.stack.id);
               }}
             >
               <i className="fa fa-trash" />
