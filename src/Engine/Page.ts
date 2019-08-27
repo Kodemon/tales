@@ -108,13 +108,18 @@ export class Page extends EventEmitter {
    * @param page
    */
   public load(page: any) {
+    this.title = page.title;
+    this.assets = page.assets;
+
     this.element.innerHTML = "";
+
     this.sections = [];
     for (const data of page.sections) {
       const section = new Section(this, data);
       this.sections.push(section);
       section.render();
     }
+
     this.emit(PageEvent.Loaded);
   }
 
@@ -174,6 +179,41 @@ export class Page extends EventEmitter {
       this.conduit.list.forEach(conn => {
         conn.send(JSON.stringify({ type, args }));
       });
+    }
+  }
+
+  /*
+  |--------------------------------------------------------------------------------
+  | Asset Utilities
+  |--------------------------------------------------------------------------------
+  */
+
+  /**
+   * Adds a new asset to the page asset list.
+   *
+   * @param data
+   * @param source
+   */
+  public addAsset(data: any, source: Source = Source.Silent) {
+    this.assets.push(data);
+    this.cache();
+    this.emit(PageEvent.Refresh);
+    if (source === Source.User) {
+      this.send(PageConduitEvent.AssetAdded, this.id, data);
+    }
+  }
+
+  public removeAsset(publicId: string, source: Source = Source.Silent) {
+    this.assets = this.assets.reduce((assets: any[], asset: any) => {
+      if (publicId !== asset.public_id) {
+        assets.push(asset);
+      }
+      return assets;
+    }, []);
+    this.cache();
+    this.emit(PageEvent.Refresh);
+    if (source === Source.User) {
+      this.send(PageConduitEvent.AssetRemoved, this.id, publicId);
     }
   }
 
@@ -343,6 +383,14 @@ function registerConduitEventHandlers(page: Page) {
       page.emit(PageEvent.Refresh);
     });
 
+    // ### Asset Events
+
+    conduit.on(PageConduitEvent.SectionAdded, (conn, pageId, data) => {
+      if (pageId === page.id) {
+        page.addAsset(data);
+      }
+    });
+
     // ### Section Events
 
     conduit.on(PageConduitEvent.SectionAdded, (conn, pageId, data) => {
@@ -509,9 +557,27 @@ export enum PageConduitEvent {
    * Triggered when a peer has successfully sent the client a cached page.
    *
    * @param conn
+   * @param pageId
    * @param data
    */
   PageLoaded = "page:loaded",
+
+  /**
+   * Triggered when a page asset is removed.
+   *
+   * @param conn
+   * @param pageId
+   * @param data
+   */
+  AssetAdded = "asset:added",
+
+  /**
+   * Triggered when a page asset is removed.
+   *
+   * @param conn
+   * @param data
+   */
+  AssetRemoved = "asset:removed",
 
   /**
    * Triggered when a section has been added.

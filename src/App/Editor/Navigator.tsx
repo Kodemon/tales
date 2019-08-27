@@ -9,8 +9,9 @@ import { Stack } from "Engine/Stack";
 
 import { router } from "../../Router";
 import { Color, Font } from "../Variables";
-import { FileUpload, getAssets, getFolder } from "./Components/Assets";
 import { portal } from "./Components/Portal";
+import { deleteResource } from "./Lib/Assets/Providers/Cloudinary";
+import { AssetUpload } from "./Lib/Assets/Upload";
 import { getCaretPosition, getComponentIcon } from "./Lib/Utils";
 import { PageSettings } from "./Settings/Page";
 import { Category, CategoryHeader } from "./Styles";
@@ -284,13 +285,28 @@ export class Navigator extends React.Component<
       <React.Fragment>
         <PaneHeader>
           <h1>Assets</h1>
-          <FileUpload page={this.props.page} />
+          <AssetUpload page={this.props.page} />
         </PaneHeader>
         <PaneContent>
-          {getAssets(this.props.page.id).map(asset => {
+          {this.props.page.assets.map(asset => {
             return (
               <div key={asset.public_id}>
                 <img src={asset.secure_url} width="50" height="50" style={{ objectFit: "cover" }} />
+                <button
+                  onClick={() => {
+                    deleteResource(asset.public_id)
+                      .then((res: any) => {
+                        if (res.status === 200) {
+                          this.props.page.removeAsset(asset.public_id, Source.User);
+                        }
+                      })
+                      .catch((err: Error) => {
+                        console.log(err);
+                      });
+                  }}
+                >
+                  Delete
+                </button>
               </div>
             );
           })}
