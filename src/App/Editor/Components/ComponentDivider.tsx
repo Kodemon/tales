@@ -5,7 +5,7 @@ import { Divider } from "../Styles";
 export const ComponentDivider: React.SFC<{
   label: string;
   icon?: string;
-}> = function ComponentDivider({ label, icon = "asterisk" }) {
+}> = function ComponentDivider({ label, icon = "cog" }) {
   return (
     <React.Fragment>
       <div style={{ marginTop: 15 }}>

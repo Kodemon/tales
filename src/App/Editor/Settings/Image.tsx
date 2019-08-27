@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { Source } from "Engine/Enums";
+
 import { ComponentDivider } from "../Components/ComponentDivider";
 import { DataGroup, DataSetting } from "../Components/DataSetting";
 import { ActionButton, ActionGroup, SettingGroup } from "../Styles";
@@ -43,6 +44,7 @@ export const ImageSettings: React.SFC<{
           </ActionGroup>
         </SettingGroup>
       </DataGroup>
+
       <ComponentDivider label="Settings" icon="cogs" />
       <DataGroup>
         <DataSetting entity={component} type="input" label="Title" attr="settings.title" />
@@ -59,20 +61,31 @@ export const ImageSettings: React.SFC<{
           component.setSetting("src", event.dataTransfer.getData("Text"), Source.User);
         }}
       />
-      <ComponentDivider label="Style" icon="paint-brush" />
+
+      <ComponentDivider label="Position" />
+      <DataSetting
+        entity={component}
+        type="select"
+        label="Position"
+        attr="settings.position"
+        options={[{ label: "Relative", value: "relative" }, { label: "Absolute", value: "absolute" }, { label: "Sticky", value: "sticky" }, { label: "Fixed", value: "fixed" }]}
+      />
+      {component.getSetting("position") === "absolute" && <DataSetting entity={component} type="position" attr="style.objectPosition" />}
+
+      <ComponentDivider label="Spacing" />
       <DataGroup>
-        <DataSetting entity={component} type="input" label="Margin" attr="style.margin" placeholder="0px" />
-        <DataSetting
-          entity={component}
-          type="select"
-          label="Position"
-          attr="settings.position"
-          options={[{ label: "Relative", value: "relative" }, { label: "Absolute", value: "absolute" }, { label: "Sticky", value: "sticky" }, { label: "Fixed", value: "fixed" }]}
-        />
+        <DataSetting entity={component} type="input" label="Margin" attr="style.margin" placeholder="Auto" />
+        <DataSetting entity={component} type="input" label="Padding" attr="style.padding" placeholder="Auto" />
+      </DataGroup>
+
+      <ComponentDivider label="Size" />
+      <DataGroup>
+        <DataSetting entity={component} type="input" label="Width" attr="style.width" placeholder="Auto" />
+        <DataSetting entity={component} type="input" label="Height" attr="style.height" placeholder="Auto" />
       </DataGroup>
       <DataGroup>
-        <DataSetting entity={component} type="input" label="Width" attr="style.maxWidth" />
-        <DataSetting entity={component} type="input" label="Height" attr="style.height" />
+        <DataSetting entity={component} type="input" label="Min W" attr="style.minWidth" placeholder="Auto" />
+        <DataSetting entity={component} type="input" label="Min H" attr="style.minHeight" placeholder="Auto" />
       </DataGroup>
     </React.Fragment>
   );

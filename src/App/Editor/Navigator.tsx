@@ -330,7 +330,7 @@ const Icon = styled.i`
     background: ${Color.BackgroundLight};
     color: ${Color.FontLight};
     width: 40px;
-    z-index: 100;
+    z-index: 5;
   }
 
   &:hover {

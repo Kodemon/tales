@@ -27,7 +27,7 @@ export class AssetManager extends React.Component<{
 
 const Assets = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 8px;
   padding: 8px;
 `;

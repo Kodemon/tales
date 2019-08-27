@@ -67,6 +67,7 @@ export class Image extends Component {
           this.image,
           {
             objectFit: "cover",
+            objectPosition: this.getStyle("objectPosition", "center center"),
             width: "100%",
             height: "100%",
             top: null

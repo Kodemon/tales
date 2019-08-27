@@ -16,7 +16,7 @@ export class AssetItem extends React.Component<{ page: Page; asset: any }> {
           <img src={asset.secure_url} />
         </AssetImage>
         <AssetMeta>
-          <i className="fa fa-image" /> <span>{asset.resource_type}</span>
+          <i className="fa fa-cog" />
           <i
             className="fa fa-trash delete"
             onClick={() => {
@@ -46,6 +46,7 @@ export class AssetItem extends React.Component<{ page: Page; asset: any }> {
  */
 
 const Asset = styled.div`
+  position: relative;
   background: ${Color.BackgroundDark};
 `;
 
@@ -60,14 +61,26 @@ const AssetImage = styled.div`
 `;
 
 const AssetMeta = styled.div`
+  position: absolute;
+  bottom: 0;
+
+  background: rgba(0, 0, 0, 0.65);
   font-family: ${Font.Family};
   font-size: ${Font.Size};
   color: ${Color.Font};
-  padding: 8px;
+  padding: 5px 8px;
+  width: 100%;
+
+  clear: both;
+  overflow: auto;
 
   > i {
+    cursor: pointer;
     float: left;
-    font-size: 13px;
+    font-size: 14px;
+    &:hover {
+      color: ${Color.FontLight};
+    }
   }
 
   > span {
@@ -75,11 +88,6 @@ const AssetMeta = styled.div`
   }
 
   .delete {
-    cursor: pointer;
     float: right;
-    font-size: 14px;
-    &:hover {
-      color: ${Color.FontLight};
-    }
   }
 `;

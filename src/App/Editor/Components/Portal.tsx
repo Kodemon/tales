@@ -128,7 +128,7 @@ const PortalGrid = styled.div`
 
   font-family: ${Font.Family};
 
-  z-index: 2;
+  z-index: 10;
 `;
 
 /*
