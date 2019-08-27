@@ -1,5 +1,6 @@
-import { Source } from "Engine/Enums";
 import { Component } from "../Component";
+import { Source } from "../Enums";
+import { PageConduitEvent } from "../Page";
 import { Stack } from "../Stack";
 import { maybe, setStyle } from "../Utils";
 
@@ -36,7 +37,7 @@ export class Text extends Component {
       this.loadQuill();
     }
 
-    this.page.on("quill:delta", this.onQuillDelta);
+    this.page.on(PageConduitEvent.Quill, this.onQuillDelta);
   }
 
   /**
@@ -49,29 +50,6 @@ export class Text extends Component {
       modules: {
         toolbar: false
       }
-      /*
-      modules: {
-        toolbar: [
-          ["bold", "italic", "underline", "strike"], // toggled buttons
-          ["blockquote", "code-block"],
-
-          [{ header: 1 }, { header: 2 }], // custom button values
-          [{ list: "ordered" }, { list: "bullet" }],
-          [{ script: "sub" }, { script: "super" }], // superscript/subscript
-          [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
-          [{ direction: "rtl" }], // text direction
-
-          [{ size: ["small", false, "large", "huge"] }], // custom dropdown
-          [{ header: [1, 2, 3, 4, 5, 6, false] }],
-
-          [{ color: [] }, { background: [] }], // dropdown with defaults from theme
-          [{ font: [] }],
-          [{ align: [] }],
-
-          ["clean"]
-        ]
-      }
-      */
     });
 
     // ### Selection Change
@@ -95,7 +73,7 @@ export class Text extends Component {
         this.setSetting("text", data);
         this.setSetting("html", this.quill.root.innerHTML);
 
-        this.page.send("quill:delta", this.id, { data, html: this.quill.root.innerHTML });
+        this.page.send(PageConduitEvent.Quill, this.id, { data, html: this.quill.root.innerHTML });
       }
     });
 

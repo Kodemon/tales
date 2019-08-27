@@ -9,12 +9,6 @@ const log = debug("conduit");
 
 export class Conduit extends EventEmitter {
   /**
-   * Page this conduit affects on events.
-   * @type {Page}
-   */
-  public page: Page;
-
-  /**
    * Peer session.
    * @type {Peer}
    */
@@ -26,12 +20,9 @@ export class Conduit extends EventEmitter {
    */
   public list: Set<Peer.DataConnection> = new Set();
 
-  constructor(page: Page) {
+  constructor() {
     super();
-
-    this.page = page;
     this.peer = new Peer(generateId(5, "tlz"));
-
     this.load();
   }
 
@@ -90,108 +81,15 @@ export class Conduit extends EventEmitter {
   private load() {
     this.peer.on("connection", conn => {
       this.storeConnection(conn);
-
       conn.on("open", () => {
-        this.sendTo(conn, "page:load", {
-          id: this.page.id,
-          title: "Unknown",
-          sections: this.page.sections.map(s => s.toJSON())
-        });
+        this.emit(ConduitEvent.PeerConnected, conn);
       });
     });
 
     // ### Opened
 
     this.peer.on("open", () => {
-      this.page.emit("conduit:open");
-    });
-
-    // ### Page Events
-
-    this.on("page:load", (conn, data) => {
-      this.page.load(data);
-      this.page.cache();
-    });
-
-    // ### Section Events
-
-    this.on("section:added", (conn, pageId, data) => {
-      if (pageId === this.page.id) {
-        this.page.addSection(data);
-      }
-    });
-
-    this.on("section:set", (conn, pageId, sectionId, key, value) => {
-      if (pageId === this.page.id) {
-        const section = this.page.sections.find(s => s.id === sectionId);
-        if (section) {
-          section.set(key, value);
-        }
-      }
-    });
-
-    this.on("section:move", (conn, pageId, prevIndex, nextIndex) => {
-      if (pageId === this.page.id) {
-        this.page.moveSection(prevIndex, nextIndex);
-      }
-    });
-
-    // ### Stack Events
-
-    this.on("stack:added", (conn, pageId, sectionId, data) => {
-      if (pageId === this.page.id) {
-        const section = this.page.sections.find(s => s.id === sectionId);
-        if (section) {
-          section.addStack(data);
-        }
-      }
-    });
-
-    this.on("stack:set", (conn, pageId, sectionId, stackId, key, value) => {
-      if (pageId === this.page.id) {
-        const section = this.page.sections.find(s => s.id === sectionId);
-        if (section) {
-          const stack = section.stacks.find(s => s.id === stackId);
-          if (stack) {
-            stack.set(key, value);
-          }
-        }
-      }
-    });
-
-    // ### Component Events
-
-    this.on("component:added", (conn, pageId, sectionId, stackId, data) => {
-      if (pageId === this.page.id) {
-        const section = this.page.sections.find(s => s.id === sectionId);
-        if (section) {
-          const stack = section.stacks.find(s => s.id === stackId);
-          if (stack) {
-            stack.addComponent(data);
-          }
-        }
-      }
-    });
-
-    this.on("component:set", (conn, pageId, sectionId, stackId, componentId, key, value) => {
-      if (pageId === this.page.id) {
-        const section = this.page.sections.find(s => s.id === sectionId);
-        if (section) {
-          const stack = section.stacks.find(s => s.id === stackId);
-          if (stack) {
-            const component = stack.components.find(c => c.id === componentId);
-            if (component) {
-              component.set(key, value);
-            }
-          }
-        }
-      }
-    });
-
-    // ### Quill Events
-
-    this.on("quill:delta", (conn, componentId, data) => {
-      this.page.emit("quill:delta", componentId, data);
+      this.emit(ConduitEvent.Open);
     });
 
     // ### Cleanup
@@ -218,7 +116,7 @@ export class Conduit extends EventEmitter {
     conn.on("close", () => {
       log("peer closed %o", conn);
       this.list.delete(conn);
-      this.page.emit("refresh");
+      this.emit(ConduitEvent.PeerClosed, conn);
     });
 
     conn.on("error", err => {
@@ -226,8 +124,6 @@ export class Conduit extends EventEmitter {
     });
 
     this.list.add(conn);
-
-    this.page.emit("refresh");
 
     // ### Heartbeat
 
@@ -254,10 +150,37 @@ export class Conduit extends EventEmitter {
         this.off("ping", ping);
 
         this.list.delete(conn);
-        this.page.emit("refresh");
+        this.emit(ConduitEvent.PeerClosed);
       }
     }, (TIMEOUT / 2) * 1000);
 
     this.on("ping", ping);
   }
+}
+
+/*
+ |--------------------------------------------------------------------------------
+ | Enums
+ |--------------------------------------------------------------------------------
+ */
+
+export enum ConduitEvent {
+  /**
+   * Triggered when the conduit instance is succesfully connected to the broker.
+   */
+  Open = "conduit:open",
+
+  /**
+   * Triggered when a peer has connected.
+   *
+   * @param conn
+   */
+  PeerConnected = "conduit:peer:connected",
+
+  /**
+   * Triggered when a peer connection was closed.
+   *
+   * @param conn
+   */
+  PeerClosed = "conduit:peer:closed"
 }

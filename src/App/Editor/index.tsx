@@ -117,7 +117,7 @@ export class Editor extends React.Component<
    * Triggers when the page container has successfully rendered.
    */
   private onReady = () => {
-    const cache = localStorage.getItem(`page.${router.params.get("page")}`);
+    const cache = localStorage.getItem(`page:${router.params.get("page")}`);
     if (cache) {
       this.page.load(JSON.parse(cache));
     }
@@ -145,12 +145,8 @@ export class Editor extends React.Component<
    * @param stack
    * @param component
    */
-  private onEdit = (section?: string, stack?: string, component?: string) => {
-    const editing = {
-      section: section || "",
-      stack: stack || "",
-      component: component || ""
-    };
+  private onEdit = (section: string = "", stack: string = "", component: string = "") => {
+    const editing = { section, stack, component };
     localStorage.setItem(`editing.${router.params.get("page")}`, JSON.stringify(editing));
     this.setState(() => ({ editing }));
   };

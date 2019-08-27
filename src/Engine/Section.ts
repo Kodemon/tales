@@ -2,7 +2,7 @@ import * as rndm from "rndm";
 
 import { DataManager } from "./DataManager";
 import { Source } from "./Enums";
-import { Page } from "./Page";
+import { Page, PageConduitEvent, PageEvent } from "./Page";
 import { Stack } from "./Stack";
 import { insertElementAfter, moveArrayIndex, setStyle } from "./Utils";
 import { viewport } from "./Viewport";
@@ -72,14 +72,14 @@ export class Section extends DataManager<Data> {
    * @param value
    */
   public send(path: string, value: any) {
-    this.page.send("section:set", this.page.id, this.id, path, value);
+    this.page.send(PageConduitEvent.SectionSet, this.page.id, this.id, path, value);
   }
 
   /**
    * Sends a edit assignment to the editor via page events.
    */
   public edit() {
-    this.page.emit("edit", this.id, "", "");
+    this.page.emit(PageEvent.Edit, this.id);
   }
 
   /*
@@ -99,11 +99,11 @@ export class Section extends DataManager<Data> {
     }, []);
 
     this.page.cache();
-    this.page.emit("refresh");
-    this.page.emit("edit");
+    this.page.emit(PageEvent.Refresh);
 
     if (source === Source.User) {
-      this.page.emit("section:remove", this.page.id, this.id);
+      this.page.send(PageConduitEvent.SectionRemoved, this.page.id, this.id);
+      this.page.emit(PageEvent.Edit);
     }
   }
 
@@ -132,11 +132,11 @@ export class Section extends DataManager<Data> {
     stack.render();
 
     this.page.cache();
-    this.page.emit("refresh");
+    this.page.emit(PageEvent.Refresh);
 
     if (source === Source.User) {
-      this.page.emit("edit", this, stack);
-      this.page.send("stack:added", this.page.id, this.id, stack.data);
+      this.page.send(PageConduitEvent.StackAdded, this.page.id, this.id, stack.data);
+      this.page.emit(PageEvent.Edit, this.id, stack.id);
     }
 
     return stack;
@@ -194,10 +194,10 @@ export class Section extends DataManager<Data> {
       insertElementAfter(stackA.element, stackB.element);
     }
 
-    this.page.emit("refresh");
+    this.page.emit(PageEvent.Refresh);
 
     if (source === Source.User) {
-      this.page.send("stack:move", this.id, prevIndex, nextIndex);
+      this.page.send(PageConduitEvent.StackMoved, this.id, prevIndex, nextIndex);
     }
   }
 

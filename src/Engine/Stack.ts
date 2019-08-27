@@ -8,6 +8,7 @@ import { Vimeo } from "./Components/Vimeo";
 import { YouTube } from "./Components/YouTube";
 import { DataManager } from "./DataManager";
 import { Source } from "./Enums";
+import { PageConduitEvent, PageEvent } from "./Page";
 import { Section } from "./Section";
 import { generateId, setStyle } from "./Utils";
 import { viewport } from "./Viewport";
@@ -90,14 +91,14 @@ export class Stack extends DataManager<Data> {
    * @param value
    */
   public send(path: string, value: any) {
-    this.page.send("stack:set", this.page.id, this.section.id, this.id, path, value);
+    this.page.send(PageConduitEvent.StackSet, this.page.id, this.section.id, this.id, path, value);
   }
 
   /**
    * Sends a edit assignment to the editor via page events.
    */
   public edit() {
-    this.page.emit("edit", this.section.id, this.id, "");
+    this.page.emit(PageEvent.Edit, this.section.id, this.id);
   }
 
   /*
@@ -117,11 +118,11 @@ export class Stack extends DataManager<Data> {
     }, []);
 
     this.page.cache();
-    this.page.emit("refresh");
-    this.page.emit("edit");
+    this.page.emit(PageEvent.Refresh);
 
     if (source === Source.User) {
-      this.page.emit("stack:remove", this.page.id, this.section.id, this.id);
+      this.page.send(PageConduitEvent.StackRemoved, this.page.id, this.section.id, this.id);
+      this.edit();
     }
   }
 
@@ -166,10 +167,11 @@ export class Stack extends DataManager<Data> {
       component.render();
 
       this.page.cache();
-      this.page.emit("refresh");
+      this.page.emit(PageEvent.Refresh);
 
       if (source === Source.User) {
-        this.page.send("component:added", this.page.id, this.section.id, this.id, component.data);
+        this.page.send(PageConduitEvent.ComponentAdded, this.page.id, this.section.id, this.id, component.data);
+        this.page.emit(PageEvent.Edit, this.section.id, this.id, component.id);
       }
 
       return component;

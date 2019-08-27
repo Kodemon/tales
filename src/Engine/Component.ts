@@ -1,5 +1,6 @@
 import { DataManager } from "./DataManager";
 import { Source } from "./Enums";
+import { PageConduitEvent, PageEvent } from "./Page";
 import { Stack } from "./Stack";
 import { setStyle } from "./Utils";
 
@@ -70,20 +71,20 @@ export class Component extends DataManager<Data> {
    */
 
   /**
-   * Sends a component set operation to all connected peers.
+   * Conduit operation sends a component set operation to all connected peers.
    *
    * @param path
    * @param value
    */
   public send(path: string, value: any) {
-    this.page.send("component:set", this.page.id, this.section.id, this.stack.id, this.id, path, value);
+    this.page.send(PageConduitEvent.ComponentSet, this.page.id, this.section.id, this.stack.id, this.id, path, value);
   }
 
   /**
    * Sends a edit assignment to the editor via page events.
    */
   public edit() {
-    this.page.emit("edit", this.section.id, this.stack.id, this.id);
+    this.page.emit(PageEvent.Edit, this.section.id, this.stack.id, this.id);
   }
 
   /*
@@ -108,11 +109,11 @@ export class Component extends DataManager<Data> {
     }, []);
 
     this.page.cache();
-    this.page.emit("refresh");
-    this.page.emit("edit");
+    this.page.emit(PageEvent.Refresh);
+    this.page.emit(PageEvent.Edit);
 
     if (source === Source.User) {
-      this.page.emit("component:remove", this.page.id, this.section.id, this.stack.id, this.id);
+      this.page.send(PageConduitEvent.ComponentRemoved, this.page.id, this.section.id, this.stack.id, this.id);
     }
   }
 
