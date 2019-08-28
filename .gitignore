@@ -1,4 +1,7 @@
 .fusebox
 node_modules
-public
 lambda/build
+
+public/*
+!public/css
+!public/scripts
