@@ -1,9 +1,6 @@
 import * as axios from "axios";
+import { config } from "Config";
 import * as crypto from "crypto-js";
-
-const API_KEY = "326518456961523";
-const API_SECRET = "WdcDmJ0uoluH6nLa1T9g6GGqN9I";
-const ACCOUNT = "kodemon";
 
 /*
  |--------------------------------------------------------------------------------
@@ -11,37 +8,37 @@ const ACCOUNT = "kodemon";
  |--------------------------------------------------------------------------------
  */
 
-export function uploadResource(file: File, data: any, config?: any) {
+export function uploadResource(file: File, data: any, options?: any) {
   const payload = {
     timestamp: (Date.now() / 1000) | 0,
     upload_preset: "tails",
     ...data
   };
   return axios.post(
-    `https://api.cloudinary.com/v1_1/${ACCOUNT}/upload`,
+    `https://api.cloudinary.com/v1_1/${config.cloudinary.account}/upload`,
     getFormData({
       ...payload,
       file,
-      api_key: API_KEY,
-      signature: generateSignature(payload, API_SECRET)
+      api_key: config.cloudinary.key,
+      signature: generateSignature(payload, config.cloudinary.secret)
     }),
-    config
+    options
   );
 }
 
-export function deleteResource(publicId: string, config?: any) {
+export function deleteResource(publicId: string, options?: any) {
   const payload = {
     timestamp: (Date.now() / 1000) | 0,
     public_id: publicId
   };
   return axios.post(
-    `https://api.cloudinary.com/v1_1/${ACCOUNT}/image/destroy`,
+    `https://api.cloudinary.com/v1_1/${config.cloudinary.account}/image/destroy`,
     getFormData({
       ...payload,
-      api_key: API_KEY,
-      signature: generateSignature(payload, API_SECRET)
+      api_key: config.cloudinary.key,
+      signature: generateSignature(payload, config.cloudinary.secret)
     }),
-    config
+    options
   );
 }
 

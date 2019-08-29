@@ -4,7 +4,7 @@
   "description": "Configurable web based render loop.",
   "main": "index.js",
   "scripts": {
-    "clean": "rimraf .cache public",
+    "clean": "rimraf .cache",
     "build": "npm run clean && npm run lambda-build && NODE_ENV=production node fuse dist",
     "lambda-serve": "netlify-lambda serve lambda/src -c lambda/webpack.lambda.js",
     "lambda-build": "netlify-lambda build lambda/src -c lambda/webpack.lambda.js",
@@ -18,6 +18,7 @@
   "author": "engine@cmdo.xyz",
   "license": "ISC",
   "dependencies": {
+    "@octokit/rest": "^16.28.7",
     "axios": "0.19.0",
     "crypto-js": "3.1.9-1",
     "debug": "4.1.1",

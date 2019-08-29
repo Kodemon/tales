@@ -1,4 +1,6 @@
+import { lighten, transparentize } from "polished";
 import styled from "styled-components";
+import { Color } from "../Variables";
 
 export const PageContainer = styled.div`
   display: flex;
@@ -11,7 +13,7 @@ export const PageContainer = styled.div`
 export const WelcomePage = styled.div`
   width: 90%;
   max-width: 1200px;
-  font-size: 10px;
+  font-size: 12px;
 `;
 
 export const Title = styled.div`
@@ -87,6 +89,38 @@ export const NavItem = styled.li`
   text-overflow: ellipsis;
 `;
 
+export const NavItemLoader = styled.li`
+  list-style: none;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: ${transparentize(0.9, Color.BackgroundDisabled)};
+  width: 200px;
+  height: 18px;
+  margin: 5px 0;
+  &:first-child {
+    width: 400px;
+  }
+  &:last-child {
+    width: 300px;
+  }
+  animation-name: color;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  @keyframes color {
+    0% {
+      background-color: ${transparentize(0.97, Color.BackgroundDisabled)};
+    }
+    50% {
+      background-color: ${transparentize(0.92, Color.BackgroundDisabled)};
+    }
+    100% {
+      background-color: ${transparentize(0.97, Color.BackgroundDisabled)};
+    }
+  }
+`;
+
 export const BlockItem = styled.button`
   background: rgba(0, 0, 0, 0.04);
   border: none;
@@ -125,4 +159,53 @@ export const NavDivider = styled.li`
   border: 1px solid rgba(0, 0, 0, 0.04);
   width: 200px;
   margin: 2em 0 1em;
+`;
+
+export const GitHubLink = styled.a`
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-image: none;
+  border: 1px solid #0000;
+  border-radius: 4px;
+  text-decoration: none;
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.3333333;
+  border-radius: 6px;
+
+  position: relative;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  color: #fff;
+  background-color: #444;
+  border-color: #0003;
+  i {
+    padding-right: 12px;
+  }
+  &:hover {
+    color: #fff;
+    background-color: #2b2b2b;
+    border-color: #0003;
+  }
+  &:hover,
+  &:focus {
+    text-decoration: none;
+  }
 `;

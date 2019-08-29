@@ -503,3 +503,15 @@ export enum ErrorStatus {
    */
   GATEWAY_TIMEOUT = 504
 }
+
+export function generateErrorObject(message: string) {
+  return {
+    statusCode: 400,
+    body: JSON.stringify({
+      error: message
+    }),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  };
+}

@@ -38,7 +38,8 @@ context(
             })
         ],
         alias: {
-          Engine: "~/Engine"
+          Engine: "~/Engine",
+          Config: "~/App/Config"
         }
       });
     }

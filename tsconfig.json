@@ -20,7 +20,8 @@
       }
     ],
     "paths": {
-      "Engine/*": ["src/Engine/*"]
+      "Engine/*": ["src/Engine/*"],
+      "Config": ["src/App/Config"]
     }
   },
   "include": ["./custom.d.ts", "./src"]
